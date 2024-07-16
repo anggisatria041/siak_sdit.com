@@ -1,0 +1,15 @@
+{
+    "name": "vendor/s-c-m",
+    "description": "Description of project SCM.",
+    "authors": [
+        {
+            "name": "User",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "maatwebsite/excel": "3.2.x-dev",
+        "phpoffice/phpword": "^0.18.2",
+        "firebase/php-jwt": "^5.5"
+    }
+}

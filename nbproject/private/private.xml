@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <coverage xmlns="http://www.netbeans.org/ns/code-coverage/1" enabled="false"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
+        <file>
+            <url>application/views/pages/manage_saldoawal/add_saldoawal.php</url>
+            <bookmark id="2">
+                <name/>
+                <line>266</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>application/views/staff/page/edit_rfp_kasbesar.php</url>
+            <bookmark id="1">
+                <name/>
+                <line>837</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/models/Md_trans.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/Staff.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/config/database.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/pages/manage_fatlama/index.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/pages/manage_fatlama/download.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/models/Md_transkegiatan.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/Kasir.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/pages/manage_payment_fatlama/edit.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/pages/manage_payment_fatlama/view.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/models/Md_fatlama.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/kasir/add_payment_fat.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/template/kasir/include_leftmenu.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/kasir/view_transaksi.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/kasir/view_rfp_kasbesar.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/Finance.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/dir/Api.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/dir/Manage_fatlama.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/helpers/number_generator_helper.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/views/pages/manage_payment_fatlama/add.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/controllers/dir/Manage_payment_fatlama.php</file>
+            <file>file:/C:/DevApps/stfms.vadhana.co.id/application/models/Md_rfp.php</file>
+        </group>
+    </open-files>
+</project-private>

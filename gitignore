@@ -1,0 +1,4 @@
+/SCM/vendor/
+/nbproject/
+application/config/database.php
+todo.md

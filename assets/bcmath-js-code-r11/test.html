@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>BCMath Test</title>
+    <script type="text/javascript" src="src/libbcmath.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.add.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.compare.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.doaddsub.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.sub.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.div.js?v=1"></script>
+    <script type="text/javascript" src="src/libbcmath.recmul.js?v=1"></script>
+    <script type="text/javascript" src="src/bcmath.js?v=1"></script>
+    <script type="text/javascript" src="src/bcmath.test.js?v=1"></script>
+    <script type="text/javascript" src="src/bcmath.benchmark.js?v=1"></script>
+    <script type="text/javascript" src="DecimalNumber/DecimalNumber.js?v=1"></script>
+    <!--
+    <script type="text/javascript" src="bcmath-min.js?v=1"></script>
+    <script type="text/javascript" src="src/bcmath.test.js?v=1"></script>
+    /-->
+</head>
+<body>
+<script type="text/javascript">
+    /* Sandbox for testing js code */
+    a = 2.88;
+    b = 2.41;
+    c = 7.34;
+
+    // d = a+b+c;
+    d = bcadd(a,b,2);
+    console.log(d)
+</script>
+
+
+<!-- <input type="button" onclick="TestFloatingPointProblems();" value="test DecimalNumber">
+<input type="button" onclick="bcmath.test.doTests();" value="test BCMath">
+<input type="button" onclick="bcmath.benchmark.doBenchmark();" value="benchmark"> -->
+</body>
+</html>
