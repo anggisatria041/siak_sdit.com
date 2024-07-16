@@ -62,7 +62,7 @@
             <!-- Content -->
             <?php include "include_leftmenu.php"; ?>
 
-            <?php include "pages/" . $page_name . ".php"; ?>
+            <?php include "pages/" . $page_dir . "/" . $page_name . ".php"; ?>
 
             </div>
             <!-- Content -->

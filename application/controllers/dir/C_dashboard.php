@@ -18,7 +18,7 @@ class C_dashboard extends CI_Controller
     public function index()
     {
         $pageData['page_name'] = 'V_dashboard';
-        $pageData['page_dir'] = 'spadmin/page';
+        $pageData['page_dir'] = 'dashboard';
         $this->load->view('index', $pageData);
 
     }
