@@ -1,9 +1,17 @@
-am4core.useTheme(am4themes_animated);
+//am4core.useTheme(am4themes_animated);
 
 var container = am4core.create("chartdiv", am4core.Container);
 container.width = am4core.percent(100);
 container.height = am4core.percent(100);
 container.layout = "vertical";
+
+container.events.on("up", function(event) {
+  for (var i = 0; i < charts.length; i++) {
+    var chart = charts[i];
+    var cursor = chart.cursor;
+    cursor.selection.hide(0);
+  }
+});
 
 
 var chartCount = 3;
@@ -14,6 +22,8 @@ var cursorShowDisposers = [];
 for (var i = 0; i < chartCount; i++) {
   makeChart();
 }
+
+initCursorListeners();
 
 // after the charts are made, add scrollbar to the first one
 var firstChart = charts[0];
@@ -54,44 +64,117 @@ function makeChart() {
   dateAxis.cursorTooltipEnabled = false;
 
   var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-  //valueAxis.tooltip.disabled = true;
+  valueAxis.tooltip.disabled = true;
+  valueAxis.tooltip.disabled = true;
   valueAxis.renderer.minWidth = 60;
 
   var series = chart.series.push(new am4charts.LineSeries());
   series.dataFields.dateX = "date";
   series.dataFields.valueY = "value";
   series.interpolationDuration = 0;
-  series.strokeWidth = 2;
+
   series.tooltipText = "{valueY.value}";
 
   var cursor = new am4charts.XYCursor();
-  //cursor.lineY.disabled = true;
+  cursor.lineY.disabled = true;
   cursor.xAxis = dateAxis;
   chart.cursor = cursor;
 
-  chart.cursor.adapter.add("cursorPoint", function(point, target) {
-    if (firstChart.scrollbarX.isBusy) {
-      point.y = -1000;
+
+  // whenever any of the charts is zoomed, we should zoom all other charts
+  dateAxis.events.on("selectionextremeschanged", function (event) {
+    syncDateAxes(event.target);
+  })
+}
+
+
+function initCursorListeners() {
+  cursorShowDisposers = [];
+  for (var i = 0; i < charts.length; i++) {
+    var chart = charts[i];
+    var cursor = chart.cursor;
+    cursor.interactionsEnabled = true;
+
+    cursorShowDisposers.push(cursor.events.on("shown", function (event) {
+      handleShowCursor(event.target);
+    }));
+  }
+}
+
+var shownCursorChangeDisposer;
+var shownCursorZoomStartedDisposer;
+var shownCursorZoomEndedDisposer;
+
+function handleShowCursor(shownCursor) {
+  // disable mouse for all other cursors
+  for (var i = 0; i < charts.length; i++) {
+    var chart = charts[i];
+    var cursor = chart.cursor;
+    if (cursor != shownCursor) {
+      cursor.interactionsEnabled = false;
     }
-    else {
-      if (!chart.cursor.fitsToBounds(point)) {
-        point.y = 0;
-        chart.cursor.lineY.visible = false;
-        chart.yAxes.getIndex(0).cursorTooltipEnabled = false;
-      }
-      else {
-        chart.cursor.lineY.visible = true;
-        chart.yAxes.getIndex(0).cursorTooltipEnabled = true;
-      }
-    }
-    return point;
+    // remove show listener
+    cursorShowDisposers[i].dispose();
+  }
+
+  // add change disposer to the hovered chart cursor
+  shownCursorChangeDisposer = shownCursor.lineX.events.on("positionchanged", function (event) {
+    syncCursors(shownCursor);
   });
 
 
-  // whenever any of the charts is zoomed, we should zoom all other charts
-  dateAxis.events.on("selectionextremeschanged", function(event) {
-    syncDateAxes(event.target);
-  })
+  shownCursorZoomStartedDisposer = shownCursor.events.on("zoomstarted", function (event) {
+
+    for (var i = 0; i < charts.length; i++) {
+      var chart = charts[i];
+      var cursor = chart.cursor;
+      if (cursor != event.target) {
+        var point = { x: event.target.point.x, y: 0 };
+        cursor.triggerDown(point);
+      }
+    }
+  });
+
+  shownCursorZoomEndedDisposer = shownCursor.events.on("zoomended", function (event) {
+    for (var i = 0; i < charts.length; i++) {
+      var chart = charts[i];
+      var cursor = chart.cursor;
+      if (cursor != event.target) {
+        var point = { x: event.target.point.x, y: 0 };
+        cursor.triggerUp(point);
+      }
+    }
+  });
+
+
+  shownCursor.events.once("hidden", function (event) {
+    shownCursorChangeDisposer.dispose();
+    shownCursorZoomStartedDisposer.dispose();
+    shownCursorZoomEndedDisposer.dispose();
+
+    for (var i = 0; i < charts.length; i++) {
+      var chart = charts[i];
+      var cursor = chart.cursor;
+      cursor.hide(0);
+
+      cursorShowDisposers[i].dispose();
+    }
+
+    initCursorListeners();
+  });
+}
+
+function syncCursors(syncWithCursor) {
+  for (var i = 0; i < charts.length; i++) {
+    var chart = charts[i];
+    var cursor = chart.cursor;
+
+    var point = { x: syncWithCursor.point.x, y: 0 };
+
+    if (cursor != syncWithCursor) {
+      cursor.triggerMove(point);
+    }
+  }
 }
 
 

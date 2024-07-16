@@ -80,7 +80,7 @@ var chart = am4core.createFromConfig({
 
     // Modify default state
     "defaultState": {
-      "transitionDuration": 1000
+      "ransitionDuration": 1000
     },
 
     // Set animation options

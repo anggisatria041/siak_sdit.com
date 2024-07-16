@@ -8,122 +8,122 @@ var chart = am4core.create("chartdiv", am4charts.RadarChart);
 
 chart.data = [
   {
-    company: "Openlane",
+    name: "Openlane",
     value1: 560.2,
     value2: 126.9
   },
   {
-    company: "Yearin",
+    name: "Yearin",
     value1: 170.1,
     value2: 90.5
   },
   {
-    company: "Goodsilron",
+    name: "Goodsilron",
     value1: 120.7,
     value2: 32.3
   },
   {
-    company: "Condax",
+    name: "Condax",
     value1: 89.4,
     value2: 124.5
   },
   {
-    company: "Opentech",
+    name: "Opentech",
     value1: 78.5,
     value2: 29.7
   },
   {
-    company: "Golddex",
+    name: "Golddex",
     value1: 77.6,
     value2: 162.2
   },
   {
-    company: "Isdom",
+    name: "Isdom",
     value1: 69.8,
     value2: 22.6
   },
   {
-    company: "Plusstrip",
+    name: "Plusstrip",
     value1: 63.6,
     value2: 45.3
   },
   {
-    company: "Kinnamplus",
+    name: "Kinnamplus",
     value1: 59.7,
     value2: 12.8
   },
   {
-    company: "Zumgoity",
+    name: "Zumgoity",
     value1: 54.3,
     value2: 19.6
   },
   {
-    company: "Stanredtax",
+    name: "Stanredtax",
     value1: 52.9,
     value2: 96.3
   },
   {
-    company: "Conecom",
+    name: "Conecom",
     value1: 42.9,
     value2: 11.9
   },
   {
-    company: "Zencorporation",
+    name: "Zencorporation",
     value1: 40.9,
     value2: 16.8
   },
   {
-    company: "Iselectrics",
+    name: "Iselectrics",
     value1: 39.2,
     value2: 9.9
   },
   {
-    company: "Treequote",
+    name: "Treequote",
     value1: 36.6,
     value2: 36.9
   },
   {
-    company: "Sumace",
+    name: "Sumace",
     value1: 34.8,
     value2: 14.6
   },
   {
-    company: "Lexiqvolax",
+    name: "Lexiqvolax",
     value1: 32.1,
     value2: 35.6
   },
   {
-    company: "Sunnamplex",
+    name: "Sunnamplex",
     value1: 31.8,
     value2: 5.9
   },
   {
-    company: "Faxquote",
+    name: "Faxquote",
     value1: 29.3,
     value2: 14.7
   },
   {
-    company: "Donware",
+    name: "Donware",
     value1: 23.0,
     value2: 2.8
   },
   {
-    company: "Warephase",
+    name: "Warephase",
     value1: 21.5,
     value2: 12.1
   },
   {
-    company: "Donquadtech",
+    name: "Donquadtech",
     value1: 19.7,
     value2: 10.8
   },
   {
-    company: "Nam-zim",
+    name: "Nam-zim",
     value1: 15.5,
     value2: 4.1
   },
   {
-    company: "Y-corporation",
+    name: "Y-corporation",
     value1: 14.2,
     value2: 11.3
   }
@@ -140,7 +140,7 @@ chart.zoomOutButton.background.cornerRadius(40, 40, 40, 40);
 chart.zoomOutButton.valign = "bottom";
 
 var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "company";
+categoryAxis.dataFields.category = "name";
 categoryAxis.renderer.labels.template.location = 0.5;
 categoryAxis.interactionsEnabled = false;
 
@@ -171,7 +171,7 @@ valueAxis.renderer.tooltip.disabled = true;
 
 var series1 = chart.series.push(new am4charts.RadarSeries());
 series1.name = "CASH HELD OUTSIDE THE U.S.";
-series1.dataFields.categoryX = "company";
+series1.dataFields.categoryX = "name";
 series1.dataFields.valueY = "value1";
 series1.stacked = true;
 series1.fillOpacity = 0.5;
@@ -183,7 +183,7 @@ series1.sequencedInterpolationDelay = 50;
 
 var series2 = chart.series.push(new am4charts.RadarSeries());
 series2.name = "TOTAL CASH PILE";
-series2.dataFields.categoryX = "company";
+series2.dataFields.categoryX = "name";
 series2.dataFields.valueY = "value2";
 series2.stacked = true;
 series2.fillOpacity = 0.5;

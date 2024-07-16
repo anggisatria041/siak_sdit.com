@@ -42,7 +42,7 @@ var currentActive;
 polygonTemplate.events.on("hit", function (event) {
 	// if we have some country selected, set default state to it
 	if (currentActive) {
-		currentActive.isActive = false;
+		currentActive.setState("default");
 	}
 
 	chart.zoomToMapObject(event.target);

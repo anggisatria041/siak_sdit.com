@@ -5,8 +5,7 @@ chart.paddingRight = 20;
 
 var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
 dateAxis.renderer.grid.template.location = 0;
-dateAxis.groupData = true;
-//dateAxis.skipEmptyPeriods = true;
+dateAxis.skipEmptyPeriods = true;
 
 var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 valueAxis.tooltip.disabled = true;

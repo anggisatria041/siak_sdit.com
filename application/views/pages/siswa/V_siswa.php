@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center">
             <div class="mr-auto">
                 <h3 class="m-subheader__title m-subheader__title--separator">
-                   Pelanggan
+                   Siswa
                 </h3>
                 <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                     <li class="m-nav__item m-nav__item--home">
@@ -37,13 +37,13 @@
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
                                 <h3 class="m-portlet__head-text">
-                                    Manage Data Pelanggan<p id="hax"></p>
+                                    Manage Data Siswa<p id="hax"></p>
                                 </h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
                             <button type="button" class="btn btn-info btn-md">
-                                <i class="la la-plus"></i> Tambah Pelanggan
+                                <i class="la la-plus"></i> Tambah Siswa
                             </button>
                         </div>
                     </div>
@@ -63,23 +63,7 @@
                             </div>
                         <?php } ?>
                         <!--begin: Datatable -->
-                        <ul class="nav nav-pills nav-fill" role="tablist">
-                            <li class="nav-item col-6">
-                                <a class="nav-link active" data-toggle="tab" onclick="renew('tableManage')" href="#m_tabs_5_1"><b>TICKET BOOK</b></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" onclick="renew('tableManage2')" href="#m_tabs_5_2"><b>TICKET</b></a>
-                            </li>
-
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="m_tabs_5_1" role="tabpanel">
-                                <div class="m_datatable" id="tableManage"></div>
-                            </div>
-                            <div class="tab-pane" id="m_tabs_5_2" role="tabpanel">
-                                <div class="m_datatable" id="tableManage2"></div>
-                            </div>
-                        </div>
+                        <div class="m_datatable" id="tableManageSiswa"></div>
                         <!--end: Datatable -->
                     </div>
                 </div>
@@ -87,4 +71,5 @@
         </div>
     </div>
 </div>
+<?= isset($tableManageSiswa) ? $tableManageSiswa : '' ?>
 <!-- end:: Body -->

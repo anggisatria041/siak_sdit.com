@@ -36,6 +36,12 @@ outline.filters.push(blurFilter);
 
 bullet.events.on("over", function(event) {
     var target = event.target;
+    chart.cursor.triggerMove({ x: target.pixelX, y: target.pixelY }, "hard");
+    chart.cursor.lineX.y = target.pixelY;
+    chart.cursor.lineY.x = target.pixelX - chart.plotContainer.pixelWidth;
+    valueAxisX.tooltip.disabled = false;
+    valueAxisY.tooltip.disabled = false;
+
     outline.radius = target.pixelRadius + 2;
     outline.x = target.pixelX;
     outline.y = target.pixelY;
@@ -43,6 +49,11 @@ bullet.events.on("over", function(event) {
 })
 
 bullet.events.on("out", function(event) {
+    chart.cursor.triggerMove(event.pointer.point, "none");
+    chart.cursor.lineX.y = 0;
+    chart.cursor.lineY.x = 0;
+    valueAxisX.tooltip.disabled = true;
+    valueAxisY.tooltip.disabled = true;
     outline.hide();
 })
 
@@ -58,7 +69,6 @@ bullet.adapter.add("tooltipY", function(tooltipY, target) {
 
 chart.cursor = new am4charts.XYCursor();
 chart.cursor.behavior = "zoomXY";
-chart.cursor.snapToSeries = series;
 
 chart.scrollbarX = new am4core.Scrollbar();
 chart.scrollbarY = new am4core.Scrollbar();
@@ -1577,3 +1587,5 @@ chart.data = [
         "value": 13013678
     }
 ];
+
+

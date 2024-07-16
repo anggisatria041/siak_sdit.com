@@ -3,8 +3,8 @@
         <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
             <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
                 <span class="m-footer__copyright">
-                    &copy; <?php echo date('Y'); ?> <a href="http://vadhana.co.id">Silver Silk </a>&nbsp;-&nbsp;
-                    <a href="#" class="m-link">Tim IT</a>
+                    &copy; <?php echo date('Y'); ?> <a href="http://vadhana.co.id">SIMA </a>&nbsp;-&nbsp;
+                    <a href="#" class="m-link">SD IT</a>
                 </span>
             </div>
         </div>
