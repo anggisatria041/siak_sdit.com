@@ -15,6 +15,8 @@ class C_siswa extends CI_Controller
         parent::__construct();
         //load model
         $this->load->model('Md_siswa');
+        $this->load->model('Md_log');
+
         //Load library
         $this->load->library('M_datatable');
         $this->load->library('Pdf');
@@ -58,8 +60,8 @@ class C_siswa extends CI_Controller
                                 <i class="la la-gear"></i>\
                             </a>\
                             <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.divisiposisiid+\'\\\');"><i class="la la-edit"></i> Edit Orchart</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.divisiposisiid+\'\\\');"><i class="la la-trash-o"></i> Hapus Orchart</a>\
+                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.siswa_id +\'\\\');"><i class="la la-edit"></i> Edit Siswa</a>\
+                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.siswa_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Siswa</a>\
                             </div>\
                         </div>\
                     \';
@@ -89,6 +91,186 @@ class C_siswa extends CI_Controller
 
 
     }
+    public function add()
+    {
+
+        $this->form_validation->set_rules('nisn', '', 'required');
+        $this->form_validation->set_rules('nama', '', 'required');
+        $this->form_validation->set_rules('jenis_kelamin', '', 'required');
+        $this->form_validation->set_rules('tempat_lahir', '', 'required');
+        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
+        $this->form_validation->set_rules('agama', '', 'required');
+        $this->form_validation->set_rules('alamat', '', 'required');
+        $this->form_validation->set_rules('no_hp', '', 'required');
+        $this->form_validation->set_rules('email', '', 'required');
+
+        $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+            'csrfHash' => $this->security->get_csrf_hash()
+        );
+
+            if($this->form_validation->run() === FALSE){
+                die(json_encode([
+                    'status'  => 'gagal',
+                    'message' => 'Semua fill harus terisi',
+                    'csrf'    => $csrf
+                ]));
+            }
+            
+            $siswa_id = decrypt($this->input->post('siswa_id'));
+            $nisn = $this->input->post('nisn');
+            $nama = $this->input->post('nama');
+            $jenis_kelamin = $this->input->post('jenis_kelamin');
+            $tempat_lahir = $this->input->post('tempat_lahir');
+            $tanggal_lahir = $this->input->post('tanggal_lahir');
+            $agama = $this->input->post('agama');
+            $alamat = $this->input->post('alamat');
+            $no_hp = $this->input->post('no_hp');
+            $email = $this->input->post('email');
+
+            $dataInsert = array(
+                'nisn' => $nisn,
+                'nama' => $nama,
+                'jenis_kelamin' => $jenis_kelamin,
+                'tempat_lahir' => $tempat_lahir,
+                'tanggal_lahir' => $tanggal_lahir,
+                'agama' => $agama,
+                'alamat' => $alamat,
+                'no_hp' => $no_hp,
+                'email' => $email,
+                'status' => 1
+            );
+        $this->db->trans_begin();
+        $this->Md_siswa->addSiswa($dataInsert);
+
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            echo json_encode(array('status' => 'success', 'csrf' => $csrf));
+            die;
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
+            die;
+        }
+           
+    }
+    public function edit($argv1 = '')
+    {
+        $valid = $argv1 == '' ? FALSE : (is_int(decrypt($argv1)) ? TRUE : FALSE);
+        if (!$valid) {
+            echo json_encode(array('data' => FALSE));
+            die;
+        }
+
+        $siswa = $this->Md_siswa->getSiswaById(decrypt($argv1));
+        
+       
+        $row = array();
+        if ($siswa) {
+            $row['data'] = TRUE;
+            $row['siswa_id'] = encrypt($siswa->siswa_id);
+            $row['nisn'] =  $siswa->nisn;
+            $row['nama'] =  $siswa->nama;
+            $row['jenis_kelamin'] =  $siswa->jenis_kelamin;
+            $row['tempat_lahir'] =  $siswa->tempat_lahir;
+            $row['tanggal_lahir'] =  $siswa->tanggal_lahir;
+            $row['agama'] =  $siswa->agama;
+            $row['alamat'] = ($siswa->alamat);
+            $row['no_hp'] = ($siswa->no_hp);
+            $row['email'] = ($siswa->email);
+            $row['status'] = $siswa->status;
+        } else {
+            $row['data'] = FALSE;
+        }
+
+        echo json_encode($row);
+        die;
+    }
+    public function update()
+    {
+        $this->form_validation->set_rules('nisn', '', 'required');
+        $this->form_validation->set_rules('nama', '', 'required');
+        $this->form_validation->set_rules('jenis_kelamin', '', 'required');
+        $this->form_validation->set_rules('tempat_lahir', '', 'required');
+        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
+        $this->form_validation->set_rules('agama', '', 'required');
+        $this->form_validation->set_rules('alamat', '', 'required');
+        $this->form_validation->set_rules('no_hp', '', 'required');
+        $this->form_validation->set_rules('email', '', 'required');
+
+        $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+            'csrfHash' => $this->security->get_csrf_hash()
+        );
+
+        if ($this->form_validation->run() != FALSE) {
+            $siswa_id = $this->input->post('siswa_id') == "" ? NULL : decrypt($this->input->post('siswa_id'));
+            $nisn = $this->input->post('nisn') == "" ? NULL : $this->input->post('nisn');
+            $nama = $this->input->post('nama') == "" ? NULL : $this->input->post('nama');
+            $jenis_kelamin = $this->input->post('jenis_kelamin') == "" ? NULL : $this->input->post('jenis_kelamin');
+            $tempat_lahir = $this->input->post('tempat_lahir') == "" ? NULL : $this->input->post('tempat_lahir');
+            $tanggal_lahir = $this->input->post('tanggal_lahir') == "" ? NULL : $this->input->post('tanggal_lahir');
+            $agama = $this->input->post('agama') == "" ? NULL : $this->input->post('agama');
+            $alamat = $this->input->post('alamat') == "" ? NULL : $this->input->post('alamat');
+            $no_hp = $this->input->post('no_hp') == "" ? NULL : $this->input->post('no_hp');
+            $email = $this->input->post('email') == "" ? NULL : $this->input->post('email');
+
+            if($this->form_validation->run() === FALSE){
+                die(json_encode([
+                    'status'  => 'gagal',
+                    'message' => 'Semua fill harus terisi',
+                    'csrf'    => $csrf
+                ]));
+            }
+
+            $this->db->trans_begin();
+            $this->Md_siswa->updateSiswa($siswa_id, [
+                'nisn' => $nisn,
+                'nama' => $nama,
+                'jenis_kelamin' => $jenis_kelamin,
+                'tempat_lahir' => $tempat_lahir,
+                'tanggal_lahir' => $tanggal_lahir,
+                'agama' => $agama,
+                'alamat' => $alamat,
+                'no_hp' => $no_hp,
+                'email' => $email,
+                'status' => 1
+            ]);
+            // addLog('Update Data', 'Mengubah data Siswa', 'Siswa ID' . $siswa_id);
+            if ($this->db->trans_status() == TRUE) {
+                $this->db->trans_commit();
+                echo json_encode(array('status' => 'success', 'csrf' => $csrf));
+                die;
+            } else {
+                $this->db->trans_rollback();
+                echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
+                die;
+            }
+        }
+    } 
+    public function delete($argv1 = '')
+    {
+        $valid = $argv1 == '' ? FALSE : (is_int(decrypt($argv1)) ? TRUE : FALSE);
+        if (!$valid) {
+            echo json_encode(array('data' => FALSE));
+            die;
+        }
+
+        $dataid = decrypt($argv1);
+        $this->db->trans_begin();
+        $this->Md_siswa->updateSiswa($dataid, array('status' => 2));
+
+        // addLog('Delete Data', 'Menghapus data Siswa', 'Siswa ID' . $dataid);
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            echo json_encode(array('data' => TRUE));
+            die;
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(array('data' => FALSE));
+            die;
+        } 
+    } 
 }
 
 
