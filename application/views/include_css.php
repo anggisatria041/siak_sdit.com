@@ -4,4 +4,4 @@
 <link href="<?= base_url() ?>/assets/vendors/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
 <!--end::Base Styles -->
-<link rel="shortcut icon" href="<?= base_url() ?>assets/app/media/img/logos/logo.png" />
+<link rel="shortcut icon" href="<?= base_url() ?>assets/app/media/img/logos/sdit.png" />

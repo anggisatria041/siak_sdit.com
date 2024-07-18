@@ -21461,7 +21461,7 @@ button:focus {
 }
 .btn.btn-default,
 .btn.btn-secondary {
-	background: white;
+	background: #1488F3;
 	border-color: #ebedf2;
 }
 .btn.btn-default i,
