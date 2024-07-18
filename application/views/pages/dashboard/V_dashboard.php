@@ -20,11 +20,11 @@
                     <div class="m-portlet__body" id="m-portlet__body">
                         <div class="m-card-profile">
                             <div class="m-card-profile__details"  style="text-align: left;">
-                                <span class="m-card-profile__name"  style="text-align: center;">Dashboard</span>
+                                <span class="m-card-profile__name"  style="text-align: center;">Reza Syahputra</span>
                                 <hr />
-                                <span class="m-card-profile__keterangan"><b>Lokasi : </b><br />
-                                <span class="m-card-profile__keterangan"><b>Produk BBM : </b><br>
-                                <span class="m-card-profile__keterangan"><b>Kepala Warehouse : </b></span><br>
+                                <span class="m-card-profile__keterangan"><b>NISN : 12812121010</b><br />
+                                <span class="m-card-profile__keterangan"><b>Kelas : MIPA 2</b><br>
+                                <span class="m-card-profile__keterangan"><b>Semester : II </b></span><br>
                             </div>
                         </div>
                         <ul class="m-nav m-nav--hover-bg m-portlet-fit--sides">
@@ -41,7 +41,7 @@
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
                                 <h3 class="m-portlet__head-text">
-                                    Warehouse
+                                    Index Prestasi
                                 </h3>
                             </div>
                         </div>
@@ -53,39 +53,20 @@
                                     <a class="m-widget4__item">
                                         <div class="m-widget4__info">
                                             <span class="m-widget4__title">
-                                                Semua Fuel Ticket
+                                                Nilai
                                             </span>
                                             <br>
                                             <span class="m-widget4__sub">
-                                                Belum Diajukan
+                                                Semester I
                                             </span><br>
                                              <span class="m-widget4__sub">
-                                                Sudah Diajukan
+                                                Semester II
                                             </span><br>
                                         </div>
                                         <span class="m-widget4__ext">
                                             <span class="m-widget4__number m--font-brand">&nbsp;</span>
-                                            <span class="m-widget4__sub">&nbsp;</span><br>
-                                            <span class="m-widget4__sub">&nbsp;</span><br>
-                                        </span>
-                                    </a>
-                                    <a  class="m-widget4__item">
-                                        <div class="m-widget4__info">
-                                            <span class="m-widget4__title">
-                                                Metode Input
-                                            </span>
-                                            <br>
-                                            <span class="m-widget4__sub">
-                                                Web
-                                            </span><br>
-                                            <span class="m-widget4__sub">
-                                               Mobile
-                                            </span>
-                                        </div>
-                                        <span class="m-widget4__ext">
-                                            <span class="m-widget4__number m--font-info">&nbsp;</span>
-                                            <span class="m-widget4__sub">&nbsp;</span><br>
-                                            <span class="m-widget4__sub">&nbsp;</span>
+                                            <span class="m-widget4__sub">85</span><br>
+                                            <span class="m-widget4__sub">-</span><br>
                                         </span>
                                     </a>
                                 </div>
@@ -95,29 +76,15 @@
                                     <a class="m-widget4__item">
                                         <div class="m-widget4__info">
                                             <span class="m-widget4__title">
-                                                Jumlah BBM Digunakan Bulan Ini
+                                                Juara lomba pidato
                                             </span><br><br>
                                               <span class="m-widget4__title">
-                                                Jumlah BBM Digunakan Bulan Lalu
+                                                Juara Kelas Mipa 1
                                             </span>
                                         </div>
                                         <span class="m-widget4__ext">
                                             <span class="m-widget4__number m--font-success">&nbsp;</span>
                                             <span class="m-widget4__number m--font-danger">&nbsp;</span>
-                                        </span>
-                                    </a>
-                                    <a class="m-widget4__item">
-                                        <div class="m-widget4__info">
-                                            <span class="m-widget4__title">
-                                                Jumlah BBM Belum Dilaporkan
-                                            </span><br><br>
-                                            <span class="m-widget4__title">
-                                                Jumlah BBM Sudah Dilaporkan
-                                            </span>
-                                        </div>
-                                        <span class="m-widget4__ext">
-                                            <span class="m-widget4__number m--font-brand">&nbsp;</span>
-                                            <span class="m-widget4__number m--font-info">&nbsp;</span>
                                         </span>
                                     </a>
                                 </div>
@@ -127,30 +94,6 @@
                 </div>
             </div>
         </div>
-        <!-- Aktivitas Terbaru (Log)-->
-        <div class="m-portlet m-portlet--head-solid-bg m-portlet--bordered m-portlet--danger">
-            <div class="m-portlet__head">
-                <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                        <h3 class="m-portlet__head-text">
-                            Aktivitas Terbaru
-                        </h3>
-                    </div>
-                </div>
-            </div>
-            <div class="m-portlet__body">
-                <div class="col-md-12 m--bg-light ">
-                    <div class="m-scrollable" data-scrollable="true" data-max-height="400" style="height: 400px; overflow: hidden;">
-
-                        <div class="m-list-timeline m-list-timeline--skin-light">
-                            <div class="m-list-timeline__items">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End LOG -->
     </div>
 </div>
 <!-- end:: Body -->
