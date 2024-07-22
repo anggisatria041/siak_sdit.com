@@ -15,6 +15,7 @@ class Api extends CI_Controller
 
         //Load Model//
         $this->load->model('Md_siswa');
+        $this->load->model('Md_guru');
 
         //Load Helper//
         $this->load->helper('get_datatable');
@@ -78,9 +79,12 @@ class Api extends CI_Controller
         foreach ($source['data'] as $list) {
             $row = array();
             $row['no'] = ++$source['no'];
-            $row['NIP'] = encrypt($list->NIP);
+            $row['guru_id'] = encrypt($list->guru_id);
+            $row['niy'] = $list->niy;
             $row['nama_guru'] = $list->nama_guru;
             $row['jenis_kelamin'] = $list->jenis_kelamin;
+            $row['agama'] = $list->agama;
+            $row['tgl_lahir'] = $list->tgl_lahir;
             $row['alamat'] = $list->alamat;
             $row['pendidikan_terakhir'] = $list->pendidikan_terakhir;
             $row['no_hp'] = $list->no_hp;

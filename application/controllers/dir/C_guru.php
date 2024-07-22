@@ -47,11 +47,13 @@ class C_guru extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NIP', 'Nama Guru', 'Jenis Kelamin', 'Alamat', 'Pendidikan Terakhir', 'No Hp', 'Aksi');
-        $configColumn['field'] = array('no', 'NIP', 'nama_guru', 'jenis_kelamin', 'alamat', 'pendidikan_terakhir', 'no_hp', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100); //on px
+        $configColumn['title'] = array('NO', 'NIY', 'Nama Guru', 'Jenis Kelamin', 'Agama', 'Tanggal Lahir', 'Alamat', 'Pendidikan Terakhir', 'No Hp', 'Aksi');
+        $configColumn['field'] = array('no', 'niy', 'nama_guru', 'jenis_kelamin', 'agama', 'tgl_lahir', 'alamat', 'pendidikan_terakhir', 'no_hp', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 50, 50, 100); //on px
         $configColumn['template'] = array(
+            FALSE,
+            FALSE,
             FALSE,
             FALSE,
             FALSE,
@@ -71,7 +73,7 @@ class C_guru extends CI_Controller
                             </div>\
                         </div>\
                     \';
-                }'
+                    }'
         );
         $configFilter = FALSE;
 
@@ -91,7 +93,7 @@ class C_guru extends CI_Controller
         $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
         $pageData['tableManageguru'] = $this->m_datatable->generateScript($set);
-       
+
         $pageData['page_name'] = 'V_guru';
         $pageData['page_dir'] = 'guru';
         $this->load->view('index', $pageData);
@@ -101,15 +103,14 @@ class C_guru extends CI_Controller
     public function add()
     {
 
-        $this->form_validation->set_rules('nisn', '', 'required');
-        $this->form_validation->set_rules('nama', '', 'required');
+        $this->form_validation->set_rules('niy', '', 'required');
+        $this->form_validation->set_rules('nama_guru', '', 'required');
         $this->form_validation->set_rules('jenis_kelamin', '', 'required');
-        $this->form_validation->set_rules('tempat_lahir', '', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
         $this->form_validation->set_rules('agama', '', 'required');
+        $this->form_validation->set_rules('tgl_lahir', '', 'required');
         $this->form_validation->set_rules('alamat', '', 'required');
+        $this->form_validation->set_rules('pendidikan_terakhir', '', 'required');
         $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -124,31 +125,29 @@ class C_guru extends CI_Controller
             ]));
         }
 
-        $siswa_id = decrypt($this->input->post('siswa_id'));
-        $nisn = $this->input->post('nisn');
-        $nama = $this->input->post('nama');
+        $guru_id = decrypt($this->input->post('guru_id'));
+        $niy = $this->input->post('niy');
+        $nama_guru = $this->input->post('nama_guru');
         $jenis_kelamin = $this->input->post('jenis_kelamin');
-        $tempat_lahir = $this->input->post('tempat_lahir');
-        $tanggal_lahir = $this->input->post('tanggal_lahir');
         $agama = $this->input->post('agama');
+        $tgl_lahir = $this->input->post('tgl_lahir');
         $alamat = $this->input->post('alamat');
+        $pendidikan_terakhir = $this->input->post('pendidikan_terakhir');
         $no_hp = $this->input->post('no_hp');
-        $email = $this->input->post('email');
 
         $dataInsert = array(
-            'nisn' => $nisn,
-            'nama' => $nama,
+            'niy' => $niy,
+            'nama_guru' => $nama_guru,
             'jenis_kelamin' => $jenis_kelamin,
-            'tempat_lahir' => $tempat_lahir,
-            'tanggal_lahir' => $tanggal_lahir,
             'agama' => $agama,
+            'tgl_lahir' => $tgl_lahir,
             'alamat' => $alamat,
             'no_hp' => $no_hp,
-            'email' => $email,
+            'pendidikan_terakhir' => $pendidikan_terakhir,
             'status' => 1
         );
         $this->db->trans_begin();
-        $this->Md_siswa->addSiswa($dataInsert);
+        $this->Md_guru->addGuru($dataInsert);
 
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
@@ -156,36 +155,37 @@ class C_guru extends CI_Controller
             die;
         } else {
             $this->db->trans_rollback();
-            echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
+            echo json_encode(array('status' => 'gagal', 'message' => 'Data Guru gagal disimpan', 'csrf' => $csrf));
             die;
         }
 
     }
     public function edit($argv1 = '')
     {
+         
         $valid = $argv1 == '' ? FALSE : (is_int(decrypt($argv1)) ? TRUE : FALSE);
         if (!$valid) {
             echo json_encode(array('data' => FALSE));
             die;
         }
 
-        $siswa = $this->Md_siswa->getSiswaById(decrypt($argv1));
-
+        $guru = $this->Md_guru->getGuruById(decrypt($argv1));
+        // var_dump($guru);
+        // die;
 
         $row = array();
-        if ($siswa) {
+        if ($guru) {
             $row['data'] = TRUE;
-            $row['siswa_id'] = encrypt($siswa->siswa_id);
-            $row['nisn'] = $siswa->nisn;
-            $row['nama'] = $siswa->nama;
-            $row['jenis_kelamin'] = $siswa->jenis_kelamin;
-            $row['tempat_lahir'] = $siswa->tempat_lahir;
-            $row['tanggal_lahir'] = $siswa->tanggal_lahir;
-            $row['agama'] = $siswa->agama;
-            $row['alamat'] = ($siswa->alamat);
-            $row['no_hp'] = ($siswa->no_hp);
-            $row['email'] = ($siswa->email);
-            $row['status'] = $siswa->status;
+            $row['guru_id'] = encrypt($guru->guru_id);
+            $row['niy'] = $guru->niy;
+            $row['nama_guru'] = $guru->nama_guru;
+            $row['jenis_kelamin'] = $guru->jenis_kelamin;
+            $row['tgl_lahir'] = $guru->tgl_lahir;
+            $row['agama'] = $guru->agama;
+            $row['alamat'] = ($guru->alamat);
+            $row['no_hp'] = ($guru->no_hp);
+            $row['pendidikan_terakhir'] = ($guru->pendidikan_terakhir);
+            $row['status'] = $guru->status;
         } else {
             $row['data'] = FALSE;
         }
@@ -195,15 +195,14 @@ class C_guru extends CI_Controller
     }
     public function update()
     {
-        $this->form_validation->set_rules('nisn', '', 'required');
-        $this->form_validation->set_rules('nama', '', 'required');
+        $this->form_validation->set_rules('niy', '', 'required');
+        $this->form_validation->set_rules('nama_guru', '', 'required');
         $this->form_validation->set_rules('jenis_kelamin', '', 'required');
-        $this->form_validation->set_rules('tempat_lahir', '', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
+        $this->form_validation->set_rules('tgl_lahir', '', 'required');
         $this->form_validation->set_rules('agama', '', 'required');
         $this->form_validation->set_rules('alamat', '', 'required');
         $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
+        $this->form_validation->set_rules('pendidikan_terakhir', '', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -211,16 +210,15 @@ class C_guru extends CI_Controller
         );
 
         if ($this->form_validation->run() != FALSE) {
-            $siswa_id = $this->input->post('siswa_id') == "" ? NULL : decrypt($this->input->post('siswa_id'));
-            $nisn = $this->input->post('nisn') == "" ? NULL : $this->input->post('nisn');
-            $nama = $this->input->post('nama') == "" ? NULL : $this->input->post('nama');
+            $guru_id = $this->input->post('guru_id') == "" ? NULL : decrypt($this->input->post('guru_id'));
+            $niy = $this->input->post('niy') == "" ? NULL : $this->input->post('niy');
+            $nama_guru = $this->input->post('nama_guru') == "" ? NULL : $this->input->post('nama_guru');
             $jenis_kelamin = $this->input->post('jenis_kelamin') == "" ? NULL : $this->input->post('jenis_kelamin');
-            $tempat_lahir = $this->input->post('tempat_lahir') == "" ? NULL : $this->input->post('tempat_lahir');
-            $tanggal_lahir = $this->input->post('tanggal_lahir') == "" ? NULL : $this->input->post('tanggal_lahir');
+            $tgl_lahir = $this->input->post('tgl_lahir') == "" ? NULL : $this->input->post('tgl_lahir');
             $agama = $this->input->post('agama') == "" ? NULL : $this->input->post('agama');
             $alamat = $this->input->post('alamat') == "" ? NULL : $this->input->post('alamat');
             $no_hp = $this->input->post('no_hp') == "" ? NULL : $this->input->post('no_hp');
-            $email = $this->input->post('email') == "" ? NULL : $this->input->post('email');
+            $pendidikan_terakhir = $this->input->post('pendidikan_terakhir') == "" ? NULL : $this->input->post('pendidikan_terakhir');
 
             if ($this->form_validation->run() === FALSE) {
                 die(json_encode([
@@ -231,26 +229,25 @@ class C_guru extends CI_Controller
             }
 
             $this->db->trans_begin();
-            $this->Md_siswa->updateSiswa($siswa_id, [
-                'nisn' => $nisn,
-                'nama' => $nama,
+            $this->Md_guru->updateGuru($guru_id, [
+                'niy' => $niy,
+                'nama_guru' => $nama_guru,
                 'jenis_kelamin' => $jenis_kelamin,
-                'tempat_lahir' => $tempat_lahir,
-                'tanggal_lahir' => $tanggal_lahir,
+                'tgl_lahir' => $tgl_lahir,
                 'agama' => $agama,
                 'alamat' => $alamat,
                 'no_hp' => $no_hp,
-                'email' => $email,
+                'pendidikan_terakhir' => $pendidikan_terakhir,
                 'status' => 1
             ]);
-            // addLog('Update Data', 'Mengubah data Siswa', 'Siswa ID' . $siswa_id);
+            // addLog('Update Data', 'Mengubah data Guru, 'GGuruD' . $guguru);
             if ($this->db->trans_status() == TRUE) {
                 $this->db->trans_commit();
                 echo json_encode(array('status' => 'success', 'csrf' => $csrf));
                 die;
             } else {
                 $this->db->trans_rollback();
-                echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
+                echo json_encode(array('status' => 'gagal', 'message' => 'Data Guru gagal disimpan', 'csrf' => $csrf));
                 die;
             }
         }
@@ -265,9 +262,9 @@ class C_guru extends CI_Controller
 
         $dataid = decrypt($argv1);
         $this->db->trans_begin();
-        $this->Md_siswa->updateSiswa($dataid, array('status' => 2));
+        $this->Md_guru->updateGuru($dataid, array('status' => 2));
 
-        // addLog('Delete Data', 'Menghapus data Siswa', 'Siswa ID' . $dataid);
+        // addLog('Delete Data', 'Menghapus data Guru', 'Guru ID' . $dataid);
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
             echo json_encode(array('data' => TRUE));
