@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class C_siswa extends CI_Controller
+class C_guru extends CI_Controller
 {
     private $akses = '';
 
@@ -14,7 +14,7 @@ class C_siswa extends CI_Controller
     {
         parent::__construct();
         //load model
-        $this->load->model('Md_siswa');
+        $this->load->model('Md_guru');
         $this->load->model('Md_log');
 
         //Load library
@@ -47,14 +47,11 @@ class C_siswa extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NISN', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Email', 'Aksi');
-        $configColumn['field'] = array('no', 'nisn', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'email', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 100, 50); //on px
+        $configColumn['title'] = array('NO', 'NIP', 'Nama Guru', 'Jenis Kelamin', 'Alamat', 'Pendidikan Terakhir', 'No Hp', 'Aksi');
+        $configColumn['field'] = array('no', 'NIP', 'nama_guru', 'jenis_kelamin', 'alamat', 'pendidikan_terakhir', 'no_hp', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100); //on px
         $configColumn['template'] = array(
-            FALSE,
-            FALSE,
-            FALSE,
             FALSE,
             FALSE,
             FALSE,
@@ -69,8 +66,8 @@ class C_siswa extends CI_Controller
                                 <i class="la la-gear"></i>\
                             </a>\
                             <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.siswa_id +\'\\\');"><i class="la la-edit"></i> Edit Siswa</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.siswa_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Siswa</a>\
+                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.guru_id +\'\\\');"><i class="la la-edit"></i> Edit Guru</a>\
+                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.guru_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Guru</a>\
                             </div>\
                         </div>\
                     \';
@@ -85,17 +82,18 @@ class C_siswa extends CI_Controller
          * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
          * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
          */
-        $set['id_table'] = 'tableManageSiswa'; // tanpa spasi dan karakter
-        $set['json_url'] = base_url() . 'dir/api/manage_siswa';
+        $set['id_table'] = 'tableManageguru'; // tanpa spasi dan karakter
+        $set['json_url'] = base_url() . 'dir/api/manage_guru';
         $set['columns'] = $this->m_datatable->setColumn($configColumn);
         $set['filter'] = FALSE; // wajib
         $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
         $set['server_side'] = TRUE; // wajib
         $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
-        $pageData['tableManageSiswa'] = $this->m_datatable->generateScript($set);
-        $pageData['page_name'] = 'V_siswa';
-        $pageData['page_dir'] = 'siswa';
+        $pageData['tableManageguru'] = $this->m_datatable->generateScript($set);
+       
+        $pageData['page_name'] = 'V_guru';
+        $pageData['page_dir'] = 'guru';
         $this->load->view('index', $pageData);
 
 

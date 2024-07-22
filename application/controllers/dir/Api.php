@@ -71,4 +71,30 @@ class Api extends CI_Controller
 
         die(json_encode($output));
     }
+    public function manage_guru()
+    {
+        $source = getDataForDataTable('Md_guru', null);
+       
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['NIP'] = encrypt($list->NIP);
+            $row['nama_guru'] = $list->nama_guru;
+            $row['jenis_kelamin'] = $list->jenis_kelamin;
+            $row['alamat'] = $list->alamat;
+            $row['pendidikan_terakhir'] = $list->pendidikan_terakhir;
+            $row['no_hp'] = $list->no_hp;
+            $data[] = $row;
+        }
+
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
 }
