@@ -73,6 +73,7 @@ class C_pembayaran extends CI_Controller
                                 <a class="dropdown-item" href="javascript:edit(\\\'\'+e.pembayaran_id +\'\\\');"><i class="la la-edit"></i> Edit Pembayaran</a>\
                                 <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Pembayaran</a>\
                                 <a class="dropdown-item" href="javascript:verifikasi(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-check-circle"></i> Konfirmasi Status Pembayaran</a>\
+                                <a class="dropdown-item" href="javascript:uploadBuktiPembayaran(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-upload"></i> Upload Bukti Pembayaran</a>\
                             </div>\
                         </div>\
                     \';
@@ -256,6 +257,7 @@ class C_pembayaran extends CI_Controller
         echo json_encode($row);
         die;
     }
+    
     public function update()
     {
         $this->form_validation->set_rules('nis', '', 'required');

@@ -283,6 +283,57 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal_uploadbukti" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header m--bg-brand">
+                    <h5 class="modal-title m--font-light" id="exampleModalLongTitle">
+                        Verifikasi Pembayaran
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <form class="m-form m-form--fit m-form--label-align-right" action="" method="POST" id="formverifikasi"
+                    enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="pembayaran_id" value="">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value=""
+                            style="display: none">
+                            <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+
+                            </label>
+                            <div class="col-md-6">
+                                <img id="bukti_pembayaran" width="100" src="" alt="Bukti Pembayaran">
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Bukti Pembayaran(optional)
+                            </label>
+                            <div class="col-md-6">
+                                <input type="file" name="file_bukti_pembayaran" required class="form-control m-input"
+                                    placeholder="Bukti Pembayaran"
+                                    onchange="document.getElementById('bukti_pembayaran').src = window.URL.createObjectURL(this.files[0])" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-warning" data-dismiss="modal">
+                            Batal
+                        </a>
+                        <a href="#" onclick="saveverifikasi()" id="btnSaveAjax" class="btn btn-accent">
+                            Simpan
+                        </a>
+
+                    </div>
+            </div>
+        </div>
+    </div>
 
     <!-- End Modal -->
 </div>
@@ -323,6 +374,39 @@
     //     $('#modalImage').css('width', '100%');
     //     $('#modalImage').attr('style', 'height: auto;');
     // }
+    function uploadBuktiPembayaran(id) {
+        method = 'uploadBuktiPembayaran';
+        resetForm();
+        $('#btnSaveAjax').show();
+        $('#exampleModalLongTitle').html("Upload Bukti Pembayaran");
+
+        $.ajax({
+            url: "<?php echo base_url() . 'dir/C_pembayaran/verifikasi' ?>/" + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                if (data.data == true) {
+
+                    $('#formAdd')[0].reset();
+                    $('[name="pembayaran_id"]').val(data.pembayaran_id);
+                    $('[name="file_bukti_pembayaran"]').val(data.bukti_pembayaran);
+                    $('.m-select2').select2({ width: '100%' });
+                    $('#modal_uploadbukti').modal('show');
+
+                } else if (data.data == false) {
+                    swal("Oops", "Data gagal mengambil data!", "error");
+                } else {
+                    swal("Gagal", data.message, "warning");
+                }
+                mApp.unblockPage();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                mApp.unblockPage();
+                alert('Error get data from ajax');
+            }
+        });
+        $('#formAdd')[0].reset();
+    }
     function edit(id) {
 
         method = 'edit';
@@ -409,6 +493,8 @@
         });
         $('#formAdd')[0].reset();
     }
+
+
 
     function save() {
 
