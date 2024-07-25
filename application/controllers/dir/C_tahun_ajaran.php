@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class C_siswa extends CI_Controller
+class C_tahun_ajaran extends CI_Controller
 {
     private $akses = '';
 
