@@ -1,34 +1,26 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_guru extends CI_Model
+class Md_mapel extends CI_Model
 {
-    public $table = 'guru';
+    public $table = 'mapel';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(nama_guru)');
-    public $column_filter = array('nama_guru');
-    public $order = array('guru_id' => 'asc');
+    public $column_search = array('lower(nama_mapel)');
+    public $column_filter = array('nama_mapel');
+    public $order = array('mapel_id' => 'asc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
+        $this->db->select('m.*');
+        $this->db->from('mapel m');
+        $this->db->where('m.status', 1);
 
-    }
-    public function getguru()
-    {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
-        $query = $this->db->get();
-        return $query->result();
     }
 
 
     private function getDatatablesQuery()
     {
-        $this->Md_guru->getDataForDataTable();
+        $this->Md_mapel->getDataForDataTable();
         $i = 0;
         foreach ($this->column_search as $item) {
             if ($this->input->post('query[generalSearch]')) {
@@ -75,20 +67,20 @@ class Md_guru extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addguru($data)
+    function addmapel($data)
     {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
-    function getguruById($id)
+    function getmapelById($id)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('mapel_id', $id);
         $hasil = $this->db->get($this->table)->row();
         return $hasil;
     }
-    function updateguru($id, $data)
+    function updatemapel($id, $data)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('mapel_id', $id);
         $this->db->update($this->table, $data);
     }
 

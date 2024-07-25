@@ -1,26 +1,27 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_guru extends CI_Model
+class Md_tajaran extends CI_Model
 {
-    public $table = 'guru';
+    public $table = 'tahun_ajaran';
+    public $primary_key = 'tajaran_id';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(nama_guru)');
-    public $column_filter = array('nama_guru');
-    public $order = array('guru_id' => 'asc');
+    public $column_search = array('lower(nama_tajaran)');
+    public $column_filter = array('nama_tajaran');
+    public $order = array('tajaran_id' => 'asc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
+        $this->db->select('a.*');
+        $this->db->from('tahun_ajaran a');
+        $this->db->where('a.status', 1);
 
     }
-    public function getguru()
+    function getTajaran()
     {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
+        $this->db->select('s.*');
+        $this->db->from('tahun_ajaran s');
+        $this->db->where('s.status', 1);
         $query = $this->db->get();
         return $query->result();
     }
@@ -28,7 +29,7 @@ class Md_guru extends CI_Model
 
     private function getDatatablesQuery()
     {
-        $this->Md_guru->getDataForDataTable();
+        $this->getDataForDataTable();
         $i = 0;
         foreach ($this->column_search as $item) {
             if ($this->input->post('query[generalSearch]')) {
@@ -75,20 +76,20 @@ class Md_guru extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addguru($data)
+    function addTahunAjaran($data)
     {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
-    function getguruById($id)
+    function getTahunAjaranById($id)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('tajaran_id', $id);
         $hasil = $this->db->get($this->table)->row();
         return $hasil;
     }
-    function updateguru($id, $data)
+    function updateTahunAjaran($id, $data)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('tajaran_id', $id);
         $this->db->update($this->table, $data);
     }
 

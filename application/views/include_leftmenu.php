@@ -39,6 +39,30 @@
                     <span class="m-menu__link-text">Guru</span>
                 </a>
             </li>
+            <li class="m-menu__item <?= $page_name == "V_mapel" ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
+                m-menu-link-redirect="1">
+                <a href="<?= site_url('dir/C_mapel'); ?>" class="m-menu__link ">
+                    <span class="m-menu__item-here"></span>
+                    <i class="m-menu__link-icon flaticon-list-2"></i>
+                    <span class="m-menu__link-text">Mata Pelajaran</span>
+                </a>
+            </li>
+            <li class="m-menu__item <?= $page_name == "V_akun" ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
+                m-menu-link-redirect="1">
+                <a href="<?= site_url('dir/C_akun'); ?>" class="m-menu__link ">
+                    <span class="m-menu__item-here"></span>
+                    <i class="m-menu__link-icon flaticon-list-2"></i>
+                    <span class="m-menu__link-text">Akun</span>
+                </a>
+            </li>
+            <li class="m-menu__item <?= $page_name == "V_pembayaran" ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
+                m-menu-link-redirect="1">
+                <a href="<?= site_url('dir/C_pembayaran'); ?>" class="m-menu__link ">
+                    <span class="m-menu__item-here"></span>
+                    <i class="m-menu__link-icon flaticon-list-2"></i>
+                    <span class="m-menu__link-text">Pembayaran</span>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- END: Aside Menu -->

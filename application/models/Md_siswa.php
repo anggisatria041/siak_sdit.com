@@ -16,7 +16,14 @@ class Md_siswa extends CI_Model
         $this->db->where('s.status', 1);
         
     }
-
+    public function getsiswa()
+    {
+        $this->db->select('s.*');
+        $this->db->from('siswa s');
+        $this->db->where('s.status', 1);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     private function getDatatablesQuery()
     {

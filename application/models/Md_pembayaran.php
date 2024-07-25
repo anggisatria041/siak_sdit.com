@@ -1,34 +1,28 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_guru extends CI_Model
+class Md_pembayaran extends CI_Model
 {
-    public $table = 'guru';
+    public $table = 'pembayaran';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(nama_guru)');
-    public $column_filter = array('nama_guru');
-    public $order = array('guru_id' => 'asc');
+    public $column_search = array('lower(nis)', 'lower(status_pembayaran)');
+    public $column_filter = array('nis', 'status_pembayaran');
+    public $order = array('pembayaran_id' => 'desc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
+        $this->db->select('p.*, s.nama as nama_siswa, t.nama_tajaran');
+        $this->db->from('pembayaran p');
+        $this->db->join('siswa s', 's.nis = p.nis');
+        $this->db->join('tahun_ajaran t', 't.tajaran_id = p.tajaran_id');
+        $this->db->where('p.status', 1);
 
-    }
-    public function getguru()
-    {
-        $this->db->select('g.*');
-        $this->db->from('guru g');
-        $this->db->where('g.status', 1);
-        $query = $this->db->get();
-        return $query->result();
     }
 
 
     private function getDatatablesQuery()
     {
-        $this->Md_guru->getDataForDataTable();
+        $this->getDataForDataTable();
         $i = 0;
         foreach ($this->column_search as $item) {
             if ($this->input->post('query[generalSearch]')) {
@@ -68,6 +62,14 @@ class Md_guru extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getAllPembayaran()
+    {
+        $this->db->select('*');
+        $this->db->from('pembayaran');
+        $this->db->order_by('pembayaran_id', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function countFiltered()
     {
@@ -75,20 +77,20 @@ class Md_guru extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addguru($data)
+    function addPembayaran($data)
     {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
-    function getguruById($id)
+    function getPembayaranById($id)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('pembayaran_id', $id);
         $hasil = $this->db->get($this->table)->row();
         return $hasil;
     }
-    function updateguru($id, $data)
+    function updatePembayaran($id, $data)
     {
-        $this->db->where('guru_id', $id);
+        $this->db->where('pembayaran_id', $id);
         $this->db->update($this->table, $data);
     }
 
