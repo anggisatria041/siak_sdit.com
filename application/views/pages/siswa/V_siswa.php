@@ -103,10 +103,10 @@
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="" style="display: none">
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                NISN <font class="m--font-danger">*</font>
+                                NIS <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="number" name="nisn" required class="form-control m-input" placeholder="NISN"/>
+                                <input type="number" name="nis" required class="form-control m-input" placeholder="NIS"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
@@ -243,7 +243,7 @@
                 if (data.data == true) {
                     $('#formAdd')[0].reset();
                     $('[name="siswa_id"]').val(data.siswa_id);
-                    $('[name="nisn"]').val(data.nisn);
+                    $('[name="nis"]').val(data.nis);
                     $('[name="nama"]').val(data.nama);
                     $('[name="jenis_kelamin"]').val(data.jenis_kelamin);
                     $('[name="tempat_lahir"]').val(data.tempat_lahir);
@@ -282,7 +282,7 @@
         }
 
         // ajax adding data to database
-        if ($('[name="nisn"]').val() == "" || $('[name="nama"]').val() == "" || $('[name="jenis_kelamin"]').val() == "" || $('[name="tempat_lahir"]').val() == "" || $('[name="tanggal_lahir"]').val() == "" || $('[name="alamat"]').val() == "" || $('[name="agama"]').val() == "" || $('[name="no_hp"]').val() == "" || $('[name="email"]').val() == "") {
+        if ($('[name="nis"]').val() == "" || $('[name="nama"]').val() == "" || $('[name="jenis_kelamin"]').val() == "" || $('[name="tempat_lahir"]').val() == "" || $('[name="tanggal_lahir"]').val() == "" || $('[name="alamat"]').val() == "" || $('[name="agama"]').val() == "" || $('[name="no_hp"]').val() == "" || $('[name="email"]').val() == "") {
             $('#m_form_1_msg').show();
             mApp.unblock(".modal-content");
         } else {

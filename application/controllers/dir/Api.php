@@ -47,7 +47,7 @@ class Api extends CI_Controller
             $row = array();
             $row['no'] = ++$source['no'];
             $row['siswa_id'] = encrypt($list->siswa_id);
-            $row['nisn'] = $list->nisn;
+            $row['nis'] = $list->nis;
             $row['nama'] = $list->nama;
             $row['jenis_kelamin'] = $list->jenis_kelamin;
             $row['tempat_lahir'] = $list->tempat_lahir;
