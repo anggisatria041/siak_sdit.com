@@ -387,6 +387,7 @@
             success: function (data) {
                 if (data.data == true) {
 
+                    
                     $('#formAdd')[0].reset();
                     $('[name="pembayaran_id"]').val(data.pembayaran_id);
                     $('[name="file_bukti_pembayaran"]').val(data.bukti_pembayaran);
