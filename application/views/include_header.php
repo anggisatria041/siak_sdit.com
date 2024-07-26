@@ -107,7 +107,7 @@
                                             <div class="m-dropdown__content">
                                                 <ul class="m-nav m-nav--skin-light">
                                                     <li class="m-nav__item">
-                                                        <a href="snippets/pages/user/login-1.html" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">Logout</a>
+                                                        <a href="<?php echo base_url(); ?>lawang/logout" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">Logout</a>
                                                     </li>
                                                 </ul>
                                             </div>

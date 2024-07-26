@@ -90,6 +90,7 @@ class Md_akun extends CI_Model
         $this->db->group_start();
         $this->db->where('ak.username', $username);
         $this->db->or_where("lower(replace(ak.nis,' ','')) = ", $username);
+        $this->db->or_where("lower(replace(ak.niy,' ','')) = ", $username);
         $this->db->group_end();
         $this->db->where('ak.status', 1);
         $query = $this->db->get();

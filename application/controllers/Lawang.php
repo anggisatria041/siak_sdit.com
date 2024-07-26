@@ -588,7 +588,7 @@ class Lawang extends CI_Controller
             # delete cookie
             deleteCookie();
             $akunid = decrypt($this->session->userdata('akun_id'));
-            $this->Md_akun->updateKaryawanById($akunid, ['sessionid' => null]);
+            $this->Md_akun->updateAkun($akunid, ['sessionid' => null]);
         }
         $this->session->sess_destroy();
         redirect(base_url() . 'lawang', 'refresh');

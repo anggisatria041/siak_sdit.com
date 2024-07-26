@@ -88,7 +88,7 @@
                         <!-- CEK HAKAKSES PENGGUNA -->
                         <?php if (!isset($hak_akses)) { ?>
                             <div class="form-group m-form__group">
-                                <input class="form-control m-input" type="text" placeholder="NIS or Username" name="username" autocomplete="off">
+                                <input class="form-control m-input" type="text" placeholder="Nis, Niy or Username" name="username" autocomplete="off">
                             </div>
                             <div class="form-group m-form__group">
                                 <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Password" name="password" onkeypress="capLock(event)">
