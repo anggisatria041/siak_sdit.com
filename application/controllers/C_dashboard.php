@@ -7,13 +7,27 @@ class C_dashboard extends CI_Controller
     private $akses = '';
 
     private $allowed_accesses = [
-        'is_spadmin' => 'spadmin',
+        'is_guru' => 'guru',
+        'is_admin' => 'admin',
+        'is_ortu' => 'orang_tua',
     ];
     
     public function __construct()
     {
         parent::__construct();
         //load model
+
+        date_default_timezone_set('Asia/Jakarta');
+        $validate = false;
+        foreach ($this->allowed_accesses as $key => $value) {
+            if (!$this->session->userdata($key)) continue;
+            $validate = true;
+            $this->akses = $value;
+            break;
+        }
+        if (!$validate) redirect(base_url('lawang'));
+
+        
     }
     public function index()
     {

@@ -16,6 +16,7 @@ class C_tahun_ajaran extends CI_Controller
         //load model
         $this->load->model('Md_siswa');
         $this->load->model('Md_log');
+        $this->load->model('Md_tahun_ajaran');
 
         //Load library
         $this->load->library('M_datatable');
@@ -47,71 +48,48 @@ class C_tahun_ajaran extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NIS', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Email', 'Aksi');
-        $configColumn['field'] = array('no', 'nis', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'email', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 100, 50); //on px
+        $configColumn['title'] = array('NO', 'Tahun Ajaran', 'Semester', 'Status', 'Aksi');
+        $configColumn['field'] = array('no', 'nama_tajaran', 'semester', 'status_tajaran', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, TRUE, FALSE);
+        $configColumn['width'] = array(30, 100, 100, 100, 100);
         $configColumn['template'] = array(
             FALSE,
             FALSE,
             FALSE,
             FALSE,
-            FALSE,
-            FALSE,
-            FALSE,
-            FALSE,
-            FALSE,
-            FALSE,
             'function (e) {
-                    return \'\
-                        <div class="dropdown down">\
-                            <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
-                                <i class="la la-gear"></i>\
-                            </a>\
-                            <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.siswa_id +\'\\\');"><i class="la la-edit"></i> Edit Siswa</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.siswa_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Siswa</a>\
-                            </div>\
+                return \'\
+                    <div class="dropdown down">\
+                        <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
+                            <i class="la la-gear"></i>\
+                        </a>\
+                        <div class="dropdown-menu dropdown-menu-right">\
+                            <a class="dropdown-item" href="javascript:edit(\\\'\'+e.tajaran_id +\'\\\');"><i class="la la-edit"></i> Edit Tahun Ajaran</a>\
+                            <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.tajaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Tahun Ajaran</a>\
                         </div>\
-                    \';
-                }'
+                    </div>\
+                \';
+            }'
         );
-        $configFilter = FALSE;
 
-        /**
-         * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
-         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
-         * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
-         * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
-         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
-         */
-        $set['id_table'] = 'tableManageSiswa'; // tanpa spasi dan karakter
-        $set['json_url'] = base_url() . 'dir/api/manage_siswa';
+        $set['id_table'] = 'tableManageTahunAjaran';
+        $set['json_url'] = base_url() . 'dir/api/manage_tahun_ajaran';
         $set['columns'] = $this->m_datatable->setColumn($configColumn);
-        $set['filter'] = FALSE; // wajib
-        $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
-        $set['server_side'] = TRUE; // wajib
-        $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+        $set['filter'] = FALSE;
+        $set['search'] = TRUE;
+        $set['server_side'] = TRUE;
+        $set['perpage'] = 10;
 
-        $pageData['tableManageSiswa'] = $this->m_datatable->generateScript($set);
-        $pageData['page_name'] = 'V_siswa';
-        $pageData['page_dir'] = 'siswa';
+        $pageData['tableManageTahunAjaran'] = $this->m_datatable->generateScript($set);
+        $pageData['page_name'] = 'V_tahun_ajaran';
+        $pageData['page_dir'] = 'tahun_ajaran';
         $this->load->view('index', $pageData);
-
-
     }
     public function add()
     {
 
-        $this->form_validation->set_rules('nis', '', 'required');
-        $this->form_validation->set_rules('nama', '', 'required');
-        $this->form_validation->set_rules('jenis_kelamin', '', 'required');
-        $this->form_validation->set_rules('tempat_lahir', '', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
-        $this->form_validation->set_rules('agama', '', 'required');
-        $this->form_validation->set_rules('alamat', '', 'required');
-        $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
+        $this->form_validation->set_rules('tahun_ajaran', 'Tahun Ajaran', 'required');
+        $this->form_validation->set_rules('status_tajaran', 'Status Tahun Ajaran', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -121,45 +99,42 @@ class C_tahun_ajaran extends CI_Controller
         if ($this->form_validation->run() === FALSE) {
             die(json_encode([
                 'status' => 'gagal',
-                'message' => 'Semua fill harus terisi',
+                'message' => 'Semua field harus terisi',
                 'csrf' => $csrf
             ]));
         }
 
-        $siswa_id = decrypt($this->input->post('siswa_id'));
-        $nis = $this->input->post('nis');
-        $nama = $this->input->post('nama');
-        $jenis_kelamin = $this->input->post('jenis_kelamin');
-        $tempat_lahir = $this->input->post('tempat_lahir');
-        $tanggal_lahir = $this->input->post('tanggal_lahir');
-        $agama = $this->input->post('agama');
-        $alamat = $this->input->post('alamat');
-        $no_hp = $this->input->post('no_hp');
-        $email = $this->input->post('email');
+        $tahun_ajaran = $this->input->post('tahun_ajaran');
+        $status_tajaran = $this->input->post('status_tajaran');
 
-        $dataInsert = array(
-            'nis' => $nis,
-            'nama' => $nama,
-            'jenis_kelamin' => $jenis_kelamin,
-            'tempat_lahir' => $tempat_lahir,
-            'tanggal_lahir' => $tanggal_lahir,
-            'agama' => $agama,
-            'alamat' => $alamat,
-            'no_hp' => $no_hp,
-            'email' => $email,
-            'status' => 1
-        );
+        $ta=$this->Md_tahun_ajaran->getTahunAjaran();
+
+        // if($ta->status_tajaran == 'Aktif' && $status_tajaran == 'Aktif'){
+        //     echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran ada yang aktif', 'csrf' => $csrf));
+        //     die;
+        // }
+        $dataInsert = [
+            [
+                'nama_tajaran' => $tahun_ajaran,
+                'semester' => 1,
+                'status_tajaran' => $status_tajaran
+            ],
+            [
+                'nama_tajaran' => $tahun_ajaran,
+                'semester' => 2,
+                'status_tajaran' => $status_tajaran
+            ]
+        ];
+
         $this->db->trans_begin();
-        $this->Md_siswa->addSiswa($dataInsert);
+        $this->Md_tahun_ajaran->addTahunAjaran($dataInsert);
 
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
             echo json_encode(array('status' => 'success', 'csrf' => $csrf));
-            die;
         } else {
             $this->db->trans_rollback();
-            echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
-            die;
+            echo json_encode(array('status' => 'gagal', 'message' => 'Data Tahun Ajaran gagal disimpan', 'csrf' => $csrf));
         }
 
     }
@@ -171,23 +146,15 @@ class C_tahun_ajaran extends CI_Controller
             die;
         }
 
-        $siswa = $this->Md_siswa->getSiswaById(decrypt($argv1));
-
+        $tahun_ajaran = $this->Md_tahun_ajaran->getTahunAjaranById(decrypt($argv1));
 
         $row = array();
-        if ($siswa) {
+        if ($tahun_ajaran) {
             $row['data'] = TRUE;
-            $row['siswa_id'] = encrypt($siswa->siswa_id);
-            $row['nis'] = $siswa->nis;
-            $row['nama'] = $siswa->nama;
-            $row['jenis_kelamin'] = $siswa->jenis_kelamin;
-            $row['tempat_lahir'] = $siswa->tempat_lahir;
-            $row['tanggal_lahir'] = $siswa->tanggal_lahir;
-            $row['agama'] = $siswa->agama;
-            $row['alamat'] = ($siswa->alamat);
-            $row['no_hp'] = ($siswa->no_hp);
-            $row['email'] = ($siswa->email);
-            $row['status'] = $siswa->status;
+            $row['tajaran_id'] = encrypt($tahun_ajaran->tajaran_id);
+            $row['nama_tajaran'] = $tahun_ajaran->nama_tajaran;
+            $row['semester'] = $tahun_ajaran->semester;
+            $row['status_tajaran'] = $tahun_ajaran->status_tajaran;
         } else {
             $row['data'] = FALSE;
         }
@@ -197,64 +164,38 @@ class C_tahun_ajaran extends CI_Controller
     }
     public function update()
     {
-        $this->form_validation->set_rules('nis', '', 'required');
-        $this->form_validation->set_rules('nama', '', 'required');
-        $this->form_validation->set_rules('jenis_kelamin', '', 'required');
-        $this->form_validation->set_rules('tempat_lahir', '', 'required');
-        $this->form_validation->set_rules('tanggal_lahir', '', 'required');
-        $this->form_validation->set_rules('agama', '', 'required');
-        $this->form_validation->set_rules('alamat', '', 'required');
-        $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
+        $this->form_validation->set_rules('tahun_ajaran', 'Tahun Ajaran', 'required');
+        $this->form_validation->set_rules('status_tajaran', 'Status Tahun Ajaran', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
             'csrfHash' => $this->security->get_csrf_hash()
         );
 
-        if ($this->form_validation->run() != FALSE) {
-            $siswa_id = $this->input->post('siswa_id') == "" ? NULL : decrypt($this->input->post('siswa_id'));
-            $nis = $this->input->post('nis') == "" ? NULL : $this->input->post('nis');
-            $nama = $this->input->post('nama') == "" ? NULL : $this->input->post('nama');
-            $jenis_kelamin = $this->input->post('jenis_kelamin') == "" ? NULL : $this->input->post('jenis_kelamin');
-            $tempat_lahir = $this->input->post('tempat_lahir') == "" ? NULL : $this->input->post('tempat_lahir');
-            $tanggal_lahir = $this->input->post('tanggal_lahir') == "" ? NULL : $this->input->post('tanggal_lahir');
-            $agama = $this->input->post('agama') == "" ? NULL : $this->input->post('agama');
-            $alamat = $this->input->post('alamat') == "" ? NULL : $this->input->post('alamat');
-            $no_hp = $this->input->post('no_hp') == "" ? NULL : $this->input->post('no_hp');
-            $email = $this->input->post('email') == "" ? NULL : $this->input->post('email');
+        if ($this->form_validation->run() === FALSE) {
+            die(json_encode([
+                'status' => 'gagal',
+                'message' => 'Semua field harus terisi',
+                'csrf' => $csrf
+            ]));
+        }
 
-            if ($this->form_validation->run() === FALSE) {
-                die(json_encode([
-                    'status' => 'gagal',
-                    'message' => 'Semua fill harus terisi',
-                    'csrf' => $csrf
-                ]));
-            }
+        $tajaran_id = decrypt($this->input->post('tajaran_id'));
+        $nama_tajaran = $this->input->post('tahun_ajaran');
+        $status_tajaran = $this->input->post('status_tajaran');
 
-            $this->db->trans_begin();
-            $this->Md_siswa->updateSiswa($siswa_id, [
-                'nis' => $nis,
-                'nama' => $nama,
-                'jenis_kelamin' => $jenis_kelamin,
-                'tempat_lahir' => $tempat_lahir,
-                'tanggal_lahir' => $tanggal_lahir,
-                'agama' => $agama,
-                'alamat' => $alamat,
-                'no_hp' => $no_hp,
-                'email' => $email,
-                'status' => 1
-            ]);
-            // addLog('Update Data', 'Mengubah data Siswa', 'Siswa ID' . $siswa_id);
-            if ($this->db->trans_status() == TRUE) {
-                $this->db->trans_commit();
-                echo json_encode(array('status' => 'success', 'csrf' => $csrf));
-                die;
-            } else {
-                $this->db->trans_rollback();
-                echo json_encode(array('status' => 'gagal', 'message' => 'Data Siswa gagal disimpan', 'csrf' => $csrf));
-                die;
-            }
+        $this->db->trans_begin();
+        $this->Md_tahun_ajaran->updateTahunAjaran($tajaran_id, [
+            'nama_tajaran' => $nama_tajaran,
+            'status_tajaran' => $status_tajaran
+        ]);
+
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            echo json_encode(array('status' => 'success', 'csrf' => $csrf));
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(array('status' => 'gagal', 'message' => 'Data Tahun Ajaran gagal diperbarui', 'csrf' => $csrf));
         }
     }
     public function delete($argv1 = '')
@@ -267,17 +208,14 @@ class C_tahun_ajaran extends CI_Controller
 
         $dataid = decrypt($argv1);
         $this->db->trans_begin();
-        $this->Md_siswa->updateSiswa($dataid, array('status' => 2));
+        $this->Md_tahun_ajaran->updateTahunAjaran($dataid, array('status' => 2));
 
-        // addLog('Delete Data', 'Menghapus data Siswa', 'Siswa ID' . $dataid);
         if ($this->db->trans_status() == TRUE) {
             $this->db->trans_commit();
             echo json_encode(array('data' => TRUE));
-            die;
         } else {
             $this->db->trans_rollback();
             echo json_encode(array('data' => FALSE));
-            die;
         }
     }
 }

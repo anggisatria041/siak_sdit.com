@@ -8,14 +8,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
  */
-function getDataForDataTable($model, $param1 = '',$param2 = '', $param3 = '', $param4 = '', $param5 = '', $param6 = '') {
+function getDataForDataTable($model,$param=null, $param1=null, $param2=null, $param3 = null, $param4 = null, $param5 = null, $param6 = null) {
     $CI = get_instance();
     $CI->load->model($model);
     $CI->load->helper('encryption_id');
 
     //META
     
-    $total = $CI->$model->countFiltered($param1, $param2, $param3, $param4, $param5, $param6);
+    $total = $CI->$model->countFiltered($param, $param1, $param2, $param3, $param4, $param5, $param6);
     
     $perpage = intval($CI->input->post('pagination[perpage]'));
     $pages = $perpage > 0 ? intval($total / $perpage): 0;
@@ -27,7 +27,7 @@ function getDataForDataTable($model, $param1 = '',$param2 = '', $param3 = '', $p
     $no = ($CI->input->post('pagination[perpage]') * (($CI->input->post('pagination[page]') - 1)));
     $end = $no + $perpage;
 
-    $fromModel = $CI->$model->getDatatables($param1, $param2, $param3, $param4, $param5, $param6);
+    $fromModel = $CI->$model->getDatatables($param, $param1, $param2, $param3, $param4, $param5, $param6);
 
     $pages = intval($CI->input->post('pagination[pages]'));
     $page = intval($CI->input->post('pagination[page]'));

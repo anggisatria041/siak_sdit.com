@@ -17,7 +17,7 @@ class C_pembayaran extends CI_Controller
         $this->load->model('Md_pembayaran');
         $this->load->model('Md_siswa');
         $this->load->model('Md_log');
-        $this->load->model('Md_tajaran');
+        $this->load->model('Md_tahun_ajaran');
 
         //Load library
         $this->load->library('M_datatable');
@@ -100,7 +100,7 @@ class C_pembayaran extends CI_Controller
         $pageData['tableManagepembayaran'] = $this->m_datatable->generateScript($set);
 
         $pageData['siswa'] = $this->Md_siswa->getsiswa();
-        $pageData['tajaran'] = $this->Md_tajaran->getTajaran();
+        $pageData['tajaran'] = $this->Md_tahun_ajaran->getTahunAjaran();
         $pageData['pembayaran'] = $this->Md_pembayaran->getAllPembayaran();
         // var_dump($pageData['pembayaran']);
         // die;

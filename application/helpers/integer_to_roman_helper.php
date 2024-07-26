@@ -43,12 +43,3 @@ function integerToRoman($integer) {
     // The Roman numeral should be built, return it
     return $result;
 }
-
-function negativeNumber($text) {
-    if($text < 0) {
-        $result = '('.substr($text,1).')';
-    } else {
-        $result = $text;
-    }
-    return $result;
-}

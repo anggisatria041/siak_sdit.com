@@ -7,7 +7,7 @@ class C_siswa extends CI_Controller
     private $akses = '';
 
     private $allowed_accesses = [
-        'is_spadmin' => 'spadmin',
+        'is_ortu' => 'spadmin',
     ];
 
     public function __construct()

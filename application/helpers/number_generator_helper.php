@@ -1,205 +1,124 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-function getNomorReturPO($tanggal, $perusahaanid)
+
+function generate_no_depo($tanggal)
+{
+    $CI = get_instance();
+    //mendefisikan sequence ex. 0001/SPK-VDI/III/2021 (reset perbulan) 
+    $bulan = date('m');
+    $tahun = date('Y');
+    $romawi = getRomawi($bulan);
+
+    // Mengambil Kode perusahaan 
+    $dt_perusahaan = $CI->Md_requestdeposit->getPerusahaan();
+    $kode = $dt_perusahaan->kodeperusahaan;
+    $id_perusahaan = $dt_perusahaan->perusahaanid;
+
+    $data = $CI->Md_requestdeposit->getNoDepoByMonthAndPerusahaanid($bulan, $tahun, $id_perusahaan);
+    if (empty($data)) {
+        $no = 1;
+    } else {
+        $no_depo = explode("/", $data->no_deposit);
+        $no = $no_depo[0] + 1;
+    }
+
+    $no_depo = sprintf("%04s", $no) . '/ReqDepo-' . $kode . '/' . $romawi . '/' . $tahun;
+    return $no_depo;
+}
+
+
+function generate_no_fuel_ticket($jenis_warehouse, $perusahaanid): array
+{
+    $CI = get_instance();
+    $CI->load->model('Md_fuelticket');
+    $CI->load->model('Md_perusahaan');
+
+    //mendefisikan sequence ex. 0001/SPK-VDI/III/2021 (reset perbulan) 
+    $bulan = date('m');
+    $tahun = date('Y');
+    $romawi = getRomawi($bulan);
+
+    // Mengambil Kode perusahaan 
+    $dt_perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
+    $kode = $dt_perusahaan->kodeperusahaan;
+    $id_perusahaan = $dt_perusahaan->perusahaanid;
+
+    $data = $CI->Md_fuelticket->getNoTicketByMonthAndPerusahaanid($bulan, $tahun, $id_perusahaan);
+    if (empty($data)) {
+        $no = 1;
+    } else {
+        $noticket = explode("/", $data->no_ticket);
+        $no = $noticket[0] + 1;
+    }
+
+    $noticket = sprintf("%04s", $no) . '/FTM-' . $kode . '/' . $romawi . '/' . $tahun;
+    if ($jenis_warehouse == 'Warehouse') {
+        $noticket = sprintf("%04s", $no) . '/FT-' . $kode . '/' . $romawi . '/' . $tahun;
+    }
+
+    return ['no' => $noticket, 'seq' => $no];
+}
+
+/**
+ * Mengambil nomor mio terakhir
+ * 
+ * @param int $perusahaanid
+ * @param string $jenis = Material In/Material Out
+ */
+function generate_no_mio($perusahaanid, $jenis): array
 {
     $CI = get_instance();
     $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_returpo');
+    $CI->load->model('Md_mio');
 
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
+    //mendefisikan sequence ex. 0001 /SPK-VDI/III/2021 (reset perbulan) 
+    $bulan = date('m');
+    $tahun = date('Y');
+    $romawi = getRomawi($bulan);
 
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $rp         = $CI->Md_returpo->getLastRPO($month, $year, $perusahaanid);
+    // Mengambil Kode perusahaan 
+    $dt_perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
 
-    if (!empty($rp)) {
-        $seq = $rp->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/RPO-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/RPO-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
+    $kode = $dt_perusahaan->kodeperusahaan;
+    // dd($kode);
+
+
+    $data = $CI->Md_mio->getNoMioByMonth($bulan, $tahun, $jenis);
+
+    $no = 1;
+    if (!empty($data)) {
+        $no_mio = explode("/", $data->nomio);
+        $no = $no_mio[0] + 1;
     }
 
-    return (object)['nomor' => $nomor, 'seq' => $seq];
-}
-
-function getNomorTransAlih($tanggal, $perusahaanid){
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_transalih');
-    
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-    
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $ta         = $CI->Md_transalih->getLastPBR($month, $year, $perusahaanid);
-    
-    if (!empty($ta)) {
-        $seq = $ta->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/PBR-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/PBR-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
+    $no_mio = sprintf("%04s", $no) . '/MO-' . $kode . '/' . $romawi . '/' . $tahun;
+    if ($jenis == 'Material In') {
+        $no_mio = sprintf("%04s", $no) . '/MI-' . $kode . '/' . $romawi . '/' . $tahun;
     }
 
-    return (object)['nomor' => $nomor, 'seq' => $seq];
+
+    return ['no' => $no_mio, 'seq' => $no];
 }
 
-function getNomorpcoapproval($tanggal, $perusahaanid){
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_periodecoaapproval');
-    
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-    
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $pcoa         = $CI->Md_periodecoaapproval->getLastPcoaApp($month, $year, $perusahaanid);
-    
-    if (!empty($pcoa)) {
-        $seq = $pcoa->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/ASA-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/ASA-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    }
-
-    return (object)['nomor' => $nomor, 'seq' => $seq];
-}
-
-function getNomorProgress($perusahaanid)
+function generate_no_pengajuan()
 {
     $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_progress');
+    $CI->load->model('Md_fuelticketpengajuan');
 
-    $year  = date('Y');
+    $bulan = date('m');
+    $tahun = date('Y');
+    $romawi = getRomawi($bulan);
+    $pengTicket = $CI->Md_fuelticketpengajuan->getNoPengajuanByMonth($bulan, $tahun);
 
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $progress   = $CI->Md_progress->getLastProgress($year, $perusahaanid);
-
-    $seq   = 1;
-    $nomor = "$perusahaan->kodeperusahaan/PRO/$year/0001";
-
-    if (!empty($progress)) {
-        $seq = $progress->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$perusahaan->kodeperusahaan/PRO/$year/$newid";
+    $nom = 1;
+    if (!empty($pengTicket)) {
+        $noPeng = explode("/", $pengTicket->no_pengajuan);
+        $nom = intval($noPeng[0]) + 1;
     }
 
-    return (object)['nomor' => $nomor, 'seq' => $seq];
-}
-
-function getNomorTransFAT($tanggal, $perusahaanid)
-{
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_trans');
-
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $transfat   = $CI->Md_trans->getLastTransFat($month, $year, $perusahaanid);
-
-    //= reformat year
-    $year = date('y', strtotime($tanggal));
-
-    if (!empty($transfat)) {
-        $seq = $transfat->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/VR/FAT-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/VR/FAT-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    }
-
-    return (object)['notrans' => $nomor, 'seq' => $seq];
-}
-
-function getNomorTransReturMI($tanggal, $perusahaanid)
-{
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_trans');
-
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $trans   = $CI->Md_trans->getLastTransReturMI($month, $year, $perusahaanid);
-
-    //= reformat year
-    $year = date('y', strtotime($tanggal));
-
-    if (!empty($trans)) {
-        $seq = $trans->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/VR/RMI-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/VR/RMI-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    }
-
-    return (object)['notrans' => $nomor, 'seq' => $seq];
-}
-
-function getNomorTransNotaReturMI($tanggal, $perusahaanid)
-{
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_trans');
-
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $trans   = $CI->Md_trans->getLastTransNotaReturMI($month, $year, $perusahaanid);
-
-    //= reformat year
-    $year = date('y', strtotime($tanggal));
-
-    if (!empty($trans)) {
-        $seq = $trans->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/VR/NR-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/VR/NR-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    }
-
-    return (object)['notrans' => $nomor, 'seq' => $seq];
-}
-
-function getNomorTransFATCancel($tanggal, $perusahaanid)
-{
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_trans');
-
-    $month      = date('m', strtotime($tanggal));
-    $year       = date('Y', strtotime($tanggal));
-
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $transfat   = $CI->Md_trans->getLastTransFatcancel($month, $year, $perusahaanid);
-
-    //= reformat year
-    $year = date('y', strtotime($tanggal));
-
-    if (!empty($transfat)) {
-        $seq = $transfat->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/VR/FCL-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    } else {
-        $seq = 1;
-        $nomor = "0001/VR/FCL-$perusahaan->kodeperusahaan/" . integerToRoman($month) . "/$year";
-    }
-
-    return (object)['notrans' => $nomor, 'seq' => $seq];
+    $nopengajuan = sprintf("%04s", $nom) . '/PFT/' . $romawi . '/' . $tahun;
+    return ['no' => $nopengajuan, 'seq' => $nom];
 }
 
 function getNomorTransMIO($tanggal, $perusahaanid, $sumber)
@@ -281,110 +200,4 @@ function getTglValidasi(int $itemdetailid, int $tglvalidasi)
 
 
     return date('Y-m-d H:i:s', $tglvalidasi + $counter);
-}
-
-function getNomorTrans($perusahaanid, $tgltrans, $sumber)
-{
-    $CI = get_instance();
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    if (!isset($perusahaan)) {
-        return null;
-        die;
-    }
-
-    # untuk sequence
-    $y = date('Y', strtotime($tgltrans));
-    $m = date('n', strtotime($tgltrans));
-    //start no surat
-    $trans = $CI->Md_trans->getLastSequenceInvoiceProgress($perusahaanid, $m, $y, $sumber);
-    $seq = 1;
-    if (!empty($trans)) {
-        $seq = $trans->seq + 1;
-    }
-
-    if ($sumber == 'Payroll') {
-        $kode = 'PR';
-    } else if ($sumber == 'Progress') {
-        $kode = 'PG';
-    } else {
-        $kode = 'INVS';
-    }
-
-    # untuk penomoran
-    $month = date('m', strtotime($tgltrans));
-    $month = integerToRoman($month);
-    $year = date('y', strtotime($tgltrans));
-    $notrans = str_pad($seq, 4, '0', STR_PAD_LEFT) . "/" . $perusahaan->kodeperusahaan . "-$kode-R/" . $month . "/" . $year;
-    //end no surat
-
-    $row = array();
-    $row['data'] = TRUE;
-    $row['seq'] = $seq;
-    $row['no_trans'] = $notrans;
-    return $row;
-}
-
-function get_nomor_mr($tgl, $perusahaanid, $kodejenis)
-{
-    $CI = get_instance();
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $kodeperusahaan = $perusahaan->kodeperusahaan;
-
-    $month = date('m', strtotime($tgl));
-    $year = date('Y', strtotime($tgl));
-    $mr = $CI->Md_mr->getLastMrByPerusahaanidAndMonth($perusahaanid, $month, $year);
-    $month = integerToRoman($month);
-
-    if (isset($mr)) {
-        $seq = explode('/', $mr->nomr);
-        if ($seq[2] == $month) {
-            $seq[0] = $seq[0] + 1;
-            $nomr = str_pad($seq[0], 4, '0', STR_PAD_LEFT) . "/" . $kodejenis . "-$kodeperusahaan/$month/$year";
-        } else {
-            $nomr = "0001/" . $kodejenis . "-$kodeperusahaan/$month/$year";
-        }
-    } else {
-        $nomr = "0001/" . $kodejenis . "-$kodeperusahaan/$month/$year";
-    }
-
-    return $nomr;
-}
-
-function getNomorFatLama($perusahaanid){
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_fatlama');
-    
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $fatlama    = $CI->Md_fatlama->getLastSequenceFatLama($perusahaanid);
-    
-    if (!empty($fatlama)) {
-        $seq = $fatlama->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/$perusahaan->kodeperusahaan/FATLAMA";
-    } else {
-        $seq = 1;
-        $nomor = "0001/$perusahaan->kodeperusahaan/FATLAMA";
-    }
-
-    return (object)['nomor' => $nomor, 'seq' => $seq];
-}
-function getNomorVoucherFatLama($perusahaanid){
-    $CI = get_instance();
-    $CI->load->model('Md_perusahaan');
-    $CI->load->model('Md_trans');
-    
-    $perusahaan = $CI->Md_perusahaan->getPerusahaanById($perusahaanid);
-    $trans    = $CI->Md_trans->getLastSequenceFatLama($perusahaanid);
-    
-    if (!empty($trans)) {
-        $seq = $trans->seq + 1;
-        $newid = sprintf("%04d", $seq);
-        $nomor = "$newid/VR/FATLAMA-$perusahaan->kodeperusahaan";
-    } else {
-        $seq = 1;
-        $nomor = "0001/VR/FATLAMA-$perusahaan->kodeperusahaan";
-    }
-
-    return (object)['nomor' => $nomor, 'seq' => $seq];
 }

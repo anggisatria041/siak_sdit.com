@@ -114,6 +114,6 @@ function decrypt($argv1) {
             $encode = 0;
         }
     }
-    return (int) $encode;
+    return $encode;
 }
 ?>

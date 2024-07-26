@@ -1,47 +1,45 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_tajaran extends CI_Model
+class Md_tahun_ajaran extends CI_Model
 {
     public $table = 'tahun_ajaran';
-    public $primary_key = 'tajaran_id';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
     public $column_search = array('lower(nama_tajaran)');
-    public $column_filter = array('nama_tajaran');
-    public $order = array('tajaran_id' => 'asc');
+    public $column_filter =array('nama_tajaran');
+    public $order         = array('tajaran_id' => 'asc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('a.*');
-        $this->db->from('tahun_ajaran a');
-        $this->db->where('a.status', 1);
-
+        $this->db->select('ta.*');
+        $this->db->from('tahun_ajaran ta');
+        $this->db->where('ta.status', 1);
+        
     }
-    function getTajaran()
+    public function getTahunAjaran()
     {
-        $this->db->select('s.*');
-        $this->db->from('tahun_ajaran s');
-        $this->db->where('s.status', 1);
+        $this->db->select('ta.*');
+        $this->db->from('tahun_ajaran ta');
+        $this->db->where('ta.status', 1);
         $query = $this->db->get();
         return $query->result();
     }
 
-
     private function getDatatablesQuery()
     {
-        $this->getDataForDataTable();
+        $this->Md_tahun_ajaran->getDataForDataTable();
         $i = 0;
-        foreach ($this->column_search as $item) {
-            if ($this->input->post('query[generalSearch]')) {
-                if ($i === 0) {
-                    $this->db->group_start();
+        foreach ($this->column_search as $item) { 
+            if ($this->input->post('query[generalSearch]')) { 
+                if ($i === 0) { 
+                    $this->db->group_start(); 
                     $this->db->like($item, strtolower($this->input->post('query[generalSearch]')));
                 } else {
                     $this->db->or_like($item, strtolower($this->input->post('query[generalSearch]')));
                 }
-                if (count($this->column_search) - 1 == $i) {
+                if (count($this->column_search) - 1 == $i) { 
                     $this->db->group_end();
-                }
+                } 
             }
             $i++;
         }
@@ -52,7 +50,7 @@ class Md_tajaran extends CI_Model
             }
         }
 
-        if ($this->input->post('sort[field]')) {
+        if ($this->input->post('sort[field]')) { 
             $this->db->order_by($this->input->post('sort[field]'), $this->input->post('sort[sort]'));
         } elseif (isset($this->order)) {
             $order = $this->order;
@@ -76,22 +74,19 @@ class Md_tajaran extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addTahunAjaran($data)
-    {
-        $this->db->insert($this->table, $data);
+    function addTahunAjaran(array $data) {
+        $this->db->insert_batch($this->table, $data);
         return $this->db->insert_id();
     }
-    function getTahunAjaranById($id)
-    {
-        $this->db->where('tajaran_id', $id);
-        $hasil = $this->db->get($this->table)->row();
-        return $hasil;
+    function getTahunAjaranById($id){
+       $this->db->where('tajaran_id', $id);
+       $hasil = $this->db->get($this->table)->row();
+       return $hasil;
     }
-    function updateTahunAjaran($id, $data)
-    {
+    function updateTahunAjaran($id, $data) {
         $this->db->where('tajaran_id', $id);
         $this->db->update($this->table, $data);
     }
-
+   
 
 }

@@ -16,6 +16,7 @@ class Api extends CI_Controller
         //Load Model//
         $this->load->model('Md_siswa');
         $this->load->model('Md_guru');
+        $this->load->model('Md_tahun_ajaran');
 
         //Load Helper//
         $this->load->helper('get_datatable');
@@ -194,6 +195,33 @@ class Api extends CI_Controller
             $row['catatan'] = $list->catatan;
             $row['status'] = $list->status;
             $row['date_created'] = $list->date_created;
+            $data[] = $row;
+        }
+
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+    public function manage_tahun_ajaran()
+    {
+        $source = getDataForDataTable('Md_tahun_ajaran', null);
+
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['tajaran_id'] = encrypt($list->tajaran_id);
+            $row['nama_tajaran'] = $list->nama_tajaran;
+            $row['semester'] = $list->semester;
+            $row['status_tajaran'] = $list->status_tajaran;
+            $row['status'] = $list->status;
+            $row['date_created'] = $list->date_created;
+           
             $data[] = $row;
         }
 

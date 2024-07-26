@@ -83,6 +83,22 @@ class Md_akun extends CI_Model
         $this->db->where('akun_id', $id);
         $this->db->update($this->table, $data);
     }
+    public function getAkunByNikOrUsername($username, $role='')
+    {
+        $this->db->select('ak.*');
+        $this->db->from('akun ak');
+        $this->db->group_start();
+        $this->db->where('ak.username', $username);
+        $this->db->or_where("lower(replace(ak.nis,' ','')) = ", $username);
+        $this->db->group_end();
+        $this->db->where('ak.status', 1);
+        $query = $this->db->get();
+        if ($query && $query->num_rows() > 0) {
+            return $query->row();
+        }
+        
+        return null;
+        }
 
 
 }

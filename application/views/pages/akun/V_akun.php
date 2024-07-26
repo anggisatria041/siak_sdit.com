@@ -151,7 +151,7 @@
                                     <option value="">Pilih Nama Siswa</option>
                                     <!-- Loop through your database to get the options -->
                                     <?php foreach($siswa as $row): ?>
-                                        <option value="<?= $row->nisn; ?>"><?= $row->nama; ?></option>
+                                        <option value="<?= $row->nis; ?>"><?= $row->nama; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

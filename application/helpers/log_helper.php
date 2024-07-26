@@ -1,7 +1,29 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-function addLog($jenis_aksi, $keterangan, $userid = null)
+function addLog($jenis_aksi, $keterangan, $keterangandetail)
+{
+    $CI = get_instance();
+
+    $karyawan_id = NULL;
+    $tanggal = date('Y-m-d H:i:s');
+    $ip = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER['REMOTE_ADDR'];
+
+    $karyawan_id = decrypt($CI->session->userdata('karyawan_id'));
+    $dataInsert = array(
+        'jenis_log' => $jenis_aksi,
+        'karyawanid' => $karyawan_id,
+        'keterangan' => $keterangan,
+        'tanggal' => $tanggal,
+        'status' => 1,
+        'keterangan_detail' => $keterangandetail,
+        'ipaddr' => $ip
+    );
+
+    $CI->Md_log->addLog($dataInsert);
+}
+
+function addLogSCM($jenis_aksi, $keterangan, $keterangandetail, $info = null, $karyawanid = null)
 {
     $CI = get_instance();
 
@@ -9,26 +31,28 @@ function addLog($jenis_aksi, $keterangan, $userid = null)
     //untuk reverse proxy HTTP_X_FORWARDED_FOR
     $ip = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER['REMOTE_ADDR'];
 
-    $userid = ($userid == null
-        ? (decrypt($CI->session->userdata('user_id')) != 0
-            ? decrypt($CI->session->userdata('user_id')) :
-            decrypt($CI->session->userdata('auth_login'))) : $userid);
+    $karyawanid = ($karyawanid == null ? decrypt($CI->session->userdata('karyawan_id')) : $karyawanid);
 
-        $dataInsert = array(
-            'jenislog' => $jenis_aksi,
-            'userid' => $userid,
-            'keterangan' => $keterangan,
-            'tanggal' => $tanggal,
-            'status' => 1,
-        );
+    $info = $info ? json_encode($info) : null;
 
-    $CI->Md_log->addLog($dataInsert);
+    $dataInsert = array(
+        'jenislog' => $jenis_aksi,
+        'karyawanid' => $karyawanid,
+        'keterangan' => $keterangan,
+        'tanggal' => $tanggal,
+        'ipaddr' => $ip,
+        'status' => 1,
+        'keterangandetail' => $keterangandetail,
+        'info'  => $info
+    );
+
+    $CI->Md_log->addLogSCM($dataInsert);
 }
 
-function dd($arr)
+function dd($array)
 {
-    echo "<pre>";
-    print_r($arr);
-    echo "</pre>";
+    echo '<pre>';
+    print_r($array);
+    echo '</pre>';
     die;
 }
