@@ -111,6 +111,18 @@
                             </div>
                             <div class="form-group m-form__group row">
                                 <label class="col-form-label col-md-3" style="text-align:left">
+                                    Semeter <font class="m--font-danger">*</font>
+                                </label>
+                                <div class="col-md-3">
+                                    <select name="semester" required class="form-control m-input m-select2">
+                                        <option value="">Pilih Semester</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-md-3" style="text-align:left">
                                     Status <font class="m--font-danger">*</font>
                                 </label>
                                 <div class="col-md-6">
@@ -146,7 +158,8 @@
     function resetForm() {
         $('#m_form_1_msg').hide();
         $('#formAdd')[0].reset();
-        $('[name="status"] :selected').removeAttr('selected');
+        $('[name="status_tajaran"] :selected').removeAttr('selected');
+        $('[name="semester"] :selected').removeAttr('selected');
         $('.m-select2').select2({
             width: '100%'
         });
@@ -182,6 +195,7 @@
                     $('[name="tajaran_id"]').val(data.tajaran_id);
                     $('[name="tahun_ajaran"]').val(data.nama_tajaran);
                     $('[name="status_tajaran"] option[value="' + data.status_tajaran + '"]').attr('selected', 'selected');
+                    $('[name="semester"] option[value="' + data.semester + '"]').attr('selected', 'selected');
                     $('.m-select2').select2({width : '100%'});
                     $('#m_modal_6').modal('show');
                 } else if (data.data == false) {

@@ -100,6 +100,7 @@ class C_tahun_ajaran extends CI_Controller
 
         $this->form_validation->set_rules('tahun_ajaran', 'Tahun Ajaran', 'required');
         $this->form_validation->set_rules('status_tajaran', 'Status Tahun Ajaran', 'required');
+        $this->form_validation->set_rules('semester', 'Semester', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -116,25 +117,28 @@ class C_tahun_ajaran extends CI_Controller
 
         $tahun_ajaran = $this->input->post('tahun_ajaran');
         $status_tajaran = $this->input->post('status_tajaran');
+        $semester = $this->input->post('semester');
 
         $ta=$this->Md_tahun_ajaran->getTahunAjaran();
-
-        // if($ta->status_tajaran == 'Aktif' && $status_tajaran == 'Aktif'){
-        //     echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran ada yang aktif', 'csrf' => $csrf));
-        //     die;
-        // }
-        $dataInsert = [
-            [
-                'nama_tajaran' => $tahun_ajaran,
-                'semester' => 1,
-                'status_tajaran' => $status_tajaran
-            ],
-            [
-                'nama_tajaran' => $tahun_ajaran,
-                'semester' => 2,
-                'status_tajaran' => $status_tajaran
-            ]
-        ];
+        foreach($ta as $list){
+            if($list->nama_tajaran == $tahun_ajaran && $list->semester == $semester){
+                echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran '.$tahun_ajaran.' untuk semester '.$semester.' sudah ada', 'csrf' => $csrf));
+                die;
+            }
+        }
+        foreach($ta as $list){
+            if($list->status_tajaran == 'Aktif' && $status_tajaran == 'Aktif'){
+                echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran masih ada yang aktif', 'csrf' => $csrf));
+                die;
+            }
+        }
+        
+       
+         $dataInsert = array(
+            'nama_tajaran' => $tahun_ajaran,
+            'semester' => $semester,
+            'status_tajaran' => $status_tajaran
+        );
 
         $this->db->trans_begin();
         $this->Md_tahun_ajaran->addTahunAjaran($dataInsert);
@@ -176,6 +180,7 @@ class C_tahun_ajaran extends CI_Controller
     {
         $this->form_validation->set_rules('tahun_ajaran', 'Tahun Ajaran', 'required');
         $this->form_validation->set_rules('status_tajaran', 'Status Tahun Ajaran', 'required');
+        $this->form_validation->set_rules('semester', 'Semester', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -193,11 +198,28 @@ class C_tahun_ajaran extends CI_Controller
         $tajaran_id = decrypt($this->input->post('tajaran_id'));
         $nama_tajaran = $this->input->post('tahun_ajaran');
         $status_tajaran = $this->input->post('status_tajaran');
+        $semester = $this->input->post('semester');
+
+        $ta=$this->Md_tahun_ajaran->getTahunAjaranNoId($tajaran_id);
+       
+        foreach($ta as $list){
+            if($list->nama_tajaran == $nama_tajaran && $list->semester == $semester){
+                echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran '.$nama_tajaran.' untuk semester '.$semester.' sudah ada', 'csrf' => $csrf));
+                die;
+            }
+        }
+        foreach($ta as $list){
+            if($list->status_tajaran == 'Aktif' && $status_tajaran == 'Aktif'){
+                echo json_encode(array('status' => 'gagal', 'message' => 'Tahun Ajaran masih ada yang aktif', 'csrf' => $csrf));
+                die;
+            }
+        }
 
         $this->db->trans_begin();
         $this->Md_tahun_ajaran->updateTahunAjaran($tajaran_id, [
             'nama_tajaran' => $nama_tajaran,
-            'status_tajaran' => $status_tajaran
+            'status_tajaran' => $status_tajaran,
+            'semester' => $semester
         ]);
 
         if ($this->db->trans_status() == TRUE) {

@@ -75,7 +75,7 @@ class Md_tahun_ajaran extends CI_Model
         return $query;
     }
     function addTahunAjaran(array $data) {
-        $this->db->insert_batch($this->table, $data);
+        $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
     function getTahunAjaranById($id){
@@ -86,6 +86,12 @@ class Md_tahun_ajaran extends CI_Model
     function updateTahunAjaran($id, $data) {
         $this->db->where('tajaran_id', $id);
         $this->db->update($this->table, $data);
+    }
+    function getTahunAjaranNoId($id){
+        $this->db->where('tajaran_id !=', $id);
+        $this->db->where('status', 1);
+        $hasil = $this->db->get($this->table)->result();
+        return $hasil;
     }
    
 
