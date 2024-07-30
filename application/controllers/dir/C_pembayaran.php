@@ -267,7 +267,7 @@ class C_pembayaran extends CI_Controller
         echo json_encode($row);
         die;
     }
-    
+
     public function update()
     {
         $this->form_validation->set_rules('nis', '', 'required');
@@ -359,6 +359,7 @@ class C_pembayaran extends CI_Controller
         if ($this->form_validation->run() != FALSE) {
             $pembayaran_id = $this->input->post('pembayaran_id') == "" ? NULL : decrypt($this->input->post('pembayaran_id'));
             $status_pembayaran = $this->input->post('status_pembayaran') == "" ? NULL : $this->input->post('status_pembayaran');
+
             if ($this->form_validation->run() === FALSE) {
                 die(json_encode([
                     'status' => 'gagal',
@@ -366,9 +367,50 @@ class C_pembayaran extends CI_Controller
                     'csrf' => $csrf
                 ]));
             }
+            $file_bukti_pembayaran = $_FILES['file_bukti_pembayaran']['name'];
             $updatedata = array(
                 'status_pembayaran' => $status_pembayaran,
             );
+            if ($file_bukti_pembayaran) {
+                $upload_file = $_FILES['file_bukti_pembayaran']['name'];
+                $file_name = str_replace(' ', '_', $upload_file);
+                $new_file_name = preg_replace('/\.(?=.*\.)/', '_', $file_name);
+                $tipe_file = pathinfo($new_file_name, PATHINFO_EXTENSION);
+                $file_size_kb = $_FILES['file_bukti_pembayaran']['size'] / 1024;
+
+                $config['allowed_types'] = 'pdf|csv|docx|xls|xlsx|png|jpg|jpeg';
+                $config['max_size'] = '10240';
+                $config['upload_path'] = './assets/upload/bukti_pembayaran/';
+                $config['file_name'] = $new_file_name;
+
+                if (!in_array($tipe_file, explode('|', $config['allowed_types']))) {
+                    echo json_encode([
+                        'status' => 'gagal',
+                        'message' => 'Jenis file tidak diizinkan. Silakan pilih file dengan tipe: ' . $config['allowed_types'],
+                        'csrf' => $csrf
+                    ]);
+                    die;
+                } elseif ($file_size_kb > $config['max_size']) {
+                    echo json_encode([
+                        'status' => 'gagal',
+                        'message' => 'Ukuran file melebihi batas maksimum: ' . $config['max_size'] . ' KB',
+                        'csrf' => $csrf
+                    ]);
+                    die;
+                } else {
+                    $this->load->library('upload', $config);
+
+                    if ($this->upload->do_upload('file_bukti_pembayaran')) {
+                        $new_image = $this->upload->data('file_name');
+                        $updatedata = array(
+                            'bukti_pembayaran' => $new_image,
+                        );
+                    } else {
+                        echo $this->upload->display_errors();
+                        die;
+                    }
+                }
+            } 
 
             $this->db->trans_begin();
             $this->Md_pembayaran->updatePembayaran($pembayaran_id, $updatedata);
@@ -384,6 +426,81 @@ class C_pembayaran extends CI_Controller
                 die;
             }
         }
+    }
+    public function uploadBuktiPembayaran()
+    {
+        var_dump($this->input->post('id'));
+        die;
+
+        $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+            'csrfHash' => $this->security->get_csrf_hash()
+        );
+
+        $pembayaran_id = $this->input->post('pembayaran_id_') == "" ? NULL : decrypt($this->input->post('pembayaran_id_'));
+        $file_bukti_pembayaran = $this->input->post('file_bukti_pembayaran') == "" ? NULL : $this->input->post('file_bukti_pembayaran');
+
+        if ($file_bukti_pembayaran) {
+            $upload_file = $_FILES['file_bukti_pembayaran']['name'];
+            $file_name = str_replace(' ', '_', $upload_file);
+            $new_file_name = preg_replace('/\.(?=.*\.)/', '_', $file_name);
+            $tipe_file = pathinfo($new_file_name, PATHINFO_EXTENSION);
+            $file_size_kb = $_FILES['file_bukti_pembayaran']['size'] / 1024;
+
+            $config['allowed_types'] = 'pdf|csv|docx|xls|xlsx|png|jpg|jpeg';
+            $config['max_size'] = '10240';
+            $config['upload_path'] = './assets/upload/bukti_pembayaran/';
+            $config['file_name'] = $new_file_name;
+
+            if (!in_array($tipe_file, explode('|', $config['allowed_types']))) {
+                echo json_encode([
+                    'status' => 'gagal',
+                    'message' => 'Jenis file tidak diizinkan. Silakan pilih file dengan tipe: ' . $config['allowed_types'],
+                    'csrf' => $csrf
+                ]);
+                die;
+            } elseif ($file_size_kb > $config['max_size']) {
+                echo json_encode([
+                    'status' => 'gagal',
+                    'message' => 'Ukuran file melebihi batas maksimum: ' . $config['max_size'] . ' KB',
+                    'csrf' => $csrf
+                ]);
+                die;
+            } else {
+                $this->load->library('upload', $config);
+
+                if ($this->upload->do_upload('file_bukti_pembayaran')) {
+                    $new_image = $this->upload->data('file_name');
+                    $updatedata = array(
+                        'bukti_pembayaran' => $new_image,
+                    );
+                } else {
+                    echo $this->upload->display_errors();
+                    die;
+                }
+            }
+        } else {
+            echo json_encode([
+                'status' => 'gagal',
+                'message' => 'Tidak ada file yang diupload',
+                'csrf' => $csrf
+            ]);
+            die;
+        }
+
+        $this->db->trans_begin();
+        $this->Md_pembayaran->updatePembayaran($pembayaran_id, $updatedata);
+
+        if ($this->db->trans_status() == TRUE) {
+            $this->db->trans_commit();
+            echo json_encode(array('status' => 'success', 'csrf' => $csrf));
+            die;
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(array('status' => 'gagal', 'message' => 'Data Pembayaran gagal disimpan', 'csrf' => $csrf));
+            die;
+        }
+
     }
     public function delete($argv1 = '')
     {

@@ -256,71 +256,44 @@
                         <input type="hidden" name="pembayaran_id" value="">
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value=""
                             style="display: none">
-                        <div class="form-group m-form__group row">
-                            <label class="col-form-label col-md-3" style="text-align:left">
-                                Status Pembayaran <font class="m--font-danger">*</font>
-                            </label>
-                            <div class="col-md-6">
-                                <select name="status_pembayaran" required class="form-control m-input m-select2">
-                                    <option value="">Pilih Status Pembayaran</option>
-                                    <option value="lunas">Lunas</option>
-                                    <option value="belum lunas">Belum Lunas</option>
-                                    <option value="menunggu verifikasi">Menunggu Verifikasi</option>
-                                    <option value="ditolak">Ditolak</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-warning" data-dismiss="modal">
-                            Batal
-                        </a>
-                        <a href="#" onclick="saveverifikasi()" id="btnSaveAjax" class="btn btn-accent">
-                            Simpan
-                        </a>
-
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="modal_uploadbukti" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header m--bg-brand">
-                    <h5 class="modal-title m--font-light" id="exampleModalLongTitle">
-                        Verifikasi Pembayaran
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">
-                            &times;
-                        </span>
-                    </button>
-                </div>
-                <form class="m-form m-form--fit m-form--label-align-right" action="" method="POST" id="formverifikasi"
-                    enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <input type="hidden" name="pembayaran_id" value="">
-                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value=""
-                            style="display: none">
+                        <div id="verifikasi">
                             <div class="form-group m-form__group row">
-                            <label class="col-form-label col-md-3" style="text-align:left">
+                                <label class="col-form-label col-md-3" style="text-align:left">
+                                    Status Pembayaran <font class="m--font-danger">*</font>
+                                </label>
+                                <div class="col-md-6">
+                                    <select name="status_pembayaran" required class="form-control m-input m-select2">
+                                        <option value="">Pilih Status Pembayaran</option>
+                                        <option value="lunas">Lunas</option>
+                                        <option value="belum lunas">Belum Lunas</option>
+                                        <option value="menunggu verifikasi">Menunggu Verifikasi</option>
+                                        <option value="ditolak">Ditolak</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                            </label>
-                            <div class="col-md-6">
-                                <img id="bukti_pembayaran" width="100" src="" alt="Bukti Pembayaran">
+                        <div id="uploud">
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-md-3" style="text-align:left">
+
+                                </label>
+                                <div class="col-md-6">
+                                    <img id="bukti_pembayaran_" width="100" src="" alt="Bukti Pembayaran">
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-md-4" style="text-align:left">
+                                    Bukti Pembayaran
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="file" name="file_bukti_pembayaran"
+                                        class="form-control m-input" placeholder="Bukti Pembayaran"
+                                        onchange="document.getElementById('bukti_pembayaran_').src = window.URL.createObjectURL(this.files[0])" />
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group m-form__group row">
-                            <label class="col-form-label col-md-3" style="text-align:left">
-                                Bukti Pembayaran(optional)
-                            </label>
-                            <div class="col-md-6">
-                                <input type="file" name="file_bukti_pembayaran" required class="form-control m-input"
-                                    placeholder="Bukti Pembayaran"
-                                    onchange="document.getElementById('bukti_pembayaran').src = window.URL.createObjectURL(this.files[0])" />
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-warning" data-dismiss="modal">
@@ -334,6 +307,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- End Modal -->
 </div>
@@ -368,12 +342,7 @@
         $('#exampleModalLongTitle').html("Lihat Gambar Bukti Pembayaran");
         $('#modalImage-' + src).modal('show');
     }
-    // function openModal(src) {
-    //     $('#modalImage').attr('src', src);
-    //     $('#modalImage').modal('show');
-    //     $('#modalImage').css('width', '100%');
-    //     $('#modalImage').attr('style', 'height: auto;');
-    // }
+ 
     function uploadBuktiPembayaran(id) {
         method = 'uploadBuktiPembayaran';
         resetForm();
@@ -386,12 +355,17 @@
             dataType: "JSON",
             success: function (data) {
                 if (data.data == true) {
-
+                    let lokasi = '<?= base_url() ?>assets/upload/bukti_pembayaran/' + data.bukti_pembayaran;
+                    var verifikasigroup = document.getElementById('verifikasi');
+                    var uploudgroup = document.getElementById('uploud');
                     $('#formAdd')[0].reset();
                     $('[name="pembayaran_id"]').val(data.pembayaran_id);
-                    $('[name="file_bukti_pembayaran"]').val(data.bukti_pembayaran);
+                    $('[name="status_pembayaran"]').val(data.status_pembayaran);
+                    $('#bukti_pembayaran_').attr('src', lokasi);
+                    verifikasigroup.style.display = 'none';
+                    uploudgroup.style.display = 'block';
                     $('.m-select2').select2({ width: '100%' });
-                    $('#modal_uploadbukti').modal('show');
+                    $('#modal_varifikasi').modal('show');
 
                 } else if (data.data == false) {
                     swal("Oops", "Data gagal mengambil data!", "error");
@@ -472,10 +446,13 @@
             dataType: "JSON",
             success: function (data) {
                 if (data.data == true) {
-
+                    var uploudgroup = document.getElementById('uploud');
+                    var verifikasigroup = document.getElementById('verifikasi');
                     $('#formAdd')[0].reset();
                     $('[name="pembayaran_id"]').val(data.pembayaran_id);
                     $('[name="status_pembayaran"]').val(data.status_pembayaran);
+                    uploudgroup.style.display = 'none';
+                    verifikasigroup.style.display = 'block';
                     $('.m-select2').select2({ width: '100%' });
                     $('#modal_varifikasi').modal('show');
 
@@ -549,6 +526,99 @@
         }
     }
 
+    // function saveverifikasi() {
+
+    //     var url = "<?= base_url() . 'dir/C_pembayaran/updateverifikasi' ?>";
+
+    //     // ajax adding data to database
+    //     if ($('[name="status_pembayaran"]').val() == "") {
+    //         $('#m_form_1_msg').show();
+    //         mApp.unblock(".modal-content");
+    //     } else {
+    //         $('[name="' + csrfName + '"]').val(csrfHash);
+    //         $.ajax({
+    //             url: url,
+    //             type: "POST",
+    //             data: new FormData($('#formverifikasi')[0]), //this is formData
+    //             processData: false,
+    //             contentType: false,
+    //             cache: false,
+    //             async: false,
+    //             dataType: "JSON",
+    //             success: function (data) {
+    //                 if (data.status == 'success') {
+    //                     csrfName = data.csrf.csrfName;
+    //                     csrfHash = data.csrf.csrfHash;
+    //                     $('#modal_varifikasi').modal('hide');
+    //                     swal("Berhasil..", "Data anda berhasil disimpan", "success");
+    //                     reload_table('tableManagepembayaran');
+    //                 } else {
+    //                     csrfName = data.csrf.csrfName;
+    //                     csrfHash = data.csrf.csrfHash;
+    //                     swal({
+    //                         text: data.message,
+    //                         type: "warning",
+    //                         closeOnConfirm: true
+    //                     });
+
+    //                 }
+    //             },
+    //             error: function (jqXHR, textStatus, errorThrown) {
+    //                 swal("Oops", "Data gagal disimpan !", "error");
+    //                 $('#btnSave').text('save'); //change button text
+    //                 $('#btnSave').attr('disabled', false); //set button enable 
+    //             }
+    //         });
+    //     }
+    // }
+    // function saveupdatebukti() {
+
+    //     var url = "<?= base_url() . 'dir/C_pembayaran/uploadBuktiPembayaran' ?>";
+    //     var id = $('[name="pembayaran_id_"]').val();
+    //     var file_bukti_pembayaran = $('[name="file_bukti_pembayaran"]').val();
+    //     console.log(id);
+    //     console.log(file_bukti_pembayaran);
+    //     // ajax adding data to database
+    //     if ($('[name="file_bukti_pembayaran"]').val() == "vv") {
+    //         $('#m_form_1_msg').show();
+    //         mApp.unblock(".modal-content");
+    //     } else {
+    //         $('[name="' + csrfName + '"]').val(csrfHash);
+    //         $.ajax({
+    //             url: url,
+    //             type: "POST",
+    //             data: { id: $('[name="pembayaran_id_"]').val(), file_bukti_pembayaran: $('[name="file_bukti_pembayaran"]').val() }, //ini adalah formData
+    //             processData: false,
+    //             contentType: false,
+    //             cache: false,
+    //             async: false,
+    //             dataType: "JSON",
+    //             success: function (data) {
+    //                 if (data.status == 'success') {
+    //                     csrfName = data.csrf.csrfName;
+    //                     csrfHash = data.csrf.csrfHash;
+    //                     $('#modal_uploadbukti').modal('hide');
+    //                     swal("Berhasil..", "Data anda berhasil disimpan", "success");
+    //                     reload_table('tableManagepembayaran');
+    //                 } else {
+    //                     csrfName = data.csrf.csrfName;
+    //                     csrfHash = data.csrf.csrfHash;
+    //                     swal({
+    //                         text: data.message,
+    //                         type: "warning",
+    //                         closeOnConfirm: true
+    //                     });
+
+    //                 }
+    //             },
+    //             error: function (jqXHR, textStatus, errorThrown) {
+    //                 swal("Oops", "Data gagal disimpan !", "error");
+    //                 $('#btnSave').text('save'); //ubah teks tombol
+    //                 $('#btnSave').attr('disabled', false); //set tombol enable 
+    //             }
+    //         });
+    //     }
+    // }
     function saveverifikasi() {
 
         var url = "<?= base_url() . 'dir/C_pembayaran/updateverifikasi' ?>";
