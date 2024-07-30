@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center">
             <div class="mr-auto">
                 <h3 class="m-subheader__title m-subheader__title--separator">
-                   Siswa
+                   Orang Tua
                 </h3>
                 <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                     <li class="m-nav__item m-nav__item--home">
@@ -18,7 +18,7 @@
                     <li class="m-nav__item">
                         <a href="" class="m-nav__link">
                             <span class="m-nav__link-text">
-                                Siswa
+                                Orang Tua
                             </span>
                         </a>
                     </li>
@@ -37,13 +37,13 @@
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
                                 <h3 class="m-portlet__head-text">
-                                    Manage Data Siswa<p id="hax"></p>
+                                    Manage Data Orang Tua<p id="hax"></p>
                                 </h3>
                             </div>
                         </div>
                        <div class="m-portlet__head-tools">
                             <button type="button" class="btn btn-info btn-md" onclick="add_ajax()">
-                                <i class="la la-plus"></i> Tambah Siswa
+                                <i class="la la-plus"></i> Tambah Orang Tua
                             </button>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                             </div>
                         <?php } ?>
                         <!--begin: Datatable -->
-                        <div class="m_datatable" id="tableManageSiswa"></div>
+                        <div class="m_datatable" id="tableManageOrangTua"></div>
                         <!--end: Datatable -->
                     </div>
                 </div>
@@ -76,7 +76,7 @@
             <div class="modal-content">
                 <div class="modal-header m--bg-brand">
                     <h5 class="modal-title m--font-light" id="exampleModalLongTitle">
-                        Tambah Siswa
+                        Tambah Orang Tua
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -99,98 +99,108 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="siswa_id" value="">
+                        <input type="hidden" name="id_orang_tua" value="">
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="" style="display: none">
+                        
+                        <!-- Data Ayah -->
+                        <h4>Data Ayah</h4>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                NIS <font class="m--font-danger">*</font>
+                                Nama Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="number" name="nis" required class="form-control m-input" placeholder="NIS"/>
+                                <input type="text" name="nama_ayah" required class="form-control m-input" placeholder="Nama Ayah"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Nama Lengkap <font class="m--font-danger">*</font>
+                                Tahun Lahir Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="text" name="nama" required class="form-control m-input" placeholder="Nama Lengkap"/>
+                                <input type="date" name="tahun_lahir_ayah" required class="form-control m-input" placeholder="Tahun Lahir Ayah"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Jenis Kelamin <font class="m--font-danger">*</font>
+                                Pekerjaan Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <select name="jenis_kelamin" required class="form-control m-input m-select2">
-                                    <option value="">Pilih Jenis Kelamin</option>
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
-                                </select>
+                                <input type="text" name="pekerjaan_ayah" required class="form-control m-input" placeholder="Pekerjaan Ayah"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Tempat Lahir <font class="m--font-danger">*</font>
+                                Pendidikan Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="text" name="tempat_lahir" required class="form-control m-input" placeholder="Tempat Lahir"/>
+                                <input type="text" name="pendidikan_ayah" required class="form-control m-input" placeholder="Pendidikan Ayah"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Tanggal Lahir <font class="m--font-danger">*</font>
+                                Penghasilan Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="date" name="tanggal_lahir" required class="form-control m-input" placeholder="Tanggal Lahir"/>
+                                <input type="number" name="penghasilan_ayah" required class="form-control m-input" placeholder="Penghasilan Ayah"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Orang Tua <font class="m--font-danger">*</font>
+                                Alamat Ayah <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                 <select name="id_orang_tua" required class="form-control m-input m-select2">
-                                        <option value="">Pilih Orang Tua</option>
-                                        <?php foreach ($orang_tua as $list) : ?>
-                                            <?php
-                                            $jobOption = $list->nama_ayah . ' - ' . $list->nama_ibu;
-                                            ?>
-                                            <option value="<?= encrypt($list->id_orang_tua); ?>"><?= $jobOption; ?></option>
-                                        <?php
-                                        endforeach;
-                                        ?>
-                                </select>
+                                <textarea name="alamat_ayah" required class="form-control m-input" placeholder="Alamat Ayah"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Data Ibu -->
+                        <h4>Data Ibu</h4>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Nama Ibu <font class="m--font-danger">*</font>
+                            </label>
+                            <div class="col-md-6">
+                                <input type="text" name="nama_ibu" required class="form-control m-input" placeholder="Nama Ibu"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Alamat <font class="m--font-danger">*</font>
+                                Tahun Lahir Ibu <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <textarea name="alamat" required class="form-control m-input" placeholder="Alamat"></textarea>
+                                <input type="date" name="tahun_lahir_ibu" required class="form-control m-input" placeholder="Tahun Lahir Ibu"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Agama <font class="m--font-danger">*</font>
+                                Pekerjaan Ibu <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <select name="agama" required class="form-control m-input m-select2">
-                                    <option value="">Pilih Agama</option>
-                                    <option value="Islam">Islam</option>
-                                    <option value="Katholik">Katholik</option>
-                                    <option value="Kristen">Kristen</option>
-                                    <option value="Hindu">Hindu</option>
-                                </select>
+                                <input type="text" name="pekerjaan_ibu" required class="form-control m-input" placeholder="Pekerjaan Ibu"/>
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                No Hp<font class="m--font-danger">*</font>
+                                Pendidikan Ibu <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="number" name="no_hp" required class="form-control m-input" placeholder="No Hp"/>
+                                <input type="text" name="pendidikan_ibu" required class="form-control m-input" placeholder="Pendidikan Ibu"/>
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Penghasilan Ibu <font class="m--font-danger">*</font>
+                            </label>
+                            <div class="col-md-6">
+                                <input type="number" name="penghasilan_ibu" required class="form-control m-input" placeholder="Penghasilan Ibu"/>
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Alamat Ibu <font class="m--font-danger">*</font>
+                            </label>
+                            <div class="col-md-6">
+                                <textarea name="alamat_ibu" required class="form-control m-input" placeholder="Alamat Ibu"></textarea>
                             </div>
                         </div>
                     </div>
@@ -201,7 +211,6 @@
                         <a href="#" onclick="save()" id="btnSaveAjax" class="btn btn-accent">
                             Simpan
                         </a>
-
                     </div>
                 </form>
                 <!--end::Form-->
@@ -218,12 +227,6 @@
     function resetForm() {
         $('#m_form_1_msg').hide();
         $('#formAdd')[0].reset();
-        $('[name="jenis_kelamin"] :selected').removeAttr('selected');
-        $('[name="agama"] :selected').removeAttr('selected');
-        $('[name="id_orang_tua"] :selected').removeAttr('selected');
-        $('.m-select2').select2({
-            width: '100%'
-        });
     }
     function renew(x) {
     }
@@ -231,7 +234,7 @@
     function add_ajax() {
         method = 'add';
         resetForm();
-        $('#exampleModalLongTitle').html("Tambah Siswa");
+        $('#exampleModalLongTitle').html("Tambah Orang Tua");
         $('.form-group').removeClass('has-error');
         $('.help-block').empty();
         $('#m_form_1_msg').hide();
@@ -244,27 +247,32 @@
         method = 'edit';
         resetForm();
         $('#btnSaveAjax').show();
-        $('#exampleModalLongTitle').html("Edit Siswa");
+        $('#exampleModalLongTitle').html("Edit Orang Tua");
 
         $.ajax({
-            url: "<?php echo base_url() . 'dir/C_siswa/edit' ?>/" + id,
+            url: "<?php echo base_url() . 'dir/C_orang_tua/edit' ?>/" + id,
             type: "GET",
             dataType: "JSON",
             success: function(data) {
                 if (data.data == true) {
                     $('#formAdd')[0].reset();
-                    $('[name="siswa_id"]').val(data.siswa_id);
-                    $('[name="nis"]').val(data.nis);
-                    $('[name="nama"]').val(data.nama);
-                    $('[name="jenis_kelamin"]').val(data.jenis_kelamin);
-                    $('[name="tempat_lahir"]').val(data.tempat_lahir);
-                    $('[name="tanggal_lahir"]').val(data.tanggal_lahir);
-                    $('[name="alamat"]').val(data.alamat);
-                    $('[name="agama"]').val(data.agama);
-                    $('[name="no_hp"]').val(data.no_hp);
-                    $('[name="jenis_kelamin"] option[value="' + data.jenis_kelamin + '"]').attr('selected', 'selected');
-                    $('[name="agama"] option[value="' + data.agama + '"]').attr('selected', 'selected');
-                    $('[name="id_orang_tua"] option[value="' + data.id_orang_tua + '"]').attr('selected', 'selected');
+                    $('[name="id_orang_tua"]').val(data.id_orang_tua);
+                    // Data Ayah
+                    $('[name="nama_ayah"]').val(data.nama_ayah);
+                    $('[name="tahun_lahir_ayah"]').val(data.tahun_lahir_ayah);
+                    $('[name="pekerjaan_ayah"]').val(data.pekerjaan_ayah);
+                    $('[name="pendidikan_ayah"]').val(data.pendidikan_ayah);
+                    $('[name="penghasilan_ayah"]').val(data.penghasilan_ayah);
+                    $('[name="alamat_ayah"]').val(data.alamat_ayah);
+
+                    // Data Ibu
+                    $('[name="nama_ibu"]').val(data.nama_ibu);
+                    $('[name="tahun_lahir_ibu"]').val(data.tahun_lahir_ibu);
+                    $('[name="pekerjaan_ibu"]').val(data.pekerjaan_ibu);
+                    $('[name="pendidikan_ibu"]').val(data.pendidikan_ibu);
+                    $('[name="penghasilan_ibu"]').val(data.penghasilan_ibu);
+                    $('[name="alamat_ibu"]').val(data.alamat_ibu);
+
                     $('.m-select2').select2({width : '100%'});
                     $('#m_modal_6').modal('show');
 
@@ -287,13 +295,13 @@
        
         var url;
         if (method == 'add') {
-            url = "<?= base_url() . 'dir/C_siswa/add' ?>";
+            url = "<?= base_url() . 'dir/C_orang_tua/add' ?>";
         } else {
-            url = "<?= base_url() . 'dir/C_siswa/update' ?>";
+            url = "<?= base_url() . 'dir/C_orang_tua/update' ?>";
         }
 
         // ajax adding data to database
-        if ($('[name="nis"]').val() == "" || $('[name="nama"]').val() == "" || $('[name="jenis_kelamin"]').val() == "" || $('[name="tempat_lahir"]').val() == "" || $('[name="tanggal_lahir"]').val() == "" || $('[name="alamat"]').val() == "" || $('[name="agama"]').val() == "" || $('[name="no_hp"]').val() == "") {
+        if ($('[name="nama_ayah"]').val() == "" || $('[name="nama_ibu"]').val() == "") {
             $('#m_form_1_msg').show();
             mApp.unblock(".modal-content");
         } else {
@@ -301,7 +309,7 @@
             $.ajax({
                 url: url,
                 type: "POST",
-                data: new FormData($('#formAdd')[0]), //this is formData
+                data: new FormData($('#formAdd')[0]), 
                 processData: false,
                 contentType: false,
                 cache: false,
@@ -313,7 +321,7 @@
                         csrfHash = data.csrf.csrfHash;
                         $('#m_modal_6').modal('hide');
                         swal("Berhasil..", "Data anda berhasil disimpan", "success");
-                        reload_table('tableManageSiswa');
+                        reload_table('tableManageOrangTua');
                     } else{
                         csrfName = data.csrf.csrfName;
                         csrfHash = data.csrf.csrfHash;
@@ -356,13 +364,13 @@
                 });
 
                 $.ajax({
-                    url: "<?php echo base_url() . 'dir/C_siswa/delete' ?>/" + id,
+                    url: "<?php echo base_url() . 'dir/C_orang_tua/delete' ?>/" + id,
                     type: "GET",
                     dataType: "JSON",
                     success: function(data) {
                         if (data.data == true) {
                             swal("Berhasil..", "Data berhasil dicancel", "success");
-                            reload_table('tableManageSiswa');
+                            reload_table('tableManageOrangTua');
                         } else if (data.data == false) {
                             swal("Oops", "Data gagal dicancel!", "error");
                         } else {
@@ -379,5 +387,5 @@
         });
     }
 </script>
-<?= isset($tableManageSiswa) ? $tableManageSiswa : '' ?>
+<?= isset($tableManageOrangTua) ? $tableManageOrangTua : '' ?>
 <!-- end:: Body -->

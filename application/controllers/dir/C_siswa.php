@@ -18,6 +18,7 @@ class C_siswa extends CI_Controller
         //load model
         $this->load->model('Md_siswa');
         $this->load->model('Md_log');
+        $this->load->model('Md_orang_tua');
 
         //Load library
         $this->load->library('M_datatable');
@@ -57,11 +58,12 @@ class C_siswa extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NIS', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Email', 'Aksi');
-        $configColumn['field'] = array('no', 'nis', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'email', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 100, 50); //on px
+        $configColumn['title'] = array('No', 'NIS', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Nama Ayah', 'Nama Ibu', 'Aksi');
+        $configColumn['field'] = array('no', 'nis', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'nama_ayah', 'nama_ibu', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 100, 100, 80); //on px
         $configColumn['template'] = array(
+            FALSE,
             FALSE,
             FALSE,
             FALSE,
@@ -104,6 +106,7 @@ class C_siswa extends CI_Controller
         $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
         $pageData['tableManageSiswa'] = $this->m_datatable->generateScript($set);
+        $pageData['orang_tua'] = $this->Md_orang_tua->getOrangTua();
         $pageData['page_name'] = 'V_siswa';
         $pageData['page_dir'] = 'siswa';
         $this->load->view('index', $pageData);
@@ -121,7 +124,6 @@ class C_siswa extends CI_Controller
         $this->form_validation->set_rules('agama', '', 'required');
         $this->form_validation->set_rules('alamat', '', 'required');
         $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -137,6 +139,7 @@ class C_siswa extends CI_Controller
         }
 
         $siswa_id = decrypt($this->input->post('siswa_id'));
+        $id_orang_tua = decrypt($this->input->post('id_orang_tua'));
         $nis = $this->input->post('nis');
         $nama = $this->input->post('nama');
         $jenis_kelamin = $this->input->post('jenis_kelamin');
@@ -145,9 +148,9 @@ class C_siswa extends CI_Controller
         $agama = $this->input->post('agama');
         $alamat = $this->input->post('alamat');
         $no_hp = $this->input->post('no_hp');
-        $email = $this->input->post('email');
 
         $dataInsert = array(
+            'id_orang_tua' => $id_orang_tua,
             'nis' => $nis,
             'nama' => $nama,
             'jenis_kelamin' => $jenis_kelamin,
@@ -156,7 +159,6 @@ class C_siswa extends CI_Controller
             'agama' => $agama,
             'alamat' => $alamat,
             'no_hp' => $no_hp,
-            'email' => $email,
             'status' => 1
         );
         $this->db->trans_begin();
@@ -187,6 +189,7 @@ class C_siswa extends CI_Controller
         $row = array();
         if ($siswa) {
             $row['data'] = TRUE;
+            $row['id_orang_tua'] = encrypt($siswa->id_orang_tua);
             $row['siswa_id'] = encrypt($siswa->siswa_id);
             $row['nis'] = $siswa->nis;
             $row['nama'] = $siswa->nama;
@@ -196,7 +199,6 @@ class C_siswa extends CI_Controller
             $row['agama'] = $siswa->agama;
             $row['alamat'] = ($siswa->alamat);
             $row['no_hp'] = ($siswa->no_hp);
-            $row['email'] = ($siswa->email);
             $row['status'] = $siswa->status;
         } else {
             $row['data'] = FALSE;
@@ -215,7 +217,6 @@ class C_siswa extends CI_Controller
         $this->form_validation->set_rules('agama', '', 'required');
         $this->form_validation->set_rules('alamat', '', 'required');
         $this->form_validation->set_rules('no_hp', '', 'required');
-        $this->form_validation->set_rules('email', '', 'required');
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -223,6 +224,7 @@ class C_siswa extends CI_Controller
         );
 
         if ($this->form_validation->run() != FALSE) {
+            $id_orang_tua = $this->input->post('id_orang_tua') == "" ? NULL : decrypt($this->input->post('id_orang_tua'));
             $siswa_id = $this->input->post('siswa_id') == "" ? NULL : decrypt($this->input->post('siswa_id'));
             $nis = $this->input->post('nis') == "" ? NULL : $this->input->post('nis');
             $nama = $this->input->post('nama') == "" ? NULL : $this->input->post('nama');
@@ -232,7 +234,6 @@ class C_siswa extends CI_Controller
             $agama = $this->input->post('agama') == "" ? NULL : $this->input->post('agama');
             $alamat = $this->input->post('alamat') == "" ? NULL : $this->input->post('alamat');
             $no_hp = $this->input->post('no_hp') == "" ? NULL : $this->input->post('no_hp');
-            $email = $this->input->post('email') == "" ? NULL : $this->input->post('email');
 
             if ($this->form_validation->run() === FALSE) {
                 die(json_encode([
@@ -244,6 +245,7 @@ class C_siswa extends CI_Controller
 
             $this->db->trans_begin();
             $this->Md_siswa->updateSiswa($siswa_id, [
+                'id_orang_tua' => $id_orang_tua,
                 'nis' => $nis,
                 'nama' => $nama,
                 'jenis_kelamin' => $jenis_kelamin,
@@ -252,7 +254,6 @@ class C_siswa extends CI_Controller
                 'agama' => $agama,
                 'alamat' => $alamat,
                 'no_hp' => $no_hp,
-                'email' => $email,
                 'status' => 1
             ]);
             // addLog('Update Data', 'Mengubah data Siswa', 'Siswa ID' . $siswa_id);
