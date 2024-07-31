@@ -17,6 +17,7 @@ class C_siswa extends CI_Controller
         parent::__construct();
         //load model
         $this->load->model('Md_siswa');
+        $this->load->model('Md_kelas');
         $this->load->model('Md_log');
         $this->load->model('Md_orang_tua');
 
@@ -58,11 +59,12 @@ class C_siswa extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('No', 'NIS', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Nama Ayah', 'Nama Ibu', 'Aksi');
-        $configColumn['field'] = array('no', 'nis', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'nama_ayah', 'nama_ibu', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 100, 100, 80); //on px
+        $configColumn['title'] = array('No', 'NIS', 'Nama', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Alamat', 'No HP', 'Kelas', 'Nama Ayah', 'Nama Ibu', 'Aksi');
+        $configColumn['field'] = array('no', 'nis', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'no_hp', 'nama_kelas', 'nama_ayah', 'nama_ibu', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+        $configColumn['width'] = array(30, 50, 50, 100, 100, 80, 50, 100, 50, 60, 100, 100, 80); //on px
         $configColumn['template'] = array(
+            FALSE,
             FALSE,
             FALSE,
             FALSE,
@@ -107,6 +109,7 @@ class C_siswa extends CI_Controller
 
         $pageData['tableManageSiswa'] = $this->m_datatable->generateScript($set);
         $pageData['orang_tua'] = $this->Md_orang_tua->getOrangTua();
+        $pageData['kelas'] = $this->Md_kelas->getkelas();
         $pageData['page_name'] = 'V_siswa';
         $pageData['page_dir'] = 'siswa';
         $this->load->view('index', $pageData);
@@ -140,6 +143,7 @@ class C_siswa extends CI_Controller
 
         $siswa_id = decrypt($this->input->post('siswa_id'));
         $id_orang_tua = decrypt($this->input->post('id_orang_tua'));
+        $kelas_id = decrypt($this->input->post('kelas_id'));
         $nis = $this->input->post('nis');
         $nama = $this->input->post('nama');
         $jenis_kelamin = $this->input->post('jenis_kelamin');
@@ -151,6 +155,7 @@ class C_siswa extends CI_Controller
 
         $dataInsert = array(
             'id_orang_tua' => $id_orang_tua,
+            'kelas_id' => $kelas_id,
             'nis' => $nis,
             'nama' => $nama,
             'jenis_kelamin' => $jenis_kelamin,
@@ -190,6 +195,7 @@ class C_siswa extends CI_Controller
         if ($siswa) {
             $row['data'] = TRUE;
             $row['id_orang_tua'] = encrypt($siswa->id_orang_tua);
+            $row['kelas_id'] = encrypt($siswa->kelas_id);
             $row['siswa_id'] = encrypt($siswa->siswa_id);
             $row['nis'] = $siswa->nis;
             $row['nama'] = $siswa->nama;
@@ -225,6 +231,7 @@ class C_siswa extends CI_Controller
 
         if ($this->form_validation->run() != FALSE) {
             $id_orang_tua = $this->input->post('id_orang_tua') == "" ? NULL : decrypt($this->input->post('id_orang_tua'));
+            $kelas_id = $this->input->post('kelas_id') == "" ? NULL : decrypt($this->input->post('kelas_id'));
             $siswa_id = $this->input->post('siswa_id') == "" ? NULL : decrypt($this->input->post('siswa_id'));
             $nis = $this->input->post('nis') == "" ? NULL : $this->input->post('nis');
             $nama = $this->input->post('nama') == "" ? NULL : $this->input->post('nama');
@@ -246,6 +253,7 @@ class C_siswa extends CI_Controller
             $this->db->trans_begin();
             $this->Md_siswa->updateSiswa($siswa_id, [
                 'id_orang_tua' => $id_orang_tua,
+                'kelas_id' => $kelas_id,
                 'nis' => $nis,
                 'nama' => $nama,
                 'jenis_kelamin' => $jenis_kelamin,

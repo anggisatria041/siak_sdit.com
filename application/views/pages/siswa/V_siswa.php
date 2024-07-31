@@ -193,6 +193,19 @@
                                 <input type="number" name="no_hp" required class="form-control m-input" placeholder="No Hp"/>
                             </div>
                         </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Kelas <font class="m--font-danger">*</font>
+                            </label>
+                            <div class="col-md-6">
+                                 <select name="kelas_id" required class="form-control m-input m-select2">
+                                        <option value="">Pilih Kelas</option>
+                                         <?php foreach ($kelas as $list) : ?>
+                                                <option value="<?= encrypt($list->kelas_id); ?>"><?= $list->nama_kelas; ?></option>
+                                        <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-warning" data-dismiss="modal">
@@ -221,6 +234,7 @@
         $('[name="jenis_kelamin"] :selected').removeAttr('selected');
         $('[name="agama"] :selected').removeAttr('selected');
         $('[name="id_orang_tua"] :selected').removeAttr('selected');
+        $('[name="kelas_id"] :selected').removeAttr('selected');
         $('.m-select2').select2({
             width: '100%'
         });
@@ -265,6 +279,7 @@
                     $('[name="jenis_kelamin"] option[value="' + data.jenis_kelamin + '"]').attr('selected', 'selected');
                     $('[name="agama"] option[value="' + data.agama + '"]').attr('selected', 'selected');
                     $('[name="id_orang_tua"] option[value="' + data.id_orang_tua + '"]').attr('selected', 'selected');
+                    $('[name="kelas_id"] option[value="' + data.kelas_id + '"]').attr('selected', 'selected');
                     $('.m-select2').select2({width : '100%'});
                     $('#m_modal_6').modal('show');
 

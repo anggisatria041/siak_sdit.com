@@ -18,6 +18,7 @@ class Api extends CI_Controller
         //Load Model//
         $this->load->model('Md_siswa');
         $this->load->model('Md_guru');
+        $this->load->model('Md_nilai');
         $this->load->model('Md_orang_tua');
         $this->load->model('Md_tahun_ajaran');
 
@@ -72,6 +73,7 @@ class Api extends CI_Controller
             $row['agama'] = $list->agama;
             $row['alamat'] = $list->alamat;
             $row['no_hp'] = $list->no_hp;
+            $row['nama_kelas'] = $list->nama_kelas;
             $row['kelas_id'] = encrypt($list->kelas_id);
 
             $data[] = $row;
@@ -358,6 +360,35 @@ class Api extends CI_Controller
 
 
         }
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+    public function nilai_lingkup($lingkup)
+    {
+        $source = getDataForDataTable('Md_nilai', null);
+
+        foreach ($source['data'] as $list) {
+            if ($list->lingkup_materi == $lingkup) { 
+                $row = array();
+                $row['no'] = ++$source['no'];
+                $row['nilai_id'] = encrypt($list->nilai_id);
+                $row['nis'] = $list->nis;
+                $row['nama'] = $list->nama;
+                $row['tp1'] = $list->tp1;
+                $row['tp2'] = $list->tp2;
+                $row['tp3'] = $list->tp3;
+                $row['tp4'] = $list->tp4;
+                $data[] = $row;
+            }
+        }
+
         $output = null;
         if (!empty($source)) {
             $output = [

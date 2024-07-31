@@ -1,9 +1,6 @@
 <!--begin::Base Scripts -->
 <script src="<?= base_url(); ?>assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
 <script src="<?= base_url(); ?>assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
-<!-- <script src="<?= base_url(); ?>assets/demo/default/custom/crud/datatables/extensions/buttons.js" type="text/javascript"></script> -->
-<!-- <script src="<?= base_url(); ?>assets/vendors/custom/datatables/datatables.bundle.js" type="text/javascript"></script> -->
-<!-- <script src="<?= base_url(); ?>assets/demo/default/custom/crud/forms/widgets/dropzone.js" type="text/javascript"></script> -->
 <script src="<?= base_url(); ?>assets/demo/default/custom/crud/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="<?= base_url(); ?>assets/demo/default/custom/crud/forms/widgets/bootstrap-timepicker.js" type="text/javascript"></script>
 <script src="<?= base_url(); ?>assets/demo/default/custom/crud/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>

@@ -78,6 +78,15 @@ class Md_mapel extends CI_Model
         $hasil = $this->db->get($this->table)->row();
         return $hasil;
     }
+    function getByIdKelas($id)
+    {
+        $this->db->select('m.*');
+        $this->db->from('mapel m');
+        $this->db->where('m.status', 1);
+        $this->db->where('m.kelas_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
     function updatemapel($id, $data)
     {
         $this->db->where('mapel_id', $id);

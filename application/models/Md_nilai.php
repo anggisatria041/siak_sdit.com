@@ -1,44 +1,35 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_siswa extends CI_Model
+class Md_nilai extends CI_Model
 {
-    public $table = 'siswa';
+    public $table = 'nilai';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(nama)');
-    public $column_filter =array('nama');
-    public $order         = array('siswa_id' => 'asc');
+    public $column_search = array('lower(lingkup_materi)');
+    public $column_filter =array('lingkup_materi');
+    public $order         = array('nilai_id' => 'asc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('s.*,ot.id_orang_tua,ot.nama_ayah,ot.nama_ibu,k.nama_kelas');
-        $this->db->from('siswa s');
-        $this->db->join('orang_tua ot', 'ot.id_orang_tua = s.id_orang_tua');
-        $this->db->join('kelas k', 'k.kelas_id = s.kelas_id');
-        $this->db->where('s.status', 1);
+        $this->db->select('n.*,mp.nama_mapel,s.nis,s.nama');
+        $this->db->from('nilai n');
+        $this->db->join('mapel mp', 'mp.mapel_id = n.mapel_id','left');
+        $this->db->join('siswa s', 's.siswa_id = n.siswa_id','left');
+        $this->db->where('n.status', 1);
         
     }
-    public function getsiswa()
+    public function getNilai()
     {
-        $this->db->select('s.*');
-        $this->db->from('siswa s');
-        $this->db->where('s.status', 1);
+        $this->db->select('n.*');
+        $this->db->from('nilai n');
+        $this->db->where('n.status', 1);
         $query = $this->db->get();
         return $query->result();
-    }
-    public function getSiswaByKelas($id)
-    {
-        $this->db->select('s.*');
-        $this->db->from('siswa s');
-        $this->db->where('s.status', 1);
-        $this->db->where('s.kelas_id', $id);
-        $query = $this->db->get();
-        return $query->result_array();
     }
 
     private function getDatatablesQuery()
     {
-        $this->Md_siswa->getDataForDataTable();
+        $this->Md_nilai->getDataForDataTable();
         $i = 0;
         foreach ($this->column_search as $item) { 
             if ($this->input->post('query[generalSearch]')) { 
@@ -85,35 +76,28 @@ class Md_siswa extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addSiswa($data) {
+    function addNilai($data) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
-    function getSiswaById($id){
-       $this->db->where('siswa_id', $id);
-       $hasil = $this->db->get($this->table)->row();
-       return $hasil;
+    function getNilaiById($id){
+        $this->db->select('n.*,s.nama,s.nis');
+        $this->db->from('nilai n');
+        $this->db->join('siswa s', 's.siswa_id = n.siswa_id','left');
+        $this->db->where('n.nilai_id', $id);
+        $hasil = $this->db->get()->row();
+        return $hasil;
     }
-    function getSiswaByNis($id){
-        $this->db->where('siswa_id', $id);
-        $hasil = $this->db->get($this->table)->row_array();
-        return $hasil;
-     }
-     function getSiswaByNis_k($id){
-        $this->db->where('nis', $id);
-        $hasil = $this->db->get($this->table)->row_array();
-        return $hasil;
-     }
-    function updateSiswa($id, $data) {
-        $this->db->where('siswa_id', $id);
+    function updateNilai($id, $data) {
+        $this->db->where('nilai_id', $id);
         $this->db->update($this->table, $data);
     }
-    function getByIdKelas($id)
+    function getByIdSiswa($id)
     {
-        $this->db->select('s.*');
-        $this->db->from('siswa s');
-        $this->db->where('s.status', 1);
-        $this->db->where('s.kelas_id', $id);
+        $this->db->select('n.*');
+        $this->db->from('nilai s');
+        $this->db->where('n.status', 1);
+        $this->db->where('n.siswa', $id);
         $query = $this->db->get();
         return $query->result_array();
     }
