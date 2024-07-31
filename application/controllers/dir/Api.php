@@ -37,12 +37,14 @@ class Api extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $validate = false;
         foreach ($this->allowed_accesses as $key => $value) {
-            if (!$this->session->userdata($key)) continue;
+            if (!$this->session->userdata($key))
+                continue;
             $validate = true;
             $this->akses = $value;
             break;
         }
-        if (!$validate) redirect(base_url('lawang'));
+        if (!$validate)
+            redirect(base_url('lawang'));
 
     }
 
@@ -197,9 +199,9 @@ class Api extends CI_Controller
                     $row['status_pembayaran'] = '<span class="m-badge m-badge--info m-badge--rounded text-white text-center">Tidak Diketahui</span>';
                     break;
             }
-            if($list->bukti_pembayaran != ''){
-                $row['bukti_pembayaran'] = '<a class="btn btn-outline-info text-center" data-bs-toggle="modal" data-bs-target="#modalImage-' . $list->pembayaran_id . '"><img onclick="img('.$list->pembayaran_id.')" src="' . base_url() . 'assets/upload/bukti_pembayaran/' . $list->bukti_pembayaran . '" alt="Bukti Pembayaran" width="50" ></a>';
-            }else{
+            if ($list->bukti_pembayaran != '') {
+                $row['bukti_pembayaran'] = '<a class="btn btn-outline-info text-center" data-bs-toggle="modal" data-bs-target="#modalImage-' . $list->pembayaran_id . '"><img onclick="img(' . $list->pembayaran_id . ')" src="' . base_url() . 'assets/upload/bukti_pembayaran/' . $list->bukti_pembayaran . '" alt="Bukti Pembayaran" width="50" ></a>';
+            } else {
                 $row['bukti_pembayaran'] = '-';
             }
             $row['catatan'] = $list->catatan;
@@ -231,10 +233,68 @@ class Api extends CI_Controller
             $row['status_tajaran'] = $list->status_tajaran;
             $row['status'] = $list->status;
             $row['date_created'] = $list->date_created;
-           
+
             $data[] = $row;
         }
 
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+    public function manage_absensi()
+    {
+        $source = getDataForDataTable('Md_kelas', null);
+
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['kelas_id'] = encrypt($list->kelas_id);
+            $row['nama_kelas'] = $list->nama_kelas;
+            $row['status'] = $list->status;
+            $row['date_created'] = $list->date_created;
+            $data[] = $row;
+        }
+
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+    public function manage_detail($id_kelas)
+    {
+       
+        $source = getDataForDataTable('Md_absensi', null);
+
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['nis'] = $list->nis;
+            $row['nama_siswa'] = $list->nama;
+            for ($i = 1; $i <= 31; $i++) {
+                $absensi = $this->Md_absensi->getAbsensiByNis($list->nis, $i, $list->tajaran_id, decrypt($id_kelas));
+
+                if ($absensi != null) {
+                    $row['kehadiran_' . $i] = $absensi->kehadiran;
+                } else {
+                    $row['kehadiran_' . $i] = '-';
+                }
+            }
+
+            $data[] = $row;
+            
+
+        }
         $output = null;
         if (!empty($source)) {
             $output = [

@@ -106,7 +106,8 @@ class C_akun extends CI_Controller
         $pageData['page_dir'] = 'akun';
         $pageData['guru'] = $this->Md_guru->getguru();
         $pageData['siswa'] = $this->Md_siswa->getsiswa();
-
+        // var_dump($pageData);
+        // die;
         $this->load->view('index', $pageData);
 
 

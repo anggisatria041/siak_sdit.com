@@ -24,6 +24,15 @@ class Md_siswa extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getSiswaByKelas($id)
+    {
+        $this->db->select('s.*');
+        $this->db->from('siswa s');
+        $this->db->where('s.status', 1);
+        $this->db->where('s.kelas_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
     private function getDatatablesQuery()
     {
@@ -83,6 +92,11 @@ class Md_siswa extends CI_Model
        $hasil = $this->db->get($this->table)->row();
        return $hasil;
     }
+    function getSiswaByNis($id){
+        $this->db->where('siswa_id', $id);
+        $hasil = $this->db->get($this->table)->row_array();
+        return $hasil;
+     }
     function updateSiswa($id, $data) {
         $this->db->where('siswa_id', $id);
         $this->db->update($this->table, $data);

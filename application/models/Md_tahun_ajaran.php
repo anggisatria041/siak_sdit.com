@@ -83,6 +83,11 @@ class Md_tahun_ajaran extends CI_Model
        $hasil = $this->db->get($this->table)->row();
        return $hasil;
     }
+    function getTahunAjaranAktif(){
+        $this->db->where('status_tajaran', 'Aktif');
+        $hasil = $this->db->get($this->table)->row_array();
+        return $hasil;
+     }
     function updateTahunAjaran($id, $data) {
         $this->db->where('tajaran_id', $id);
         $this->db->update($this->table, $data);
