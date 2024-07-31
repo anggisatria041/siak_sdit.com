@@ -79,7 +79,7 @@
                     <span class="m-menu__link-text">Absensi</span>
                 </a>
             </li>
-            <li class="m-menu__item <?= $page_name == "V_nilai" ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
+            <li class="m-menu__item <?= ($page_name == "V_nilai" || $page_name == "V_mata_pelajaran" || $page_name == "V_input_nilai" || $page_name == "V_rekap_nilai") ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
                 m-menu-link-redirect="1">
                 <a href="<?= site_url('dir/C_nilai'); ?>" class="m-menu__link ">
                     <span class="m-menu__item-here"></span>
