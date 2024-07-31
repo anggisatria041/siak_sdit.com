@@ -132,6 +132,8 @@ class Api extends CI_Controller
             $row['status'] = $list->status;
             $row['date_created'] = $list->date_created;
             $row['kode_mapel'] = $list->kode_mapel;
+            $row['kelas_id'] = encrypt($list->kelas_id);
+            $row['nama_kelas'] = $list->nama_kelas; // Tambahkan nama kelas
             $data[] = $row;
         }
 

@@ -133,6 +133,19 @@
                                     placeholder="Kode Mata Pelajaran" />
                             </div>
                         </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                Kelas <font class="m--font-danger">*</font>
+                            </label>
+                            <div class="col-md-6">
+                                <select class="form-control m-input" name="kelas_id" required>
+                                <option value="">Pilih Kelas</option>
+                                    <?php foreach($kelas as $kls): ?>
+                                        <option value="<?= $kls->kelas_id ?>"><?= $kls->nama_kelas ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
 
                     </div>
                     <div class="modal-footer">
@@ -200,6 +213,8 @@
 
                     $('[name="kode_mapel"]').val(data.kode_mapel);
 
+                    $('[name="kelas_id"]').val(data.kelas_id); // Tambahkan untuk mengisi kelas_id
+
                     $('.m-select2').select2({ width: '100%' });
                     $('#m_modal_6').modal('show');
 
@@ -228,7 +243,7 @@
         }
 
         // ajax adding data to database
-        if ($('[name="nama_mapel"]').val() == "" || $('[name="deskripsi"]').val() == "" || $('[name="status"]').val() == "" || $('[name="kode_mapel"]').val() == "") {
+        if ($('[name="nama_mapel"]').val() == "" || $('[name="deskripsi"]').val() == "" || $('[name="status"]').val() == "" || $('[name="kode_mapel"]').val() == "" || $('[name="kelas_id"]').val() == "") {
             $('#m_form_1_msg').show();
             mApp.unblock(".modal-content");
         } else {
