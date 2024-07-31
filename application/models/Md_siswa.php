@@ -98,6 +98,11 @@ class Md_siswa extends CI_Model
         $hasil = $this->db->get($this->table)->row_array();
         return $hasil;
      }
+     function getSiswaByNis_k($id){
+        $this->db->where('nis', $id);
+        $hasil = $this->db->get($this->table)->row_array();
+        return $hasil;
+     }
     function updateSiswa($id, $data) {
         $this->db->where('siswa_id', $id);
         $this->db->update($this->table, $data);

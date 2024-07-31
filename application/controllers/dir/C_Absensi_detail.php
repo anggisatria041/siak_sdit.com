@@ -51,7 +51,7 @@ class C_Absensi_detail extends CI_Controller
 
 
     }
-    public function index($id_kelas)
+    public function index($id_kelas, $bulan)
     { /*             * * FOR CREATE DATA TABLE ** */
         /**
          * @var $config for configuration column and field data table into helper m_datatable
@@ -63,30 +63,38 @@ class C_Absensi_detail extends CI_Controller
          */
 
 
-        $absensi = $this->Md_siswa->getSiswaByKelas(decrypt($id_kelas));
-        if ($absensi) {
-            $configColumn['title'] = array('NO', 'Nama Siswa');
-            $configColumn['field'] = array('no', 'nama_siswa');
-            $configColumn['sortable'] = array(FALSE, TRUE);
-            $configColumn['width'] = array(30, 100);
-            $configColumn['template'] = array(
-                FALSE,
-                FALSE,
-            );
 
-            for ($i = 1; $i <= 31; $i++) {
-                $configColumn['title'][] = $i;
-                $configColumn['field'][] = 'kehadiran_' . $i;
-                $configColumn['sortable'][] = FALSE;
-                $configColumn['width'][] = 50; //on px
-                $configColumn['template'][] = FALSE;
-            }
-            $configColumn['title'][] = 'Total Kehadiran';
-            $configColumn['field'][] = 'total_kehadiran';
+        $configColumn['title'] = array('NO', 'Nama Siswa');
+        $configColumn['field'] = array('no', 'nama_siswa');
+        $configColumn['sortable'] = array(FALSE, TRUE);
+        $configColumn['width'] = array(30, 100);
+        $configColumn['template'] = array(
+            FALSE,
+            FALSE,
+        );
+
+        for ($i = 1; $i <= 31; $i++) {
+            $configColumn['title'][] = $i;
+            $configColumn['field'][] = 'kehadiran_' . $i;
             $configColumn['sortable'][] = FALSE;
             $configColumn['width'][] = 50; //on px
-            $configColumn['template'][] =
-                'function (e) {
+            $configColumn['template'][] = FALSE;
+        }
+        $tajaran = $this->Md_tahun_ajaran->getTahunAjaranGroup();
+        $filter_tajaran = array();
+        if ($tajaran) {
+            foreach ($tajaran as $list) {
+                //untuk filter
+                $filter_tajaran[] = array('id' => $list->nama_tajaran, 'attr' => $list->nama_tajaran);
+            }
+        }
+
+        $configColumn['title'][] = 'Total Kehadiran';
+        $configColumn['field'][] = 'total_kehadiran';
+        $configColumn['sortable'][] = FALSE;
+        $configColumn['width'][] = 50; //on px
+        $configColumn['template'][] =
+            'function (e) {
                     return \'\
                         <div class="dropdown down">\
                             <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
@@ -98,34 +106,38 @@ class C_Absensi_detail extends CI_Controller
                         </div>\
                     \';
                     }'
-            ;
-            $configFilter = FALSE;
+        ;
+        $configFilter = array(
+            array(
+                'nama_filter' => 'Tahun Ajaran',
+                'id_filter' => 'nama_tajaran',
+                'option_filter' => $filter_tajaran,
+            )
+        );
 
-            /**
-             * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
-             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
-             * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
-             * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
-             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
-             */
-            $set['id_table'] = 'tableManageDetail'; // tanpa spasi dan karakter
-            $set['json_url'] = base_url() . 'dir/api/manage_detail/' . $id_kelas;
-            $set['columns'] = $this->m_datatable->setColumn($configColumn);
-            $set['filter'] = FALSE; // wajib
-            $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
-            $set['server_side'] = TRUE; // wajib
-            $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+        /**
+         * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
+         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
+         * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
+         * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
+         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
+         */
+        $set['id_table'] = 'tableManageDetail'; // tanpa spasi dan karakter
+        $set['json_url'] = base_url() . 'dir/api/manage_detail/' . $id_kelas . '/' . $bulan;
+        $set['columns'] = $this->m_datatable->setColumn($configColumn);
+        $set['filter'] = $this->m_datatable->setFilter($configFilter); // wajib
+        $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+        $set['server_side'] = TRUE; // wajib
+        $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
-            $pageData['tableManageDetail'] = $this->m_datatable->generateScript($set);
+        $pageData['tableManageDetail'] = $this->m_datatable->generateScript($set);
 
-            $pageData['page_name'] = 'V_absensi_detail';
-            $pageData['page_dir'] = 'absensi';
-            // var_dump($set);
-            // die;
-            $this->load->view('index', $pageData);
-        } else {
-            echo "Data absensi tidak ditemukan";
-        }
+        $pageData['page_name'] = 'V_absensi_detail';
+        $pageData['page_dir'] = 'absensi';
+        $pageData['bulan'] = $bulan;
+        $pageData['id_kelas'] = $id_kelas;
+        $this->load->view('index', $pageData);
+
     }
     public function add()
     {
@@ -187,40 +199,49 @@ class C_Absensi_detail extends CI_Controller
     }
     public function edit($argv1 = '')
     {
-
-        $valid = $argv1 == '' ? FALSE : (is_int(decrypt($argv1)) ? TRUE : FALSE);
-        if (!$valid) {
-            echo json_encode(array('data' => FALSE));
-            die;
-        }
-
         $tajaran = $this->Md_tahun_ajaran->getTahunAjaranAktif();
         $nama_tajaran = $tajaran['nama_tajaran'];
         $tajaran_id = $tajaran['tajaran_id'];
-        $siswa = $this->Md_siswa->getSiswaByKelas(decrypt($argv1));
+        $siswa = $this->Md_siswa->getSiswaByNis_k($argv1);
+        $nis = $siswa['nis'];
+        $id_kelas = $siswa['kelas_id'];
+        $bulan = $this->input->get('bulan');
 
-        // var_dump($siswa);
-        // die;
+        $nama_bulan = $this->Md_tahun_ajaran->getNamaBulan($bulan);
 
         $row = array();
         if ($siswa) {
+
             $row['data'] = TRUE;
             $row['tajaran_id'] = encrypt($tajaran_id);
             $row['nama_tajaran'] = $nama_tajaran;
+            $row['nama_siswa'] = $siswa['nama'];
+            $row['nis'] = $nis;
             $row['siswa'] = $siswa;
+            $row['bulan'] = $bulan;
+            $row['nama_bulan'] = $nama_bulan;
+            for ($i = 1; $i <= 31; $i++) {
+                $absensi = $this->Md_absensi->getAbsensiByNis($nis, $i, $tajaran_id, $id_kelas, $bulan);
+
+                if ($absensi != null) {
+                    $row['kehadiran_' . $i] = $absensi->kehadiran;
+                } else {
+                    $row['kehadiran_' . $i] = '-';
+                }
+            }
 
         } else {
             $row['data'] = FALSE;
         }
+
 
         echo json_encode($row);
         die;
     }
     public function update()
     {
-        $this->form_validation->set_rules('tanggal', '', 'required');
-        $this->form_validation->set_rules('keterangan', '', 'required');
-        $this->form_validation->set_rules('siswa_hadir[]', '', 'required');
+        $this->form_validation->set_rules('nama_siswa', '', 'required');
+
 
 
         $csrf = array(
@@ -230,8 +251,9 @@ class C_Absensi_detail extends CI_Controller
 
         if ($this->form_validation->run() != FALSE) {
             $tanggal = $this->input->post('tanggal') == "" ? NULL : $this->input->post('tanggal');
-            $keterangan = $this->input->post('keterangan') == "" ? NULL : $this->input->post('keterangan');
+            $nis = $this->input->post('nis') == "" ? NULL : $this->input->post('nis');
             $tajaran_id = $this->input->post('tajaran_id') == "" ? NULL : decrypt($this->input->post('tajaran_id'));
+            $bulan = $this->input->post('bulan') == "" ? NULL : $this->input->post('bulan');
             if ($this->form_validation->run() === FALSE) {
                 die(json_encode([
                     'status' => 'gagal',
@@ -241,20 +263,28 @@ class C_Absensi_detail extends CI_Controller
             }
             $siswa_hadir = $this->input->post('siswa_hadir');
             foreach ($siswa_hadir as $key => $value) {
-                $nis = $this->Md_siswa->getSiswaByNis($key);
 
-                $dataInsert[] = array(
-                    'tanggal' => $tanggal,
-                    'keterangan' => $keterangan,
-                    'tajaran_id' => $tajaran_id,
-                    'nis' => $nis['nis'],
-                    'kehadiran' => $value,
-                );
+                $absen_valid = $this->Md_absensi->getAbsensiByTanggal_bulan($key, $bulan, $tajaran_id, $nis);
+                if ($absen_valid) {
+                    $dataUpdate = array(
+                        'kehadiran' => $value,
+                    );
+                    $this->db->trans_start();
+                    if (!empty($dataUpdate)) {
+                        $this->Md_absensi->updateAbsensi($absen_valid->absensi_id, $dataUpdate);
+                    }
+                    $this->db->trans_complete();
+                } else {
+                    $tahun = 2024;
+                    $tanggal_lengkap = $tahun . '-' . $bulan . '-' . $key;
+                    $dataInsert[] = array(
+                        'tanggal' => $tanggal_lengkap,
+                        'tajaran_id' => $tajaran_id,
+                        'nis' => $nis,
+                        'kehadiran' => $value,
+                    );
+                }
             }
-
-
-            $this->db->trans_begin();
-            $this->Md_absensi->addAbsensi($dataInsert);
 
             // addLog('Update Data', 'Mengubah data Guru, 'GGuruD' . $guguru);
             if ($this->db->trans_status() == TRUE) {

@@ -95,6 +95,14 @@
                     <span class="m-menu__link-text">Orang Tua</span>
                 </a>
             </li>
+            <li class="m-menu__item <?= $page_name == "V_kelas" ? "m-menu__item--active" : "" ?>" aria-haspopup="true"
+                m-menu-link-redirect="1">
+                <a href="<?= site_url('dir/C_kelas'); ?>" class="m-menu__link ">
+                    <span class="m-menu__item-here"></span>
+                    <i class="m-menu__link-icon flaticon-list-2"></i>
+                    <span class="m-menu__link-text">Kelas</span>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- END: Aside Menu -->

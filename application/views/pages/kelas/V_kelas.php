@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center">
             <div class="mr-auto">
                 <h3 class="m-subheader__title m-subheader__title--separator">
-                    Absensi
+                    Kelas
                 </h3>
                 <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                     <li class="m-nav__item m-nav__item--home">
@@ -18,7 +18,7 @@
                     <li class="m-nav__item">
                         <a href="" class="m-nav__link">
                             <span class="m-nav__link-text">
-                                Absensi
+                                Kelas
                             </span>
                         </a>
                     </li>
@@ -37,15 +37,15 @@
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
                                 <h3 class="m-portlet__head-text">
-                                    Kelola Data Absensi<p id="hax"></p>
+                                    Manage Data Kelas<p id="hax"></p>
                                 </h3>
                             </div>
                         </div>
-                        <!-- <div class="m-portlet__head-tools">
+                        <div class="m-portlet__head-tools">
                             <button type="button" class="btn btn-info btn-md" onclick="add_ajax()">
-                                <i class="la la-plus"></i> Tambah Absensi
+                                <i class="la la-plus"></i> Tambah Kelas
                             </button>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="m-portlet__body">
                         <?php if ($this->session->flashdata('alert1')) { ?>
@@ -64,7 +64,7 @@
                             </div>
                         <?php } ?>
                         <!--begin: Datatable -->
-                        <div class="m_datatable" id="tableManageAbsensi"></div>
+                        <div class="m_datatable" id="tableManageKelas"></div>
                         <!--end: Datatable -->
                     </div>
                 </div>
@@ -76,9 +76,9 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header m--bg-brand">
-                    <!-- <h5 class="modal-title m--font-light" id="exampleModalLongTitle">
-                        Tambah Absensi
-                    </h5> -->
+                    <h5 class="modal-title m--font-light" id="exampleModalLongTitle">
+                        Tambah Kelas
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
                             &times;
@@ -87,6 +87,7 @@
                 </div>
                 <form class="m-form m-form--fit m-form--label-align-right" action="" method="POST" id="formAdd"
                     enctype="multipart/form-data">
+
                     <div class="modal-body">
                         <div class="m-form__content">
                             <div class="m-alert m-alert--icon alert alert-danger" role="alert" id="m_form_1_msg">
@@ -102,28 +103,17 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="kelas_id" value="">
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value=""
                             style="display: none">
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Tahun Ajaran <font class="m--font-danger">*</font>
+                                Nama Kelas <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="hidden" name="tajaran_id" required class="form-control m-input" />
-                                <input type="text" name="nama_tajaran" required class="form-control m-input" readonly
-                                    placeholder="Tahun Ajaran" />
+                                <input type="text" name="nama_kelas" required class="form-control m-input" placeholder="Nama Kelas" />
                             </div>
                         </div>
-                        <div class="form-group m-form__group row">
-                            <label class="col-form-label col-md-3" style="text-align:left">
-                                Tanggal <font class="m--font-danger">*</font>
-                            </label>
-                            <div class="col-md-6">
-                                <input type="date" name="tanggal" required class="form-control m-input" value="<?= date('Y-m-d') ?>"
-                                    placeholder="Tanggal" />
-                            </div>
-                        </div>
-
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
                                 Keterangan <font class="m--font-danger">*</font>
@@ -131,15 +121,6 @@
                             <div class="col-md-6">
                                 <input type="text" name="keterangan" required class="form-control m-input"
                                     placeholder="Keterangan" />
-                            </div>
-                        </div>
-                        <div class="form-group m-form__group row">
-                            <label class="col-form-label col-md-3" style="text-align:left">
-                                Daftar Siswa <font class="m--font-danger">*</font>
-                            </label>
-                            <div class="col-md-12">
-                               
-                                <div id="siswa-list"></div>
                             </div>
                         </div>
                     </div>
@@ -167,7 +148,7 @@
     function resetForm() {
         $('#m_form_1_msg').hide();
         $('#formAdd')[0].reset();
-        $('[name="kelas_id"] :selected').removeAttr('selected');
+        $('[name="status"] :selected').removeAttr('selected');
         $('.m-select2').select2({
             width: '100%'
         });
@@ -178,7 +159,7 @@
     function add_ajax() {
         method = 'add';
         resetForm();
-        $('#exampleModalLongTitle').html("Tambah Absensi");
+        $('#exampleModalLongTitle').html("Tambah Kelas");
         $('.form-group').removeClass('has-error');
         $('.help-block').empty();
         $('#m_form_1_msg').hide();
@@ -191,20 +172,21 @@
         method = 'edit';
         resetForm();
         $('#btnSaveAjax').show();
-        $('#exampleModalLongTitle').html("Input Absensi");
+        $('#exampleModalLongTitle').html("Edit Kelas");
 
         $.ajax({
-            url: "<?php echo base_url() . 'dir/C_absensi/edit' ?>/" + id,
+            url: "<?php echo base_url() . 'dir/C_kelas/edit' ?>/" + id,
             type: "GET",
             dataType: "JSON",
             success: function (data) {
                 if (data.data == true) {
                     $('#formAdd')[0].reset();
-                    $('[name="tajaran_id"]').val(data.tajaran_id);
-                    $('[name="nama_tajaran"]').val(data.nama_tajaran);
-                    $.each(data.siswa, function (index, value) {
-                        $('#siswa-list').append('<div class="row m-input"><div class="col-md-3">' + value.nama + '</div><div class="col-md-9"><div class="m-radio-inline"><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="hadir" required>Hadir<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="izin" required>Izin<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="sakit" required>Sakit<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="alfa" required>Alfa<span></span></label></div></div></div>');
-                    });
+                    $('[name="kelas_id"]').val(data.kelas_id);
+
+                    $('[name="nama_kelas"]').val(data.nama_kelas);
+
+                    $('[name="keterangan"]').val(data.keterangan);
+
                     $('.m-select2').select2({ width: '100%' });
                     $('#m_modal_6').modal('show');
 
@@ -227,13 +209,13 @@
 
         var url;
         if (method == 'add') {
-            url = "<?= base_url() . 'dir/C_absensi/add' ?>";
+            url = "<?= base_url() . 'dir/C_kelas/add' ?>";
         } else {
-            url = "<?= base_url() . 'dir/C_absensi/update' ?>";
+            url = "<?= base_url() . 'dir/C_kelas/update' ?>";
         }
 
         // ajax adding data to database
-        if ($('[name="tanggal"]').val() == "" || $('[name="keterangan"]').val() == "") {
+        if ($('[name="nama_kelas"]').val() == "" || $('[name="keterangan"]').val() == "" || $('[name="status"]').val() == "") {
             $('#m_form_1_msg').show();
             mApp.unblock(".modal-content");
         } else {
@@ -253,7 +235,7 @@
                         csrfHash = data.csrf.csrfHash;
                         $('#m_modal_6').modal('hide');
                         swal("Berhasil..", "Data anda berhasil disimpan", "success");
-                        reload_table('tableManageAbsensi');
+                        reload_table('tableManageKelas');
                     } else {
                         csrfName = data.csrf.csrfName;
                         csrfHash = data.csrf.csrfHash;
@@ -274,9 +256,49 @@
         }
     }
 
-    function detail(id) {
-        window.location.href = "<?= base_url() ?>dir/C_Absensi_detail/index/" + id + "/<?= date('m') ?>";
+    function hapus(id) {
+        swal({
+            title: "Apakah anda yakin?",
+            text: "Anda yakin ingin cancel data ini?",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "<span><i class='flaticon-interface-1'></i><span>Ya, Cancel!</span></span>",
+            confirmButtonClass: "btn btn-danger m-btn m-btn--pill m-btn--icon",
+            cancelButtonText: "<span><i class='flaticon-close'></i><span>Batal Cancel</span></span>",
+            cancelButtonClass: "btn btn-metal m-btn m-btn--pill m-btn--icon"
+        }).then(function (e) {
+            if (e.value) {
+                mApp.blockPage({ //block page
+                    overlayColor: "#000000",
+                    type: "loader",
+                    state: "primary",
+                    message: "Please wait..."
+                });
+
+                $.ajax({
+                    url: "<?php echo base_url() . 'dir/C_kelas/delete' ?>/" + id,
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data.data == true) {
+                            swal("Berhasil..", "Data berhasil dicancel", "success");
+                            reload_table('tableManageKelas');
+                        } else if (data.data == false) {
+                            swal("Oops", "Data gagal dicancel!", "error");
+                        } else {
+                            swal("Gagal", data.message, "warning");
+                        }
+                        mApp.unblockPage();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        mApp.unblockPage();
+                        swal("Oops", "Data gagal dicancel!", "error");
+                    }
+                })
+            }
+        });
     }
 </script>
-<?= isset($tableManageAbsensi) ? $tableManageAbsensi : '' ?>
+<?= isset($tableManageKelas) ? $tableManageKelas : '' ?>
 <!-- end:: Body -->

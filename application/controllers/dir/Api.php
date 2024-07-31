@@ -143,6 +143,32 @@ class Api extends CI_Controller
 
         die(json_encode($output));
     }
+    public function manage_kelas()
+    {
+        $source = getDataForDataTable('Md_kelas', null);
+
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['kelas_id'] = encrypt($list->kelas_id);
+            $row['nama_kelas'] = $list->nama_kelas;
+            $row['keterangan'] = $list->keterangan;
+            $row['status'] = $list->status;
+            $row['date_created'] = $list->date_created;
+            $data[] = $row;
+        }
+
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+
     public function manage_akun()
     {
         $source = getDataForDataTable('Md_akun', null);
@@ -236,7 +262,7 @@ class Api extends CI_Controller
             $row['status'] = $list->status;
             $row['date_created'] = $list->date_created;
 
-           
+
             $data[] = $row;
         }
 
@@ -308,10 +334,10 @@ class Api extends CI_Controller
 
         die(json_encode($output));
     }
-    public function manage_detail($id_kelas)
+    public function manage_detail($id_kelas, $bulan)
     {
-       
-        $source = getDataForDataTable('Md_absensi', null);
+
+        $source = getDataForDataTable('Md_absensi', decrypt($id_kelas));
 
         foreach ($source['data'] as $list) {
             $row = array();
@@ -319,7 +345,7 @@ class Api extends CI_Controller
             $row['nis'] = $list->nis;
             $row['nama_siswa'] = $list->nama;
             for ($i = 1; $i <= 31; $i++) {
-                $absensi = $this->Md_absensi->getAbsensiByNis($list->nis, $i, $list->tajaran_id, decrypt($id_kelas));
+                $absensi = $this->Md_absensi->getAbsensiByNis($list->nis, $i, $list->tajaran_id, decrypt($id_kelas), $bulan);
 
                 if ($absensi != null) {
                     $row['kehadiran_' . $i] = $absensi->kehadiran;
@@ -329,7 +355,7 @@ class Api extends CI_Controller
             }
 
             $data[] = $row;
-            
+
 
         }
         $output = null;

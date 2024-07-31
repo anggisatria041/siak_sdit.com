@@ -60,6 +60,26 @@
                                 </div>
                             </div>
                         <?php } ?>
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-md-3" style="text-align:left">
+                                <label for="bulan">Bulan</label>
+                                <select class="form-control" id="bulan" name="bulan"
+                                    onchange="changeBulan('<?= $id_kelas ?>', this.value)">
+                                    <option value="">Pilih Bulan</option>
+                                    <option value="1" <?= $bulan == '1' ? 'selected' : '' ?>>Januari</option>
+                                    <option value="2" <?= $bulan == '2' ? 'selected' : '' ?>>Februari</option>
+                                    <option value="3" <?= $bulan == '3' ? 'selected' : '' ?>>Maret</option>
+                                    <option value="4" <?= $bulan == '4' ? 'selected' : '' ?>>April</option>
+                                    <option value="5" <?= $bulan == '5' ? 'selected' : '' ?>>Mei</option>
+                                    <option value="6" <?= $bulan == '6' ? 'selected' : '' ?>>Juni</option>
+                                    <option value="7" <?= $bulan == '7' ? 'selected' : '' ?>>Juli</option>
+                                    <option value="8" <?= $bulan == '8' ? 'selected' : '' ?>>Agustus</option>
+                                    <option value="9" <?= $bulan == '9' ? 'selected' : '' ?>>September</option>
+                                    <option value="10" <?= $bulan == '10' ? 'selected' : '' ?>>Oktober</option>
+                                    <option value="11" <?= $bulan == '11' ? 'selected' : '' ?>>November</option>
+                                    <option value="12" <?= $bulan == '12' ? 'selected' : '' ?>>Desember</option>
+                                </select>
+                        </div>
                         <!--begin: Datatable -->
                         <div class="m_datatable" id="tableManageDetail"></div>
                         <!--end: Datatable -->
@@ -107,35 +127,44 @@
                             </label>
                             <div class="col-md-6">
                                 <input type="hidden" name="tajaran_id" required class="form-control m-input" />
+                                <input type="hidden" name="nis" required class="form-control m-input" />
                                 <input type="text" name="nama_tajaran" required class="form-control m-input" readonly
                                     placeholder="Tahun Ajaran" />
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Tanggal <font class="m--font-danger">*</font>
+                                Bulan <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="date" name="tanggal" required class="form-control m-input" value="<?= date('Y-m-d') ?>"
-                                    placeholder="Tanggal" />
+                                <input type="hidden" name="bulan" required class="form-control m-input" />
+                                <input type="text" name="nama_bulan" required class="form-control m-input" readonly
+                                    placeholder="Bulan" />
                             </div>
                         </div>
 
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Keterangan <font class="m--font-danger">*</font>
+                                Nama Siswa <font class="m--font-danger">*</font>
                             </label>
                             <div class="col-md-6">
-                                <input type="text" name="keterangan" required class="form-control m-input"
-                                    placeholder="Keterangan" />
+                                <input type="text" name="nama_siswa" required class="form-control m-input"
+                                    placeholder="Nama Siswa" readonly />
                             </div>
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-md-3" style="text-align:left">
-                                Daftar Siswa <font class="m--font-danger">*</font>
+                                Tanggal
                             </label>
+                            <div class="col-md-6">
+                                <label class="col-form-label col-md-3" style="text-align:left">
+                                    Kehadiran
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+
                             <div class="col-md-12">
-                               
+
                                 <div id="siswa-list"></div>
                             </div>
                         </div>
@@ -182,6 +211,10 @@
         $('#m_modal_6').modal('show');
         $('#btnSaveAjax').show();
     }
+    function changeBulan(id, value) {
+        alert('berhasil');
+        window.location.href = "<?= base_url() ?>dir/C_Absensi_detail/index/" + id + "/" + value;
+    }
 
     function edit(id) {
 
@@ -191,17 +224,35 @@
         $('#exampleModalLongTitle').html("Input Absensi");
 
         $.ajax({
-            url: "<?php echo base_url() . 'dir/C_absensi/edit' ?>/" + id,
+            url: "<?php echo base_url() . 'dir/C_absensi_detail/edit' ?>/" + id,
             type: "GET",
+            data: {
+                bulan: <?= $bulan ?>,
+            },
             dataType: "JSON",
             success: function (data) {
                 if (data.data == true) {
                     $('#formAdd')[0].reset();
                     $('[name="tajaran_id"]').val(data.tajaran_id);
+                    $('[name="nis"]').val(data.nis);
                     $('[name="nama_tajaran"]').val(data.nama_tajaran);
-                    $.each(data.siswa, function (index, value) {
-                        $('#siswa-list').append('<div class="row m-input"><div class="col-md-3">' + value.nama + '</div><div class="col-md-9"><div class="m-radio-inline"><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="hadir" required>Hadir<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="izin" required>Izin<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="sakit" required>Sakit<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + value.siswa_id + ']" value="alfa" required>Alfa<span></span></label></div></div></div>');
-                    });
+                    $('[name="nama_siswa"]').val(data.nama_siswa);
+                    $('[name="nama_bulan"]').val(data.nama_bulan);
+                    $('[name="bulan"]').val(data.bulan);
+                    $('#siswa-list').empty();
+                    for (let i = 1; i <= 31; i++) {
+                        let kehadiran = data['kehadiran_' + i];
+                        let selectedHadir = kehadiran === 'hadir' ? 'checked' : '';
+                        let selectedIzin = kehadiran === 'izin' ? 'checked' : '';
+                        let selectedSakit = kehadiran === 'sakit' ? 'checked' : '';
+                        let selectedAlfa = kehadiran === 'alfa' ? 'checked' : '';
+                        if (!selectedHadir && !selectedIzin && !selectedSakit && !selectedAlfa) {
+                        } else {
+                            $('#siswa-list').append('<div class="row m-input"><div class="col-md-3">' + i + '</div><div class="col-md-9"><div class="m-radio-inline"><label class="m-radio"><input type="radio" name="siswa_hadir[' + i + ']" value="hadir" required ' + selectedHadir + '>Hadir<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + i + ']" value="izin" required ' + selectedIzin + '>Izin<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + i + ']" value="sakit" required ' + selectedSakit + '>Sakit<span></span></label><label class="m-radio"><input type="radio" name="siswa_hadir[' + i + ']" value="alfa" required ' + selectedAlfa + '>Alfa<span></span></label></div></div></div>');
+                        }
+
+                    }
+
                     $('.m-select2').select2({ width: '100%' });
                     $('#m_modal_6').modal('show');
 
@@ -226,11 +277,11 @@
         if (method == 'add') {
             url = "<?= base_url() . 'dir/C_absensi/add' ?>";
         } else {
-            url = "<?= base_url() . 'dir/C_absensi/update' ?>";
+            url = "<?= base_url() . 'dir/C_absensi_detail/update' ?>";
         }
 
         // ajax adding data to database
-        if ($('[name="tanggal"]').val() == "" || $('[name="keterangan"]').val() == "") {
+        if ($('[name="bulan"]').val() == "" || $('[name="nama_siswa"]').val() == "") {
             $('#m_form_1_msg').show();
             mApp.unblock(".modal-content");
         } else {
@@ -271,9 +322,6 @@
         }
     }
 
-    function detail(id) {
-        window.location.href = "<?php echo base_url() . 'dir/C_absensi/detail' ?>/" + id;
-    }
 </script>
 
 <?= isset($tableManageDetail) ? $tableManageDetail : '' ?>

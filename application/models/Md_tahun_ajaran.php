@@ -24,6 +24,15 @@ class Md_tahun_ajaran extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getTahunAjaranGroup()
+    {
+        $this->db->select('ta.*');
+        $this->db->from('tahun_ajaran ta');
+        $this->db->where('ta.status', 1);
+        $this->db->group_by('ta.nama_tajaran');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     private function getDatatablesQuery()
     {
@@ -97,6 +106,23 @@ class Md_tahun_ajaran extends CI_Model
         $this->db->where('status', 1);
         $hasil = $this->db->get($this->table)->result();
         return $hasil;
+    }
+    function getNamaBulan($bulan){
+        $namaBulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+        return $namaBulan[$bulan];
     }
    
 
