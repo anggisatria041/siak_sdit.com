@@ -11,9 +11,10 @@ class Md_siswa extends CI_Model
 
     public function getDataForDataTable()
     {
-        $this->db->select('s.*,ot.id_orang_tua,ot.nama_ayah,ot.nama_ibu');
+        $this->db->select('s.*,ot.id_orang_tua,ot.nama_ayah,ot.nama_ibu,k.nama_kelas');
         $this->db->from('siswa s');
         $this->db->join('orang_tua ot', 'ot.id_orang_tua = s.id_orang_tua');
+        $this->db->join('kelas k', 'k.kelas_id = s.kelas_id');
         $this->db->where('s.status', 1);
         
     }

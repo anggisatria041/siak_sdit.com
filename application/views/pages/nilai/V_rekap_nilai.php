@@ -133,8 +133,8 @@
                             </th>
                         </tr>
                         <tr>
-                            <td id="nis">1234</td>
-                            <td style="width: 30%" id="nama">anggi</td>
+                            <td id="nis"></td>
+                            <td style="width: 30%" id="nama"></td>
                             <td>
                                 <input type="number" name="tp1" required class="form-control m-input" min="0"/>
                             </td>

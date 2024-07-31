@@ -73,6 +73,7 @@ class Api extends CI_Controller
             $row['agama'] = $list->agama;
             $row['alamat'] = $list->alamat;
             $row['no_hp'] = $list->no_hp;
+            $row['nama_kelas'] = $list->nama_kelas;
             $row['kelas_id'] = encrypt($list->kelas_id);
 
             $data[] = $row;
