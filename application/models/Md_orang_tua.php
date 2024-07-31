@@ -1,43 +1,33 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class Md_siswa extends CI_Model
+class Md_orang_tua extends CI_Model
 {
-    public $table = 'siswa';
+    public $table = 'orang_tua';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(nama)');
-    public $column_filter =array('nama');
-    public $order         = array('siswa_id' => 'asc');
+    public $column_search = array('lower(nama_ayah)');
+    public $column_filter =array('nama_ayah');
+    public $order         = array('id_orang_tua' => 'asc');
 
     public function getDataForDataTable()
     {
-        $this->db->select('s.*,ot.id_orang_tua,ot.nama_ayah,ot.nama_ibu');
-        $this->db->from('siswa s');
-        $this->db->join('orang_tua ot', 'ot.id_orang_tua = s.id_orang_tua');
-        $this->db->where('s.status', 1);
+        $this->db->select('ot.*');
+        $this->db->from('orang_tua ot');
+        $this->db->where('ot.status', 1);
         
     }
-    public function getsiswa()
+    public function getOrangTua()
     {
-        $this->db->select('s.*');
-        $this->db->from('siswa s');
-        $this->db->where('s.status', 1);
+        $this->db->select('ot.*');
+        $this->db->from('orang_tua ot');
+        $this->db->where('ot.status', 1);
         $query = $this->db->get();
         return $query->result();
-    }
-    public function getSiswaByKelas($id)
-    {
-        $this->db->select('s.*');
-        $this->db->from('siswa s');
-        $this->db->where('s.status', 1);
-        $this->db->where('s.kelas_id', $id);
-        $query = $this->db->get();
-        return $query->result_array();
     }
 
     private function getDatatablesQuery()
     {
-        $this->Md_siswa->getDataForDataTable();
+        $this->Md_orang_tua->getDataForDataTable();
         $i = 0;
         foreach ($this->column_search as $item) { 
             if ($this->input->post('query[generalSearch]')) { 
@@ -84,22 +74,17 @@ class Md_siswa extends CI_Model
         $query = $this->db->count_all_results();
         return $query;
     }
-    function addSiswa($data) {
+    function addOrangTua($data) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
-    function getSiswaById($id){
-       $this->db->where('siswa_id', $id);
+    function getOrangTuaById($id){
+       $this->db->where('id_orang_tua', $id);
        $hasil = $this->db->get($this->table)->row();
        return $hasil;
     }
-    function getSiswaByNis($id){
-        $this->db->where('siswa_id', $id);
-        $hasil = $this->db->get($this->table)->row_array();
-        return $hasil;
-     }
-    function updateSiswa($id, $data) {
-        $this->db->where('siswa_id', $id);
+    function updateOrangTua($id, $data) {
+        $this->db->where('id_orang_tua', $id);
         $this->db->update($this->table, $data);
     }
    

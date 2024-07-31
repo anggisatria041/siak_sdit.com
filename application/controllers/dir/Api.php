@@ -18,6 +18,7 @@ class Api extends CI_Controller
         //Load Model//
         $this->load->model('Md_siswa');
         $this->load->model('Md_guru');
+        $this->load->model('Md_orang_tua');
         $this->load->model('Md_tahun_ajaran');
 
         //Load Helper//
@@ -60,6 +61,9 @@ class Api extends CI_Controller
             $row = array();
             $row['no'] = ++$source['no'];
             $row['siswa_id'] = encrypt($list->siswa_id);
+            $row['id_orang_tua'] = encrypt($list->id_orang_tua);
+            $row['nama_ayah'] = $list->nama_ayah;
+            $row['nama_ibu'] = $list->nama_ibu;
             $row['nis'] = $list->nis;
             $row['nama'] = $list->nama;
             $row['jenis_kelamin'] = $list->jenis_kelamin;
@@ -68,9 +72,7 @@ class Api extends CI_Controller
             $row['agama'] = $list->agama;
             $row['alamat'] = $list->alamat;
             $row['no_hp'] = $list->no_hp;
-            $row['email'] = $list->email;
             $row['kelas_id'] = encrypt($list->kelas_id);
-            $row['orang_tua_id'] = encrypt($list->orang_tua_id);
 
             $data[] = $row;
         }
@@ -233,6 +235,41 @@ class Api extends CI_Controller
             $row['status_tajaran'] = $list->status_tajaran;
             $row['status'] = $list->status;
             $row['date_created'] = $list->date_created;
+
+           
+            $data[] = $row;
+        }
+
+        $output = null;
+        if (!empty($source)) {
+            $output = [
+                "meta" => $source['meta'],
+                "data" => isset($data) ? $data : [],
+            ];
+        }
+
+        die(json_encode($output));
+    }
+    public function manage_orang_tua()
+    {
+        $source = getDataForDataTable('Md_orang_tua', null);
+
+        foreach ($source['data'] as $list) {
+            $row = array();
+            $row['no'] = ++$source['no'];
+            $row['id_orang_tua'] = encrypt($list->id_orang_tua);
+            $row['nama_ayah'] = $list->nama_ayah;
+            $row['tahun_lahir_ayah'] = $list->tahun_lahir_ayah;
+            $row['pekerjaan_ayah'] = $list->pekerjaan_ayah;
+            $row['pendidikan_ayah'] = $list->pendidikan_ayah;
+            $row['penghasilan_ayah'] = $list->penghasilan_ayah;
+            $row['alamat_ayah'] = $list->alamat_ayah;
+            $row['nama_ibu'] = $list->nama_ibu;
+            $row['tahun_lahir_ibu'] = $list->tahun_lahir_ibu;
+            $row['pekerjaan_ibu'] = $list->pekerjaan_ibu;
+            $row['pendidikan_ibu'] = $list->pendidikan_ibu;
+            $row['penghasilan_ibu'] = $list->penghasilan_ibu;
+            $row['alamat_ibu'] = $list->alamat_ibu;
 
             $data[] = $row;
         }
