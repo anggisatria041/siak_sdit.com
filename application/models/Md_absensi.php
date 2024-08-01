@@ -5,7 +5,7 @@ class Md_absensi extends CI_Model
     public $table = 'absensi';
 
     /*** BEGIN COMPONENT DATA TABLE ***/
-    public $column_search = array('lower(keterangan)', 'nama_tajaran','nama');
+    public $column_search = array('lower(keterangan)', 'nama_tajaran', 'nama');
     public $column_filter = array('nama_tajaran');
     public $order = array('absensi_id' => 'desc');
 
@@ -15,6 +15,9 @@ class Md_absensi extends CI_Model
         $this->db->from('absensi a');
         $this->db->join('siswa b', 'a.nis = b.nis', 'right');
         $this->db->join('tahun_ajaran c', 'a.tajaran_id = c.tajaran_id');
+        if ($this->session->userdata('hak_akses') == 'orang_tua') {
+            $this->db->where('b.nis', $this->session->userdata('nis'));
+        }
         $this->db->group_by('b.siswa_id');
         $this->db->where('a.status', 1);
         $this->db->where('b.kelas_id', $id_kelas);
@@ -92,7 +95,7 @@ class Md_absensi extends CI_Model
         $this->db->where_in('nis', $nis);
         $this->db->update_batch($this->table, $data, 'nis');
     }
-    public function getAbsensiByKeterangan($keterangan, $role='')
+    public function getAbsensiByKeterangan($keterangan, $role = '')
     {
         $this->db->select('ab.*');
         $this->db->from('absensi ab');
@@ -104,7 +107,7 @@ class Md_absensi extends CI_Model
         if ($query && $query->num_rows() > 0) {
             return $query->row();
         }
-        
+
         return null;
     }
     public function getAbsensiByTanggal($tanggal, $tajaran_id, $nis)
@@ -115,7 +118,7 @@ class Md_absensi extends CI_Model
         $query = $this->db->get($this->table);
         return $query->row();
     }
-    public function getAbsensiByTanggal_bulan($tanggal,$bulan, $tajaran_id, $nis)
+    public function getAbsensiByTanggal_bulan($tanggal, $bulan, $tajaran_id, $nis)
     {
         $this->db->where('DAY(tanggal)', $tanggal);
         $this->db->where('MONTH(tanggal)', $bulan);
@@ -124,7 +127,7 @@ class Md_absensi extends CI_Model
         $query = $this->db->get($this->table);
         return $query->row();
     }
-    public function getAbsensiByNis($nis, $tanggal, $tajaran_id,$kelas_id,$bulan)
+    public function getAbsensiByNis($nis, $tanggal, $tajaran_id, $kelas_id, $bulan)
     {
         $this->db->select('ab.*');
         $this->db->from('siswa s');

@@ -53,6 +53,12 @@ class C_absensi extends CI_Controller
     }
     public function index()
     {
+        if ($this->akses == 'orang_tua') {
+            $nis = $this->session->userdata('nis');
+            $kelas_id = $this->Md_siswa->getSiswaByNis_k($nis);
+            $bulan = date('m');
+            redirect(base_url('dir/C_Absensi_detail/index') .'/' . encrypt($kelas_id['kelas_id']) . '/' . $bulan);
+        }
         /*             * * FOR CREATE DATA TABLE ** */
         /**
          * @var $config for configuration column and field data table into helper m_datatable

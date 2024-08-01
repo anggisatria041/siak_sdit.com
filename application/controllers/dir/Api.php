@@ -342,7 +342,7 @@ class Api extends CI_Controller
     {
 
         $source = getDataForDataTable('Md_absensi', decrypt($id_kelas));
-
+      
         foreach ($source['data'] as $list) {
             $row = array();
             $row['no'] = ++$source['no'];
@@ -377,7 +377,7 @@ class Api extends CI_Controller
         $source = getDataForDataTable('Md_nilai', null);
 
         foreach ($source['data'] as $list) {
-            if ($list->lingkup_materi == $lingkup) { 
+            if ($list->lingkup_materi == $lingkup) {
                 $row = array();
                 $row['no'] = ++$source['no'];
                 $row['nilai_id'] = encrypt($list->nilai_id);
