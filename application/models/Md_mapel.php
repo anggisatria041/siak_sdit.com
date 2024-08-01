@@ -11,8 +11,9 @@ class Md_mapel extends CI_Model
 
     public function getDataForDataTable()
     {
-        $this->db->select('m.*');
+        $this->db->select('m.*, k.nama_kelas');
         $this->db->from('mapel m');
+        $this->db->join('kelas k', 'm.kelas_id = k.kelas_id', 'left');
         $this->db->where('m.status', 1);
 
     }

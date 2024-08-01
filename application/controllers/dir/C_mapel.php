@@ -18,6 +18,7 @@ class C_mapel extends CI_Controller
         //load model
         $this->load->model('Md_mapel');
         $this->load->model('Md_log');
+        $this->load->model('Md_kelas'); // Tambahkan model kelas untuk mengambil nama kelas
 
         //Load library
         $this->load->library('M_datatable');
@@ -57,12 +58,13 @@ class C_mapel extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'Nama Mapel', 'Kode Mapel', 'Deskripsi', 'Aksi');
-        $configColumn['field'] = array('no', 'nama_mapel', 'kode_mapel', 'deskripsi', 'aksi');
-        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE);
-        $configColumn['width'] = array(30, 100, 70, 300, 50); //on px
+        $configColumn['title'] = array('NO', 'Nama Mapel', 'Kode Mapel', 'Deskripsi', 'Kelas', 'Aksi');
+        $configColumn['field'] = array('no', 'nama_mapel', 'kode_mapel', 'deskripsi', 'nama_kelas', 'aksi');
+        $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, TRUE, FALSE);
+        $configColumn['width'] = array(30, 100, 70, 300, 100, 50); //on px
         $configColumn['template'] = array(
             
+            FALSE,
             FALSE,
             FALSE,
             FALSE,
@@ -102,6 +104,7 @@ class C_mapel extends CI_Controller
 
         $pageData['page_name'] = 'V_mapel';
         $pageData['page_dir'] = 'mapel';
+        $pageData['kelas'] = $this->Md_kelas->getKelas();
         $this->load->view('index', $pageData);
 
 
@@ -114,6 +117,7 @@ class C_mapel extends CI_Controller
         // $this->form_validation->set_rules('status', '', 'required');
         // $this->form_validation->set_rules('date_created', '', 'required');
         $this->form_validation->set_rules('kode_mapel', '', 'required');
+        $this->form_validation->set_rules('kelas_id', '', 'required'); // Tambahkan validasi untuk kelas_id
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -134,6 +138,7 @@ class C_mapel extends CI_Controller
         $status = $this->input->post('status');
         $date_created = $this->input->post('date_created');
         $kode_mapel = $this->input->post('kode_mapel');
+        $kelas_id = $this->input->post('kelas_id'); // Tambahkan untuk mengambil kelas_id
 
         $dataInsert = array(
             'nama_mapel' => $nama_mapel,
@@ -141,6 +146,7 @@ class C_mapel extends CI_Controller
             'status' => $status,
             'date_created' => $date_created,
             'kode_mapel' => $kode_mapel,
+            'kelas_id' => $kelas_id, // Tambahkan untuk menyimpan kelas_id
             'status' => 1
         );
         $this->db->trans_begin();
@@ -179,6 +185,9 @@ class C_mapel extends CI_Controller
             $row['status'] = $mapel->status;
             $row['date_created'] = $mapel->date_created;
             $row['kode_mapel'] = $mapel->kode_mapel;
+            $row['kelas_id'] = $mapel->kelas_id; // Tambahkan untuk mengambil kelas_id
+            $kelas = $this->Md_kelas->getKelasById($mapel->kelas_id); // Mengambil nama kelas berdasarkan kelas_id
+            $row['nama_kelas'] = $kelas->nama_kelas; // Tambahkan untuk mengambil nama kelas
         } else {
             $row['data'] = FALSE;
         }
@@ -191,6 +200,7 @@ class C_mapel extends CI_Controller
         $this->form_validation->set_rules('nama_mapel', '', 'required');
         $this->form_validation->set_rules('deskripsi', '', 'required');
         $this->form_validation->set_rules('kode_mapel', '', 'required');
+        $this->form_validation->set_rules('kelas_id', '', 'required'); // Tambahkan validasi untuk kelas_id
 
         $csrf = array(
             'csrfName' => $this->security->get_csrf_token_name(),
@@ -202,6 +212,7 @@ class C_mapel extends CI_Controller
             $nama_mapel = $this->input->post('nama_mapel') == "" ? NULL : $this->input->post('nama_mapel');
             $deskripsi = $this->input->post('deskripsi') == "" ? NULL : $this->input->post('deskripsi');
             $kode_mapel = $this->input->post('kode_mapel') == "" ? NULL : $this->input->post('kode_mapel');
+            $kelas_id = $this->input->post('kelas_id') == "" ? NULL : $this->input->post('kelas_id'); // Tambahkan untuk mengambil kelas_id
 
             if ($this->form_validation->run() === FALSE) {
                 die(json_encode([
@@ -216,6 +227,7 @@ class C_mapel extends CI_Controller
                 'nama_mapel' => $nama_mapel,
                 'deskripsi' => $deskripsi,
                 'kode_mapel' => $kode_mapel,
+                'kelas_id' => $kelas_id, // Tambahkan untuk mengupdate kelas_id
                 'status' => 1
             ]);
             // addLog('Update Data', 'Mengubah data Mapel, 'GMapelD' . $gumapel);
