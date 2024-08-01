@@ -52,10 +52,81 @@ class C_nilai extends CI_Controller
     }
     public function index()
     {
+        $hakakses =$this->akses;
+        $id =decrypt($this->session->userdata('pengguna_id'));
+    
+        if($hakakses == 'orang_tua'){
+            $configColumn['title'] = array('No', 'NIS', 'Nama', 'Mata Pelajaran', 'TP 1', 'TP 2', 'TP 3', 'Tp 4');
+            $configColumn['field'] = array('no', 'nis', 'nama', 'nama_mapel', 'tp1', 'tp2', 'tp3', 'tp4');
+            $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+            $configColumn['width'] = array(30, 100, 100, 150, 100, 100, 80, 50); //on px
+            $configColumn['template'] = array(
+            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
+            );
+            $configFilter = FALSE;
+
+            /**
+             * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
+             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
+             * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
+             * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
+             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
+             */
+            $set['id_table'] = 'lingkup1'; // tanpa spasi dan karakter
+            $set['json_url'] = base_url() . 'dir/api/nilai_lingkup/1/'.$id;
+            $set['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set['filter'] = FALSE; // wajib
+            $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set['server_side'] = TRUE; // wajib
+            $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+            $set2['id_table'] = 'lingkup2'; // tanpa spasi dan karakter
+            $set2['json_url'] = base_url() . 'dir/api/nilai_lingkup/2';
+            $set2['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set2['filter'] = FALSE; // wajib
+            $set2['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set2['server_side'] = TRUE; // wajib
+            $set2['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+            $set3['id_table'] = 'lingkup3'; // tanpa spasi dan karakter
+            $set3['json_url'] = base_url() . 'dir/api/nilai_lingkup/3';
+            $set3['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set3['filter'] = FALSE; // wajib
+            $set3['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set3['server_side'] = TRUE; // wajib
+            $set3['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+            $set4['id_table'] = 'lingkup4'; // tanpa spasi dan karakter
+            $set4['json_url'] = base_url() . 'dir/api/nilai_lingkup/4';
+            $set4['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set4['filter'] = FALSE; // wajib
+            $set4['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set4['server_side'] = TRUE; // wajib
+            $set4['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+            $set5['id_table'] = 'lingkup5'; // tanpa spasi dan karakter
+            $set5['json_url'] = base_url() . 'dir/api/nilai_lingkup/5';
+            $set5['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set5['filter'] = FALSE; // wajib
+            $set5['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set5['server_side'] = TRUE; // wajib
+            $set5['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+
+            $pageData['lingkup1'] = $this->m_datatable->generateScript($set);
+            $pageData['lingkup2'] = $this->m_datatable->generateScript($set2);
+            $pageData['lingkup3'] = $this->m_datatable->generateScript($set3);
+            $pageData['lingkup4'] = $this->m_datatable->generateScript($set4);
+            $pageData['lingkup5'] = $this->m_datatable->generateScript($set5);
+            $pageData['page_name'] = 'V_rekap_nilai';
+            $pageData['page_dir'] = 'nilai';
+            $this->load->view('index', $pageData);
+        }else{
             $pageData['kelas'] = $this->Md_kelas->getkelas();
             $pageData['page_name'] = 'V_nilai';
             $pageData['page_dir'] = 'nilai';
             $this->load->view('index', $pageData);
+        }
     }
     public function mata_pelajaran($jenis='', $id='')
     {

@@ -383,6 +383,7 @@ class Api extends CI_Controller
                 $row['nilai_id'] = encrypt($list->nilai_id);
                 $row['nis'] = $list->nis;
                 $row['nama'] = $list->nama;
+                $row['nama_mapel'] = $list->nama_mapel;
                 $row['tp1'] = $list->tp1;
                 $row['tp2'] = $list->tp2;
                 $row['tp3'] = $list->tp3;

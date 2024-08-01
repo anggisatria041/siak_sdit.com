@@ -24,7 +24,7 @@
     <link href="<?= base_url() ?>assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url() ?>assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Base Styles -->
-    <link rel="shortcut icon" href="<?= base_url() ?>assets/app/media/img/logos/logo.png" />
+    <link rel="shortcut icon" href="<?= base_url() ?>assets/demo/default/media/img/logo/sdit.png" />
 
 </head>
 
@@ -167,7 +167,7 @@
     <script>
         function capLock(e) {
             kc = e.keyCode ? e.keyCode : e.which;
-            sk = e.shiftKey ? e.shiftKey : ((kc == 16) ? true : false);
+            sk = e.shiftKey ? e.shiftKey : ((kc == 1) ? true : false);
             if (((kc >= 65 && kc <= 90) && !sk) || ((kc >= 97 && kc <= 122) && sk))
                 $('.alert-capslock').show();
             else

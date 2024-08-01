@@ -165,6 +165,7 @@ class Lawang extends CI_Controller
                     'is_ortu' => TRUE,
                     'username' => $dt_akun->username,
                     'hak_akses' => 'ortu',
+                    'nis' => $dt_akun->nis,
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
             }

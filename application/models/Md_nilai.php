@@ -11,10 +11,17 @@ class Md_nilai extends CI_Model
 
     public function getDataForDataTable()
     {
+        $id =$this->session->userdata('nis');
+        $akses =$this->session->userdata('hak_akses');
+        
         $this->db->select('n.*,mp.nama_mapel,s.nis,s.nama');
         $this->db->from('nilai n');
         $this->db->join('mapel mp', 'mp.mapel_id = n.mapel_id','left');
         $this->db->join('siswa s', 's.siswa_id = n.siswa_id','left');
+        if($akses == 'orang_tua'){
+            $this->db->join('akun a', 'a.nis = s.nis','left');
+            $this->db->where('a.nis', $id);
+        }
         $this->db->where('n.status', 1);
         
     }
