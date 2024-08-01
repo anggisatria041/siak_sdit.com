@@ -16,7 +16,9 @@ class Md_pembayaran extends CI_Model
         $this->db->join('siswa s', 's.nis = p.nis');
         $this->db->join('tahun_ajaran t', 't.tajaran_id = p.tajaran_id');
         $this->db->where('p.status', 1);
-
+        if ($this->session->userdata('hak_akses') == 'orang_tua') {
+            $this->db->where('p.nis', $this->session->userdata('nis'));
+        }
     }
 
 
@@ -67,6 +69,7 @@ class Md_pembayaran extends CI_Model
         $this->db->select('*');
         $this->db->from('pembayaran');
         $this->db->order_by('pembayaran_id', 'desc');
+       
         $query = $this->db->get();
         return $query->result();
     }

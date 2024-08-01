@@ -31,8 +31,7 @@ class C_dashboard extends CI_Controller
     }
     public function index()
     {
-    //    var_dump($this->session->userdata('hak_akses'));
-    //     die;
+
         $pageData['page_name'] = 'V_dashboard';
         $pageData['page_dir'] = 'dashboard';
         $this->load->view('index', $pageData);
