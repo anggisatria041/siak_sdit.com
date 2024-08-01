@@ -150,21 +150,21 @@ class Lawang extends CI_Controller
                  $data = array(
                     'is_admin' => TRUE,
                     'username' => $dt_akun->username,
-                    'hak_akses' => $hakakses,
+                    'hak_akses' => 'admin',
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
             }elseif($pengguna->role == 'guru'){
                 $data = array(
                     'is_guru' => TRUE,
                     'username' => $dt_akun->username,
-                    'hak_akses' => $hakakses,
+                    'hak_akses' => 'guru',
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
             }else{
                 $data = array(
                     'is_ortu' => TRUE,
                     'username' => $dt_akun->username,
-                    'hak_akses' => $hakakses,
+                    'hak_akses' => 'ortu',
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
             }
