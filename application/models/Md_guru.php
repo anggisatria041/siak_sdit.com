@@ -91,6 +91,15 @@ class Md_guru extends CI_Model
         $this->db->where('guru_id', $id);
         $this->db->update($this->table, $data);
     }
+    public function getGuruCount()
+    {
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('guru');
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        $result = $query->row(); 
+        return $result->total; 
+    }
 
 
 }

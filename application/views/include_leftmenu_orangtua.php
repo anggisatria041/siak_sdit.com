@@ -17,7 +17,7 @@
             m-menu-link-redirect="1">
             <a href="<?= site_url('dir/C_pembayaran'); ?>" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
-                <i class="m-menu__link-icon flaticon-list-2"></i>
+                <i class="m-menu__link-icon flaticon-interface-6"></i>
                 <span class="m-menu__link-text">Pembayaran</span>
             </a>
         </li>
@@ -26,7 +26,7 @@
             m-menu-link-redirect="1">
             <a href="<?= site_url('dir/C_absensi'); ?>" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
-                <i class="m-menu__link-icon flaticon-list-2"></i>
+                <i class="m-menu__link-icon flaticon-network"></i>
                 <span class="m-menu__link-text">Absensi</span>
             </a>
         </li>
@@ -34,7 +34,7 @@
             aria-haspopup="true" m-menu-link-redirect="1">
             <a href="<?= site_url('dir/C_nilai'); ?>" class="m-menu__link ">
                 <span class="m-menu__item-here"></span>
-                <i class="m-menu__link-icon flaticon-list-2"></i>
+                <i class="m-menu__link-icon flaticon-diagram"></i>
                 <span class="m-menu__link-text">Nilai</span>
             </a>
         </li>

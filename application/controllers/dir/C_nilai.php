@@ -53,7 +53,7 @@ class C_nilai extends CI_Controller
     public function index()
     {
         $hakakses =$this->akses;
-        $id =decrypt($this->session->userdata('pengguna_id'));
+        $id=decrypt($this->session->userdata('pengguna_id'));
     
         if($hakakses == 'orang_tua'){
             $configColumn['title'] = array('No', 'NIS', 'Nama', 'Mata Pelajaran', 'TP 1', 'TP 2', 'TP 3', 'Tp 4');
@@ -73,7 +73,7 @@ class C_nilai extends CI_Controller
              * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
              */
             $set['id_table'] = 'lingkup1'; // tanpa spasi dan karakter
-            $set['json_url'] = base_url() . 'dir/api/nilai_lingkup/1/'.$id;
+            $set['json_url'] = base_url() . 'dir/api/nilai_lingkup/1/';
             $set['columns'] = $this->m_datatable->setColumn($configColumn);
             $set['filter'] = FALSE; // wajib
             $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;

@@ -93,6 +93,31 @@ class Md_mapel extends CI_Model
         $this->db->where('mapel_id', $id);
         $this->db->update($this->table, $data);
     }
+    public function getMapelCount($nis='')
+    {
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('mapel m');
+        if($nis){
+            $this->db->join('kelas k', 'k.kelas_id = m.kelas_id','left');
+            $this->db->join('siswa sw', 'sw.kelas_id = k.kelas_id','left');
+            $this->db->where('sw.nis', $nis);
+        }
+        $this->db->where('m.status', 1);
+        $query = $this->db->get();
+        $result = $query->row(); 
+        return $result->total; 
+    }
+    function getByNIS($nis)
+    {
+        $this->db->select('m.*');
+        $this->db->from('mapel m');
+        $this->db->join('kelas k', 'k.kelas_id = m.kelas_id','left');
+        $this->db->join('siswa sw', 'sw.kelas_id = k.kelas_id','left');
+        $this->db->where('sw.nis', $nis);
+        $this->db->where('m.status', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
 
 }
