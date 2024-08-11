@@ -88,13 +88,13 @@ class C_Absensi_detail extends CI_Controller
                 $filter_tajaran[] = array('id' => $list->nama_tajaran, 'attr' => $list->nama_tajaran);
             }
         }
-
-        $configColumn['title'][] = 'Total Kehadiran';
-        $configColumn['field'][] = 'total_kehadiran';
-        $configColumn['sortable'][] = FALSE;
-        $configColumn['width'][] = 50; //on px
-        $configColumn['template'][] =
-            'function (e) {
+        if ($this->akses != 'orang_tua') {
+            $configColumn['title'][] = 'Total Kehadiran';
+            $configColumn['field'][] = 'total_kehadiran';
+            $configColumn['sortable'][] = FALSE;
+            $configColumn['width'][] = 50; //on px
+            $configColumn['template'][] =
+                'function (e) {
                     return \'\
                         <div class="dropdown down">\
                             <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
@@ -106,7 +106,8 @@ class C_Absensi_detail extends CI_Controller
                         </div>\
                     \';
                     }'
-        ;
+            ;
+        }
         $configFilter = array(
             array(
                 'nama_filter' => 'Tahun Ajaran',

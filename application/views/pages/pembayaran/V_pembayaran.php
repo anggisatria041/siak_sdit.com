@@ -41,11 +41,13 @@
                                 </h3>
                             </div>
                         </div>
-                        <div class="m-portlet__head-tools">
-                            <button type="button" class="btn btn-info btn-md" onclick="add_ajax()">
-                                <i class="la la-plus"></i> Tambah Pembayaran
-                            </button>
-                        </div>
+                        <?php if ($this->session->userdata('hak_akses') != 'orang_tua') { ?>
+                            <div class="m-portlet__head-tools">
+                                <button type="button" class="btn btn-info btn-md" onclick="add_ajax()">
+                                    <i class="la la-plus"></i> Tambah Pembayaran
+                                </button>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="m-portlet__body">
                         <?php if ($this->session->flashdata('alert1')) { ?>
@@ -287,8 +289,8 @@
                                     Bukti Pembayaran
                                 </label>
                                 <div class="col-md-8">
-                                    <input type="file" name="file_bukti_pembayaran"
-                                        class="form-control m-input" placeholder="Bukti Pembayaran"
+                                    <input type="file" name="file_bukti_pembayaran" class="form-control m-input"
+                                        placeholder="Bukti Pembayaran"
                                         onchange="document.getElementById('bukti_pembayaran_').src = window.URL.createObjectURL(this.files[0])" />
                                 </div>
                             </div>
@@ -307,7 +309,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- End Modal -->
 </div>
@@ -342,7 +344,7 @@
         $('#exampleModalLongTitle').html("Lihat Gambar Bukti Pembayaran");
         $('#modalImage-' + src).modal('show');
     }
- 
+
     function uploadBuktiPembayaran(id) {
         method = 'uploadBuktiPembayaran';
         resetForm();

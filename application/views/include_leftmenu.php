@@ -17,7 +17,7 @@
     <?php elseif ($this->session->userdata('hak_akses') == 'guru') : ?>
         <?php include 'include_leftmenu_guru.php'; ?>
     <!-- role orang tua -->
-    <?php elseif ($this->session->userdata('hak_akses') == 'ortu') : ?>
+    <?php elseif ($this->session->userdata('hak_akses') == 'orang_tua') : ?>
         <?php include 'include_leftmenu_orangtua.php'; ?>
     <?php endif; ?>
 

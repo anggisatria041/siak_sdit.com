@@ -39,17 +39,48 @@ class C_pembayaran extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $validate = false;
         foreach ($this->allowed_accesses as $key => $value) {
-            if (!$this->session->userdata($key)) continue;
+            if (!$this->session->userdata($key))
+                continue;
             $validate = true;
             $this->akses = $value;
             break;
         }
-        if (!$validate) redirect(base_url('lawang'));
+        if (!$validate)
+            redirect(base_url('lawang'));
 
 
     }
     public function index()
     {
+        if ($this->akses == 'orang_tua') {
+            $template = 'function (e) {
+                    return \'\
+                        <div class="dropdown down">\
+                            <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
+                                <i class="la la-gear"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="javascript:uploadBuktiPembayaran(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-upload"></i> Upload Bukti Pembayaran</a>\
+                            </div>\
+                        </div>\
+                    \';
+                    }';
+        } else {
+            $template = 'function (e) {
+                    return \'\
+                        <div class="dropdown down">\
+                            <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
+                                <i class="la la-gear"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.pembayaran_id +\'\\\');"><i class="la la-edit"></i> Edit Pembayaran</a>\
+                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Pembayaran</a>\
+                                <a class="dropdown-item" href="javascript:verifikasi(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-check-circle"></i> Konfirmasi Status Pembayaran</a>\
+                            </div>\
+                        </div>\
+                    \';
+                    }';
+        }
         /*             * * FOR CREATE DATA TABLE ** */
         /**
          * @var $config for configuration column and field data table into helper m_datatable
@@ -73,21 +104,7 @@ class C_pembayaran extends CI_Controller
             FALSE,
             FALSE,
             FALSE,
-            'function (e) {
-                    return \'\
-                        <div class="dropdown down">\
-                            <a href="#" class="btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" data-toggle="dropdown">\
-                                <i class="la la-gear"></i>\
-                            </a>\
-                            <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="javascript:edit(\\\'\'+e.pembayaran_id +\'\\\');"><i class="la la-edit"></i> Edit Pembayaran</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Pembayaran</a>\
-                                <a class="dropdown-item" href="javascript:verifikasi(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-check-circle"></i> Konfirmasi Status Pembayaran</a>\
-                                <a class="dropdown-item" href="javascript:uploadBuktiPembayaran(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-upload"></i> Upload Bukti Pembayaran</a>\
-                            </div>\
-                        </div>\
-                    \';
-                    }'
+            $template,
         );
         $configFilter = FALSE;
 
@@ -410,7 +427,7 @@ class C_pembayaran extends CI_Controller
                         die;
                     }
                 }
-            } 
+            }
 
             $this->db->trans_begin();
             $this->Md_pembayaran->updatePembayaran($pembayaran_id, $updatedata);
