@@ -42,7 +42,7 @@ class C_dashboard extends CI_Controller
         $nis =$this->session->userdata('nis');
         $pageData['siswa'] = $this->Md_siswa->getSiswaCount();
         $pageData['guru'] = $this->Md_guru->getGuruCount();
-        if($hakakses == 'orang_tua'){
+        if($hakakses == 'ortu'){
             $pageData['kelas'] = $this->Md_kelas->getKelasCount($nis);
             $pageData['mapel'] = $this->Md_mapel->getMapelCount($nis);
             $pageData['siswa_nis'] = $this->Md_siswa->getSiswaByNISLimit1($nis);
