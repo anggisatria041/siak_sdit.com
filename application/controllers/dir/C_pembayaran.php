@@ -74,7 +74,6 @@ class C_pembayaran extends CI_Controller
                             </a>\
                             <div class="dropdown-menu dropdown-menu-right">\
                                 <a class="dropdown-item" href="javascript:edit(\\\'\'+e.pembayaran_id +\'\\\');"><i class="la la-edit"></i> Edit Pembayaran</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Pembayaran</a>\
                                 <a class="dropdown-item" href="javascript:verifikasi(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-check-circle"></i> Konfirmasi Status Pembayaran</a>\
                             </div>\
                         </div>\
@@ -125,8 +124,13 @@ class C_pembayaran extends CI_Controller
         $set['scrollX'] = true; // menambahkan scrolling horizontal
 
         $pageData['tableManagepembayaran'] = $this->m_datatable->generateScript($set);
-
-        $pageData['siswa'] = $this->Md_siswa->getsiswa();
+        if ($this->session->userdata('hak_akses') == 'orang_tua') {
+            $pageData['siswa'] = $this->Md_siswa->getSiswaByNis_k($this->session->userdata('nis'));
+          
+        } else {
+            $pageData['siswa'] = $this->Md_siswa->getsiswa();
+           
+        }
         $pageData['tajaran'] = $this->Md_tahun_ajaran->getTahunAjaran();
         $pageData['pembayaran'] = $this->Md_pembayaran->getAllPembayaran();
         // var_dump($pageData['pembayaran']);

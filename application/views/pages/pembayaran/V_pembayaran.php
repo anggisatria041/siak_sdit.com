@@ -41,7 +41,7 @@
                                 </h3>
                             </div>
                         </div>
-                        <?php if ($this->session->userdata('hak_akses') != 'orang_tua') { ?>
+                        <?php if ($this->session->userdata('hak_akses') == 'orang_tua') { ?>
                             <div class="m-portlet__head-tools">
                                 <button type="button" class="btn btn-info btn-md" onclick="add_ajax()">
                                     <i class="la la-plus"></i> Tambah Pembayaran
@@ -114,9 +114,13 @@
                             </label>
                             <div class="col-md-6">
                                 <select name="nis" required class="form-control m-input m-select2">
+                                    <?php if ($this->session->userdata('hak_akses') == 'orang_tua') { ?>
+                                        <option value="<?= $siswa['nis'] ?>"><?= $siswa['nis'] ?>-<?= $siswa['nama'] ?></option>
+                                    <?php } else { ?>
                                     <option value="">Pilih NIS</option>
                                     <?php foreach ($siswa as $row) { ?>
                                         <option value="<?= $row->nis ?>"><?= $row->nis ?>-<?= $row->nama ?></option>
+                                    <?php } ?>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -164,10 +168,15 @@
                             <div class="col-md-6">
                                 <select name="status_pembayaran" required class="form-control m-input m-select2">
                                     <option value="">Pilih Status Pembayaran</option>
-                                    <option value="lunas">Lunas</option>
-                                    <option value="belum lunas">Belum Lunas</option>
-                                    <option value="menunggu verifikasi">Menunggu Verifikasi</option>
+                                    <?php if ($this->session->userdata('hak_akses') == 'orang_tua') { ?>
+                                        <option value="menunggu verifikasi">Menunggu Verifikasi</option>
+                                    <?php } else { ?>
+                                        <option value="lunas">Lunas</option>
+                                        <option value="belum lunas">Belum Lunas</option>
                                     <option value="ditolak">Ditolak</option>
+
+                                    <?php } ?>
+                                   
                                 </select>
                             </div>
                         </div>
