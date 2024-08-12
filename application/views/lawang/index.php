@@ -13,7 +13,7 @@
             google: {
                 "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"]
             },
-            active: function() {
+            active: function () {
                 sessionStorage.fonts = true;
             }
         });
@@ -28,12 +28,15 @@
 
 </head>
 
-<body class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+<body
+    class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
 
     <!-- begin:: Page -->
     <div class="m-grid m-grid--hor m-grid--root m-page">
-        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--desktop m-grid--ver-desktop m-grid--hor-tablet-and-mobile m-login m-login--6" id="m_login">
-            <div class="m-grid__item   m-grid__item--order-tablet-and-mobile-2  m-grid m-grid--hor m-login__aside " style="background-image: url(<?= base_url() ?>assets/app/media/img/bg/bg-5.jpg);">
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--desktop m-grid--ver-desktop m-grid--hor-tablet-and-mobile m-login m-login--6"
+            id="m_login">
+            <div class="m-grid__item   m-grid__item--order-tablet-and-mobile-2  m-grid m-grid--hor m-login__aside "
+                style="background-image: url(<?= base_url() ?>assets/app/media/img/bg/bg-5.jpg);">
                 <div class="m-grid__item">
                     <div class="m-login__logo">
                         <a href="" target="_blank">
@@ -72,15 +75,17 @@
 
                         <!-- MENAMPILKAN ALLERT -->
                         <?php if ($this->session->flashdata('alert')) { ?>
-                            <div class="m-alert m-alert--outline m-alert--outline-2x alert alert-<?= $this->session->flashdata('alert') ?> alert-dismissible animated fadeIn" role="alert">
+                            <div class="m-alert m-alert--outline m-alert--outline-2x alert alert-<?= $this->session->flashdata('alert') ?> alert-dismissible animated fadeIn"
+                                role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
                                 <span><?= $this->session->flashdata('message') ?></span>
                             </div>
                         <?php } ?>
-
+                        <!--  -->
                         <input type="hidden" name="g-recaptcha_response" id="recaptchaResponse">
 
-                        <div class="m-alert m-alert--outline alert alert-danger alert-capslock alert-dismissible animated fadeIn" role="alert" style="display:none">
+                        <div class="m-alert m-alert--outline alert alert-danger alert-capslock alert-dismissible animated fadeIn"
+                            role="alert" style="display:none">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
                             <span>Warning! Caps Lock is on</span>
                         </div>
@@ -88,10 +93,12 @@
                         <!-- CEK HAKAKSES PENGGUNA -->
                         <?php if (!isset($hak_akses)) { ?>
                             <div class="form-group m-form__group">
-                                <input class="form-control m-input" type="text" placeholder="Nis, Niy or Username" name="username" autocomplete="off">
+                                <input class="form-control m-input" type="text" placeholder="Nis, Niy or Username"
+                                    name="username" autocomplete="off">
                             </div>
                             <div class="form-group m-form__group">
-                                <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Password" name="password" onkeypress="capLock(event)">
+                                <input class="form-control m-input m-login__form-input--last" type="password"
+                                    placeholder="Password" name="password" onkeypress="capLock(event)">
                             </div>
 
                             <!--begin::Action-->
@@ -100,7 +107,9 @@
                                     <span>Forgot Password ?</span>
                                 </a>
                                 <a href="#">
-                                    <button class="btn btn-info m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--info">Sign In</button>
+                                    <button
+                                        class="btn btn-info m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--info">Sign
+                                        In</button>
                                 </a>
                             </div>
 
@@ -113,35 +122,40 @@
                             $c = md5('mekanik');
                             $w = md5('warehouse');
                             $f = md5('fuelman');
-                        ?>
+                            ?>
                             <div class="col-md-12">
                                 <center>
                                     <?php if (isset($hak_akses['spadmin'])) { ?>
-                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $x ?>" class="btn btn-danger m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
+                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $x ?>"
+                                            class="btn btn-danger m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
                                             Masuk Sebagai Spadmin <i class="la la-arrow-right"></i>
                                         </a>
                                         <hr />
                                     <?php } ?>
                                     <?php if (isset($hak_akses['admin_transport'])) { ?>
-                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $y ?>" class="btn btn-info m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
+                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $y ?>"
+                                            class="btn btn-info m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
                                             Masuk Sebagai Admin Transport <i class="la la-arrow-right"></i>
                                         </a>
                                         <hr />
                                     <?php } ?>
                                     <?php if (isset($hak_akses['admin_mekanik'])) { ?>
-                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $c ?>" class="btn btn-brand m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
+                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $c ?>"
+                                            class="btn btn-brand m-btn m-btn--pill m-btn--custom m-btn--air btn-block">
                                             Masuk Sebagai Admin Mekanik <i class="la la-arrow-right"></i>
                                         </a>
                                         <hr />
                                     <?php } ?>
                                     <?php if (isset($hak_akses['admin_warehouse'])) { ?>
-                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $w ?>" class="btn m-btn--pill m-btn m-btn--gradient-from-success m-btn--gradient-to-accent btn-block">
+                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $w ?>"
+                                            class="btn m-btn--pill m-btn m-btn--gradient-from-success m-btn--gradient-to-accent btn-block">
                                             Masuk Sebagai Admin Warehouse <i class="la la-arrow-right"></i>
                                         </a>
                                         <hr />
                                     <?php } ?>
                                     <?php if (isset($hak_akses['admin_fuelman'])) { ?>
-                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $f ?>" class="btn m-btn--pill m-btn m-btn--gradient-from-success m-btn--gradient-to-accent btn-block">
+                                        <a href="<?= base_url() ?>lawang/auth/?auth=<?= $f ?>"
+                                            class="btn m-btn--pill m-btn m-btn--gradient-from-success m-btn--gradient-to-accent btn-block">
                                             Masuk Sebagai Mini Warehouse <i class="la la-arrow-right"></i>
                                         </a>
                                         <hr />
@@ -175,11 +189,11 @@
         }
     </script>
     <script type="text/javascript">
-        $('#formLogin').on('submit', function(e) {
+        $('#formLogin').on('submit', function (e) {
             e.preventDefault();
             grecaptcha.execute("<?= $recaptcha ?>", {
                 action: 'lawang'
-            }).then(function(token) {
+            }).then(function (token) {
                 var recaptchaResponse = document.getElementById('recaptchaResponse');
                 recaptchaResponse.value = token;
                 document.getElementById('formLogin').submit();
