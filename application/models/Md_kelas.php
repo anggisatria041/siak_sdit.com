@@ -85,6 +85,27 @@ class Md_kelas extends CI_Model
         $this->db->where('kelas_id', $id);
         $this->db->update($this->table, $data);
     }
+    public function getKelasCount($nis='')
+    {
+        
+        if($nis){
+            $this->db->select('k.nama_kelas');
+            $this->db->from('kelas k');
+            $this->db->join('siswa sw', 'sw.kelas_id = k.kelas_id','left');
+            $this->db->where('sw.nis', $nis);
+            $this->db->limit(1); 
+            $query = $this->db->get();
+            return $query->row();
+        }else{
+            $this->db->select('COUNT(*) as total');
+            $this->db->from('kelas');
+            $this->db->where('status', 1);
+            $query = $this->db->get();
+            $result = $query->row(); 
+            return $result->total; 
+        }
+        
+    }
 
 
 }

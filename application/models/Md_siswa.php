@@ -117,6 +117,24 @@ class Md_siswa extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-   
+    public function getSiswaCount()
+    {
+        $this->db->select('COUNT(*) as total');
+        $this->db->from('siswa');
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        $result = $query->row(); 
+        return $result->total; 
+    }
+    public function getSiswaByNISLimit1($nis='')
+    {
+        $this->db->select('*');
+        $this->db->from('siswa');
+        $this->db->where('status', 1);
+        $this->db->where('nis', $nis);
+        $this->db->limit(1); 
+        $query = $this->db->get();
+        return $query->row(); 
+    }
 
 }

@@ -98,8 +98,8 @@
                                                     <!-- <span class="m-type m-type--lg m--bg-danger"><span class="m--font-light">S<span><span>-->
                                                 </div>
                                                 <div class="m-card-user__details">
-                                                    <span class="m-card-user__name m--font-weight-500">Mark Andre</span>
-                                                    <a href="" class="m-card-user__email m--font-weight-300 m-link">mark.andre@gmail.com</a>
+                                                    <span class="m-card-user__name m--font-weight-500"><?php echo $this->session->userdata('username'); ?></span>
+                                                    <a href="" class="m-card-user__email m--font-weight-300 m-link"><?php echo $this->session->userdata('hak_akses'); ?></a>
                                                 </div>
                                             </div>
                                         </div>

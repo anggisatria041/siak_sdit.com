@@ -124,6 +124,15 @@ class Md_tahun_ajaran extends CI_Model
         ];
         return $namaBulan[$bulan];
     }
-   
-
+    public function getAktif()
+    {
+        $this->db->select('nama_tajaran');
+        $this->db->from('tahun_ajaran');
+        $this->db->where('status', 1);
+        $this->db->where('status_tajaran', 'Aktif');
+        $this->db->limit(1); 
+        $query = $this->db->get();
+        return $query->row(); 
+    }
+    
 }
