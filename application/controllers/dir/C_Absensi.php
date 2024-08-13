@@ -57,7 +57,7 @@ class C_absensi extends CI_Controller
             $nis = $this->session->userdata('nis');
             $kelas_id = $this->Md_siswa->getSiswaByNis_k($nis);
             $bulan = date('m');
-            redirect(base_url('dir/C_Absensi_detail/index') .'/' . encrypt($kelas_id['kelas_id']) . '/' . $bulan);
+            redirect(base_url('dir/C_Absensi_detail/index') . '/' . encrypt($kelas_id['kelas_id']) . '/' . $bulan);
         }
         /*             * * FOR CREATE DATA TABLE ** */
         /**
@@ -307,7 +307,7 @@ class C_absensi extends CI_Controller
             );
 
             for ($i = 1; $i <= 31; $i++) {
-                $configColumn['title'][] = $i;
+                $configColumn['title'][] = 'Tanggal ' . $i;
                 $configColumn['field'][] = 'kehadiran_' . $i;
                 $configColumn['sortable'][] = FALSE;
                 $configColumn['width'][] = 50; //on px

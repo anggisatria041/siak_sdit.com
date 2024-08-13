@@ -74,10 +74,10 @@ class C_Absensi_detail extends CI_Controller
         );
 
         for ($i = 1; $i <= 31; $i++) {
-            $configColumn['title'][] = $i;
+            $configColumn['title'][] = 'Tanggal ' . $i;
             $configColumn['field'][] = 'kehadiran_' . $i;
             $configColumn['sortable'][] = FALSE;
-            $configColumn['width'][] = 50; //on px
+            $configColumn['width'][] = 80; //on px
             $configColumn['template'][] = FALSE;
         }
         $tajaran = $this->Md_tahun_ajaran->getTahunAjaranGroup();

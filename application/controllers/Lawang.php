@@ -42,81 +42,105 @@ class Lawang extends CI_Controller
 
     function cekLogin()
     {
-      
-        if (checkCookie() == true) { //login with jwt
+        $recaptchaResponse = trim($this->input->post('g-recaptcha_response'));
+        $secret = $this->config->item('recaptcha_secret_key');
 
-            $payload = getPayload();
-            if ($payload->auth_login != null) {
-                $siswaId = $this->encryption->decrypt($payload->auth_login);
-                $dt_siswa = $this->Md_siswa->getSiswaById($siswaId);
-                if ($dt_siswa) {
-                    $this->confirm($dt_siswa);
-                } else {
-                    # data akun tidak ada atau tidak aktif
-                    $this->session->set_flashdata('invalid_cookie', true);
-                    $this->session->set_flashdata('alert', 'danger');
-                    $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
-                    redirect(base_url() . 'lawang', 'refresh');
-                }
-            } else {
-                # data akun tidak ada atau tidak aktif
-                $this->session->set_flashdata('invalid_cookie', true);
-                $this->session->set_flashdata('alert', 'danger');
-                $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
-                redirect(base_url() . 'lawang', 'refresh');
-            }
-        } else {
+        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$recaptchaResponse";
+        $response = file_get_contents($url);
+        $status = json_decode($response, true);
 
-            //memastikan ada request POST
-            if (!isset($_POST['username']) or !isset($_POST['password']))
-                redirect(base_url() . 'lawang', 'refresh');
+        if ($status['success']) {
+            $score = $status['score'];
+            if ($score >= 0.7) {
+                // Proses login jika skor cukup tinggi
+                // Implementasi login sesuai logika aplikasi Anda
+                if (checkCookie() == true) { //login with jwt
 
-            //memastikan data post bukan array ( acunetix test )
-            if (is_array($this->input->post('password')))
-                redirect(base_url() . 'lawang', 'refresh');
-            if (is_array($this->input->post('username')))
-                redirect(base_url() . 'lawang', 'refresh');
-
-            // memastikan data required terisi
-            // mencegah kemungkinan adanya expert user remove attr required HTML
-            $this->form_validation->set_rules('username', 'field username', 'required');
-            $this->form_validation->set_rules('password', 'field password', 'required');
-            $this->form_validation->set_rules('g-recaptcha_response', 'field recaptcha', 'required');
-
-            //siteKey and SecretKey Google
-            $secretKey = $this->config->item('recaptcha_secret_key');
-            $siteKey = $this->config->item('recaptcha_site_key');
-
-            define($secretKey, $siteKey);
-
-            // call curl to POST request
-            if ($this->form_validation->run() != FALSE) {
-                $username = strtolower(trim($this->input->post('username')));
-                $password = $this->input->post('password');
-                $dt_akun = $this->Md_akun->getAkunByNikOrUsername($username);
-                
-                // jika data akun ada
-                if ($dt_akun) {
-                    //cek password dengan metode password hash
-                    if (password_verify($password, $dt_akun->password)) {
-                        $this->confirm($dt_akun);
+                    $payload = getPayload();
+                    if ($payload->auth_login != null) {
+                        $siswaId = $this->encryption->decrypt($payload->auth_login);
+                        $dt_siswa = $this->Md_siswa->getSiswaById($siswaId);
+                        if ($dt_siswa) {
+                            $this->confirm($dt_siswa);
+                        } else {
+                            # data akun tidak ada atau tidak aktif
+                            $this->session->set_flashdata('invalid_cookie', true);
+                            $this->session->set_flashdata('alert', 'danger');
+                            $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
+                            redirect(base_url() . 'lawang', 'refresh');
+                        }
                     } else {
+                        # data akun tidak ada atau tidak aktif
+                        $this->session->set_flashdata('invalid_cookie', true);
                         $this->session->set_flashdata('alert', 'danger');
-                        $this->session->set_flashdata('message', 'Password Anda Salah, Silahkan Ulangi');
+                        $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
                         redirect(base_url() . 'lawang', 'refresh');
                     }
-                } else { //data akun tidak ada atau tidak aktif
-                    $this->session->set_flashdata('alert', 'danger');
-                    $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
-                    redirect(base_url() . 'lawang', 'refresh');
+                } else {
+
+                    //memastikan ada request POST
+                    if (!isset($_POST['username']) or !isset($_POST['password']))
+                        redirect(base_url() . 'lawang', 'refresh');
+
+                    //memastikan data post bukan array ( acunetix test )
+                    if (is_array($this->input->post('password')))
+                        redirect(base_url() . 'lawang', 'refresh');
+                    if (is_array($this->input->post('username')))
+                        redirect(base_url() . 'lawang', 'refresh');
+
+                    // memastikan data required terisi
+                    // mencegah kemungkinan adanya expert user remove attr required HTML
+                    $this->form_validation->set_rules('username', 'field username', 'required');
+                    $this->form_validation->set_rules('password', 'field password', 'required');
+                    $this->form_validation->set_rules('g-recaptcha_response', 'field recaptcha', 'required');
+
+                    //siteKey and SecretKey Google
+                    $secretKey = $this->config->item('recaptcha_secret_key');
+                    $siteKey = $this->config->item('recaptcha_site_key');
+
+                    define($secretKey, $siteKey);
+
+                    // call curl to POST request
+                    if ($this->form_validation->run() != FALSE) {
+                        $username = strtolower(trim($this->input->post('username')));
+                        $password = $this->input->post('password');
+                        $dt_akun = $this->Md_akun->getAkunByNikOrUsername($username);
+
+                        // jika data akun ada
+                        if ($dt_akun) {
+                            //cek password dengan metode password hash
+                            if (password_verify($password, $dt_akun->password)) {
+                                $this->confirm($dt_akun);
+                            } else {
+                                $this->session->set_flashdata('alert', 'danger');
+                                $this->session->set_flashdata('message', 'Password Anda Salah, Silahkan Ulangi');
+                                redirect(base_url() . 'lawang', 'refresh');
+                            }
+                        } else { //data akun tidak ada atau tidak aktif
+                            $this->session->set_flashdata('alert', 'danger');
+                            $this->session->set_flashdata('message', 'Anda tidak memiliki izin akses');
+                            redirect(base_url() . 'lawang', 'refresh');
+                        }
+                    } else { //form validasi false
+                        $this->session->set_flashdata('alert', 'danger');
+                        $this->session->set_flashdata('message', 'Seluruh field wajib');
+                        redirect(base_url() . 'lawang', 'refresh');
+                    }
+                    // var_dump($data,$getData->penggunaid);die;
                 }
-            } else { //form validasi false
+            } else {
+                // Jika skor rendah, tampilkan pesan kesalahan
                 $this->session->set_flashdata('alert', 'danger');
-                $this->session->set_flashdata('message', 'Seluruh field wajib');
-                redirect(base_url() . 'lawang', 'refresh');
+                $this->session->set_flashdata('message', 'Login failed: Low reCAPTCHA score. Please try again.');
+                redirect('lawang');
             }
-            // var_dump($data,$getData->penggunaid);die;
+        } else {
+            // Jika reCAPTCHA tidak diverifikasi, tampilkan pesan kesalahan
+            $this->session->set_flashdata('alert', 'danger');
+            $this->session->set_flashdata('message', 'reCAPTCHA verification failed. Please try again.');
+            redirect('lawang');
         }
+
     }
 
     //function konfirmasi login
@@ -130,37 +154,37 @@ class Lawang extends CI_Controller
             // set login
             $hakakses = array();
 
-                //hak akses di set Spadmin
-                if ($pengguna->role == 'admin') {
-                    $hakakses['admin'] = TRUE;
-                }
-                //hak akses di set admin transport
-                if ($pengguna->role == 'orang tua') {
-                    $hakakses['orang_tua'] = TRUE;
-                }
-                //hak akses di set admin mekanik
-                if ($pengguna->role == 'guru') {
-                    $hakakses['guru'] = TRUE;
-                }
+            //hak akses di set Spadmin
+            if ($pengguna->role == 'admin') {
+                $hakakses['admin'] = TRUE;
+            }
+            //hak akses di set admin transport
+            if ($pengguna->role == 'orang tua') {
+                $hakakses['orang_tua'] = TRUE;
+            }
+            //hak akses di set admin mekanik
+            if ($pengguna->role == 'guru') {
+                $hakakses['guru'] = TRUE;
+            }
 
 
             // menyimpan data akun_id di session
             // $this->session->set_userdata(['auth_login' => encrypt($dt_akun->akun_id)]);
-            if($pengguna->role == 'admin'){
-                 $data = array(
+            if ($pengguna->role == 'admin') {
+                $data = array(
                     'is_admin' => TRUE,
                     'username' => $dt_akun->username,
                     'hak_akses' => 'admin',
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
-            }elseif($pengguna->role == 'guru'){
+            } elseif ($pengguna->role == 'guru') {
                 $data = array(
                     'is_guru' => TRUE,
                     'username' => $dt_akun->username,
                     'hak_akses' => 'guru',
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
-            }else{
+            } else {
                 $data = array(
                     'is_ortu' => TRUE,
                     'username' => $dt_akun->username,
@@ -169,7 +193,7 @@ class Lawang extends CI_Controller
                     'pengguna_id' => encrypt($dt_akun->akun_id),
                 );
             }
-           
+
 
             $this->session->set_userdata($data);
             // addLog('Login', 'as Admin Mekanik', 'Karyawan ID ' . $penggunaData->akunid);

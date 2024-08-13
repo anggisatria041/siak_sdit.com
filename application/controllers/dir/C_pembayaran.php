@@ -74,7 +74,6 @@ class C_pembayaran extends CI_Controller
                             </a>\
                             <div class="dropdown-menu dropdown-menu-right">\
                                 <a class="dropdown-item" href="javascript:edit(\\\'\'+e.pembayaran_id +\'\\\');"><i class="la la-edit"></i> Edit Pembayaran</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Pembayaran</a>\
                                 <a class="dropdown-item" href="javascript:verifikasi(\\\'\'+e.pembayaran_id+\'\\\');"><i class="la la-check-circle"></i> Konfirmasi Status Pembayaran</a>\
                             </div>\
                         </div>\
@@ -90,7 +89,7 @@ class C_pembayaran extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NIS', 'Nama Siswa', 'Nama Tajaran', 'Nominal', 'Tanggal Pembayaran', 'Status Pembayaran', 'Bukti Pembayaran', 'Catatan', 'AKSI');
+        $configColumn['title'] = array('NO', 'NIS', 'Nama Siswa', 'Tahun Ajaran', 'Nominal', 'Tanggal Pembayaran', 'Status Pembayaran', 'Bukti Pembayaran', 'Catatan', 'AKSI');
         $configColumn['field'] = array('no', 'nis', 'nama_siswa', 'nama_tajaran', 'nominal', 'tanggal_pembayaran', 'status_pembayaran', 'bukti_pembayaran', 'catatan', 'aksi');
         $configColumn['sortable'] = array(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
         $configColumn['width'] = array(20, 50, 50, 70, 70, 100, 100, 140, 100, 50); //on px
@@ -125,8 +124,13 @@ class C_pembayaran extends CI_Controller
         $set['scrollX'] = true; // menambahkan scrolling horizontal
 
         $pageData['tableManagepembayaran'] = $this->m_datatable->generateScript($set);
-
-        $pageData['siswa'] = $this->Md_siswa->getsiswa();
+        if ($this->session->userdata('hak_akses') == 'orang_tua') {
+            $pageData['siswa'] = $this->Md_siswa->getSiswaByNis_k($this->session->userdata('nis'));
+          
+        } else {
+            $pageData['siswa'] = $this->Md_siswa->getsiswa();
+           
+        }
         $pageData['tajaran'] = $this->Md_tahun_ajaran->getTahunAjaran();
         $pageData['pembayaran'] = $this->Md_pembayaran->getAllPembayaran();
         // var_dump($pageData['pembayaran']);
