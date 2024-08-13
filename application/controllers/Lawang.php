@@ -124,8 +124,8 @@ class Lawang extends CI_Controller
     {
         $array_items = array('admin', 'orang tua', 'guru');
         $this->session->unset_userdata($array_items);
-
-        $pengguna = $this->Md_akun->getAkunByNikOrUsername($dt_akun->nis);
+        $dt = $dt_akun->niy ? $dt_akun->niy : ($dt_akun->nis ? $dt_akun->nis : $dt_akun->username);
+        $pengguna = $this->Md_akun->getAkunByNikOrUsername($dt);
         if ($pengguna) {
             // set login
             $hakakses = array();
