@@ -89,7 +89,7 @@ class C_pembayaran extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'NIS', 'Nama Siswa', 'Nama Tajaran', 'Nominal', 'Tanggal Pembayaran', 'Status Pembayaran', 'Bukti Pembayaran', 'Catatan', 'AKSI');
+        $configColumn['title'] = array('NO', 'NIS', 'Nama Siswa', 'Tahun Ajaran', 'Nominal', 'Tanggal Pembayaran', 'Status Pembayaran', 'Bukti Pembayaran', 'Catatan', 'AKSI');
         $configColumn['field'] = array('no', 'nis', 'nama_siswa', 'nama_tajaran', 'nominal', 'tanggal_pembayaran', 'status_pembayaran', 'bukti_pembayaran', 'catatan', 'aksi');
         $configColumn['sortable'] = array(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
         $configColumn['width'] = array(20, 50, 50, 70, 70, 100, 100, 140, 100, 50); //on px
