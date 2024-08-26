@@ -63,32 +63,32 @@ class C_Absensi_detail extends CI_Controller
          */
 
 
-
-        $configColumn['title'] = array('NO', 'Nama Siswa');
-        $configColumn['field'] = array('no', 'nama_siswa');
-        $configColumn['sortable'] = array(FALSE, TRUE);
-        $configColumn['width'] = array(30, 100);
-        $configColumn['template'] = array(
-            FALSE,
-            FALSE,
-        );
-
-        for ($i = 1; $i <= 31; $i++) {
-            $configColumn['title'][] = 'Tanggal ' . $i;
-            $configColumn['field'][] = 'kehadiran_' . $i;
-            $configColumn['sortable'][] = FALSE;
-            $configColumn['width'][] = 80; //on px
-            $configColumn['template'][] = FALSE;
-        }
-        $tajaran = $this->Md_tahun_ajaran->getTahunAjaranGroup();
-        $filter_tajaran = array();
-        if ($tajaran) {
-            foreach ($tajaran as $list) {
-                //untuk filter
-                $filter_tajaran[] = array('id' => $list->nama_tajaran, 'attr' => $list->nama_tajaran);
-            }
-        }
         if ($this->akses != 'orang_tua') {
+            $configColumn['title'] = array('NO', 'Nama Siswa');
+            $configColumn['field'] = array('no', 'nama_siswa');
+            $configColumn['sortable'] = array(FALSE, TRUE);
+            $configColumn['width'] = array(30, 100);
+            $configColumn['template'] = array(
+                FALSE,
+                FALSE,
+            );
+
+            for ($i = 1; $i <= 31; $i++) {
+                $configColumn['title'][] = 'Tanggal ' . $i;
+                $configColumn['field'][] = 'kehadiran_' . $i;
+                $configColumn['sortable'][] = FALSE;
+                $configColumn['width'][] = 80; //on px
+                $configColumn['template'][] = FALSE;
+            }
+            $tajaran = $this->Md_tahun_ajaran->getTahunAjaranGroup();
+            $filter_tajaran = array();
+            if ($tajaran) {
+                foreach ($tajaran as $list) {
+                    //untuk filter
+                    $filter_tajaran[] = array('id' => $list->nama_tajaran, 'attr' => $list->nama_tajaran);
+                }
+            }
+
             $configColumn['title'][] = 'Total Kehadiran';
             $configColumn['field'][] = 'total_kehadiran';
             $configColumn['sortable'][] = FALSE;
@@ -107,37 +107,111 @@ class C_Absensi_detail extends CI_Controller
                     \';
                     }'
             ;
+
+            $configFilter = array(
+                array(
+                    'nama_filter' => 'Tahun Ajaran',
+                    'id_filter' => 'nama_tajaran',
+                    'option_filter' => $filter_tajaran,
+                )
+            );
+
+            /**
+             * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
+             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
+             * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
+             * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
+             * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
+             */
+            $set['id_table'] = 'tableManageDetail'; // tanpa spasi dan karakter
+            $set['json_url'] = base_url() . 'dir/api/manage_detail/' . $id_kelas . '/' . $bulan;
+            $set['columns'] = $this->m_datatable->setColumn($configColumn);
+            $set['filter'] = $this->m_datatable->setFilter($configFilter); // wajib
+            $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set['server_side'] = TRUE; // wajib
+            $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
+            $pageData['tableManageDetail'] = $this->m_datatable->generateScript($set);
+
+            $pageData['page_name'] = 'V_absensi_detail';
+            $pageData['page_dir'] = 'absensi';
+            $pageData['bulan'] = $bulan;
+            $pageData['id_kelas'] = $id_kelas;
+            $this->load->view('index', $pageData);
+        } else {
+            $pageData['page_name'] = 'V_absensi_detailSiswa';
+            $pageData['page_dir'] = 'absensi';
+            $source = getDataForDataTable('Md_absensi', decrypt($id_kelas));
+
+            foreach ($source['data'] as $list) {
+                $row = array();
+                $row['no'] = ++$source['no'];
+                $row['nis'] = $list->nis;
+                $row['nama_siswa'] = $list->nama;
+                for ($i = 1; $i <= 31; $i++) {
+                    $absensi = $this->Md_absensi->getAbsensiByNis($list->nis, $i, $list->tajaran_id, decrypt($id_kelas), $bulan);
+
+                    if ($absensi != null) {
+                        $row['kehadiran_' . $i] = $absensi->kehadiran;
+                    } else {
+                        $row['kehadiran_' . $i] = '-';
+                    }
+                }
+
+                $data[] = $row;
+
+
+            }
+            // var_dump($data[0]);
+            // die;
+            $pageData['data'] = $data[0];
+            switch ($bulan) {
+                case 1:
+                    $nama_bulan = 'januari';
+                    break;
+                case 2:
+                    $nama_bulan = 'februari';
+                    break;
+                case 3:
+                    $nama_bulan = 'maret';
+                    break;
+                case 4:
+                    $nama_bulan = 'april';
+                    break;
+                case 5:
+                    $nama_bulan = 'mei';
+                    break;
+                case 6:
+                    $nama_bulan = 'juni';
+                    break;
+                case 7:
+                    $nama_bulan = 'juli';
+                    break;
+                case 8:
+                    $nama_bulan = 'agustus';
+                    break;
+                case 9:
+                    $nama_bulan = 'september';
+                    break;
+                case 10:
+                    $nama_bulan = 'oktober';
+                    break;
+                case 11:
+                    $nama_bulan = 'november';
+                    break;
+                case 12:
+                    $nama_bulan = 'desember';
+                    break;
+                default:
+                    $nama_bulan = 'tidak diketahui';
+                    break;
+            }
+
+            $pageData['namabulan'] = $nama_bulan;
+            $pageData['bulan'] = $bulan;
+            $pageData['id_kelas'] = $id_kelas;
+            $this->load->view('index', $pageData);
         }
-        $configFilter = array(
-            array(
-                'nama_filter' => 'Tahun Ajaran',
-                'id_filter' => 'nama_tajaran',
-                'option_filter' => $filter_tajaran,
-            )
-        );
-
-        /**
-         * @var $set['columns'] -> Mendefinisikan kolom-kolom pada table
-         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak
-         * @var $set['filter'] -> Mendefinisikan box filtering bagian kolom tertentu
-         * @var $set['URL'] -> Mendefinisikan url mengambil data dari server 
-         * @var $set['search'] -> Mendefinisikan box searching ditampilkan atau tidak.
-         */
-        $set['id_table'] = 'tableManageDetail'; // tanpa spasi dan karakter
-        $set['json_url'] = base_url() . 'dir/api/manage_detail/' . $id_kelas . '/' . $bulan;
-        $set['columns'] = $this->m_datatable->setColumn($configColumn);
-        $set['filter'] = $this->m_datatable->setFilter($configFilter); // wajib
-        $set['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
-        $set['server_side'] = TRUE; // wajib
-        $set['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
-
-        $pageData['tableManageDetail'] = $this->m_datatable->generateScript($set);
-
-        $pageData['page_name'] = 'V_absensi_detail';
-        $pageData['page_dir'] = 'absensi';
-        $pageData['bulan'] = $bulan;
-        $pageData['id_kelas'] = $id_kelas;
-        $this->load->view('index', $pageData);
 
     }
     public function add()
