@@ -38,12 +38,14 @@ class C_mapel extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $validate = false;
         foreach ($this->allowed_accesses as $key => $value) {
-            if (!$this->session->userdata($key)) continue;
+            if (!$this->session->userdata($key))
+                continue;
             $validate = true;
             $this->akses = $value;
             break;
         }
-        if (!$validate) redirect(base_url('lawang'));
+        if (!$validate)
+            redirect(base_url('lawang'));
 
 
     }
@@ -58,12 +60,12 @@ class C_mapel extends CI_Controller
          * @param width    | setting width each column -> default value is FALSE for auto width
          * @param template | making template for displaying record -> default value is FALSE
          */
-        $configColumn['title'] = array('NO', 'Nama Mapel', 'Kode Mapel', 'Deskripsi', 'Kelas', 'Aksi');
-        $configColumn['field'] = array('no', 'nama_mapel', 'kode_mapel', 'deskripsi', 'nama_kelas', 'aksi');
+        $configColumn['title'] = array('NO', 'Kode Mapel', 'Nama Mapel', 'Deskripsi', 'Kelas', 'Aksi');
+        $configColumn['field'] = array('no', 'kode_mapel', 'nama_mapel', 'deskripsi', 'nama_kelas', 'aksi');
         $configColumn['sortable'] = array(FALSE, TRUE, TRUE, FALSE, TRUE, FALSE);
         $configColumn['width'] = array(30, 100, 70, 300, 100, 50); //on px
         $configColumn['template'] = array(
-            
+
             FALSE,
             FALSE,
             FALSE,

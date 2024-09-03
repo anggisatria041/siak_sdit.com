@@ -78,7 +78,6 @@ class C_orang_tua extends CI_Controller
                         </a>\
                         <div class="dropdown-menu dropdown-menu-right">\
                             <a class="dropdown-item" href="javascript:edit(\\\'\'+e.id_orang_tua +\'\\\');"><i class="la la-edit"></i> Edit Orang Tua</a>\
-                            <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.id_orang_tua+\'\\\');"><i class="la la-trash-o"></i> Hapus Orang Tua</a>\
                         </div>\
                     </div>\
                 \';

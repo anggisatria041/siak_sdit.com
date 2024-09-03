@@ -75,7 +75,6 @@ class C_tahun_ajaran extends CI_Controller
                         </a>\
                         <div class="dropdown-menu dropdown-menu-right">\
                             <a class="dropdown-item" href="javascript:edit(\\\'\'+e.tajaran_id +\'\\\');"><i class="la la-edit"></i> Edit Tahun Ajaran</a>\
-                            <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.tajaran_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Tahun Ajaran</a>\
                         </div>\
                     </div>\
                 \';

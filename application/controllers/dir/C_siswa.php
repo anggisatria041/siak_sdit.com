@@ -84,7 +84,6 @@ class C_siswa extends CI_Controller
                             </a>\
                             <div class="dropdown-menu dropdown-menu-right">\
                                 <a class="dropdown-item" href="javascript:edit(\\\'\'+e.siswa_id +\'\\\');"><i class="la la-edit"></i> Edit Siswa</a>\
-                                <a class="dropdown-item" href="javascript:hapus(\\\'\'+e.siswa_id+\'\\\');"><i class="la la-trash-o"></i> Hapus Siswa</a>\
                             </div>\
                         </div>\
                     \';
