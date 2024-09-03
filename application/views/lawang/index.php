@@ -46,7 +46,7 @@
                 </div>
                 <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver">
                     <div class="m-grid__item m-grid__item--middle">
-                        <span class="m-login__title">Sistem Akademik Sekolah Dasar IT Luhuring Budi</span>
+                        <span class="m-login__title">Sistem Akademiks Sekolah Dasar IT Luhuring Budi</span>
                         <!--<span class="m-login__subtitle">&nbsp;</span>-->
                     </div>
                 </div>
