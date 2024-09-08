@@ -63,6 +63,12 @@ class C_nilai extends CI_Controller
             $configColumn['template'] = array(
             FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
             );
+            $configColumn2['title'] = array('No', 'NIS', 'Nama', 'LM 1', 'LM 2', 'LM 3', 'LM 4', 'Sumatif Nilai');
+            $configColumn2['field'] = array('no', 'nis', 'nama', 'lm1', 'lm2', 'lm3', 'lm4', 'sumatif');
+            $configColumn2['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+            $configColumn2['width'] = array(30, 100, 100, 100, 100, 80, 50, 100);
+            $configColumn2['template'] = array(
+            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE);
             $configFilter = FALSE;
 
             /**
@@ -112,12 +118,20 @@ class C_nilai extends CI_Controller
             $set5['server_side'] = TRUE; // wajib
             $set5['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
+            $set6['id_table'] = 'sumatif'; // tanpa spasi dan karakter
+            $set6['json_url'] = base_url() . 'dir/api/nilai_lingkup/6';
+            $set6['columns'] = $this->m_datatable->setColumn($configColumn2);
+            $set6['filter'] = FALSE; // wajib
+            $set6['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set6['server_side'] = TRUE; // wajib
+            $set6['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
             $pageData['lingkup1'] = $this->m_datatable->generateScript($set);
             $pageData['lingkup2'] = $this->m_datatable->generateScript($set2);
             $pageData['lingkup3'] = $this->m_datatable->generateScript($set3);
             $pageData['lingkup4'] = $this->m_datatable->generateScript($set4);
             $pageData['lingkup5'] = $this->m_datatable->generateScript($set5);
+            $pageData['sumatif'] = $this->m_datatable->generateScript($set6);
             $pageData['page_name'] = 'V_rekap_nilai';
             $pageData['page_dir'] = 'nilai';
             $this->load->view('index', $pageData);
@@ -165,6 +179,12 @@ class C_nilai extends CI_Controller
                     \';
                 }'
             );
+            $configColumn2['title'] = array('No', 'NIS', 'Nama', 'LM 1', 'LM 2', 'LM 3', 'LM 4', 'Sumatif Nilai');
+            $configColumn2['field'] = array('no', 'nis', 'nama', 'lm1', 'lm2', 'lm3', 'lm4', 'sumatif');
+            $configColumn2['sortable'] = array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+            $configColumn2['width'] = array(30, 100, 100, 100, 100, 80, 50, 100);
+            $configColumn2['template'] = array(
+            FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE);
             $configFilter = FALSE;
 
             /**
@@ -214,12 +234,21 @@ class C_nilai extends CI_Controller
             $set5['server_side'] = TRUE; // wajib
             $set5['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
 
+            $set6['id_table'] = 'sumatif'; // tanpa spasi dan karakter
+            $set6['json_url'] = base_url() . 'dir/api/nilai_lingkup/6';
+            $set6['columns'] = $this->m_datatable->setColumn($configColumn2);
+            $set6['filter'] = FALSE; // wajib
+            $set6['search'] = TRUE; // jika tidak ingin memunculkan kolom search $row['search'] = FALSE;
+            $set6['server_side'] = TRUE; // wajib
+            $set6['perpage'] = 10; // wajib : 10/20/30/50/100/500/1000/10000
+
 
             $pageData['lingkup1'] = $this->m_datatable->generateScript($set);
             $pageData['lingkup2'] = $this->m_datatable->generateScript($set2);
             $pageData['lingkup3'] = $this->m_datatable->generateScript($set3);
             $pageData['lingkup4'] = $this->m_datatable->generateScript($set4);
             $pageData['lingkup5'] = $this->m_datatable->generateScript($set5);
+            $pageData['sumatif'] = $this->m_datatable->generateScript($set6);
             $pageData['page_name'] = 'V_rekap_nilai';
             $pageData['page_dir'] = 'nilai';
             $this->load->view('index', $pageData);

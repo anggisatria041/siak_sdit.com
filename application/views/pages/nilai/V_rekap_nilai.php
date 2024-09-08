@@ -71,8 +71,11 @@
                              <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" onclick="renew('lingkup4')" href="#m_tabs_5_4"><b>Lingkup Materi 4</b></a>
                             </li>
-                             <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" onclick="renew('lingkup5')" href="#m_tabs_5_5"><b>Lingkup Materi 5</b></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" onclick="renew('sumatif')" href="#m_tabs_5_6"><b>Sumatif Nilai</b></a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -88,8 +91,11 @@
                              <div class="tab-pane" id="m_tabs_5_4" role="tabpanel">
                                 <div class="m_datatable" id="lingkup4"></div>
                             </div>
-                             <div class="tab-pane" id="m_tabs_5_5" role="tabpanel">
+                            <div class="tab-pane" id="m_tabs_5_5" role="tabpanel">
                                 <div class="m_datatable" id="lingkup5"></div>
+                            </div>
+                            <div class="tab-pane" id="m_tabs_5_6" role="tabpanel">
+                                <div class="m_datatable" id="sumatif"></div>
                             </div>
                         </div>
                         <!--end: Datatable -->
@@ -261,12 +267,13 @@
     }
 </script>
 <?php
-if (isset($lingkup1) && isset($lingkup2) && isset($lingkup3) && isset($lingkup4) && isset($lingkup5)) {
+if (isset($lingkup1) && isset($lingkup2) && isset($lingkup3) && isset($lingkup4) && isset($lingkup5) && isset($sumatif)) {
     echo $lingkup1;
     echo $lingkup2;
     echo $lingkup3;
     echo $lingkup4;
     echo $lingkup5;
+    echo $sumatif;
 }
 ?>
 

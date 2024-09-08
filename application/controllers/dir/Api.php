@@ -373,33 +373,85 @@ class Api extends CI_Controller
         die(json_encode($output));
     }
     public function nilai_lingkup($lingkup)
-    {
-        $source = getDataForDataTable('Md_nilai', null);
+{
+    $source = getDataForDataTable('Md_nilai', null);
+    $data = [];
 
-        foreach ($source['data'] as $list) {
-            if ($list->lingkup_materi == $lingkup) {
-                $row = array();
+    foreach ($source['data'] as $list) {
+        // Cari apakah sudah ada record untuk siswa ini berdasarkan 'nis'
+        $existingIndex = null;
+        foreach ($data as $key => $existingRow) {
+            if ($existingRow['nis'] == $list->nis) {
+                $existingIndex = $key;
+                break;
+            }
+        }
+
+        if ($lingkup == 6) {
+            // Jika siswa sudah ada, update nilai lm1, lm2, lm3, atau lm4 tanpa menambah record baru
+            if ($existingIndex !== null) {
+                if ($list->lingkup_materi == 1) {
+                    $data[$existingIndex]['lm1'] = $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4;
+                } elseif ($list->lingkup_materi == 2) {
+                    $data[$existingIndex]['lm2'] = $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4;
+                } elseif ($list->lingkup_materi == 3) {
+                    $data[$existingIndex]['lm3'] = $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4;
+                } elseif ($list->lingkup_materi == 4) {
+                    $data[$existingIndex]['lm4'] = $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4;
+                }
+
+                // Hitung ulang sumatif setelah lm1, lm2, lm3, dan lm4 diperbarui
+                $lmTotal = $data[$existingIndex]['lm1'] + $data[$existingIndex]['lm2'] + $data[$existingIndex]['lm3'] + $data[$existingIndex]['lm4'];
+                $data[$existingIndex]['sumatif'] = $lmTotal / 4;
+
+            } else {
+                // Jika belum ada, buat record baru dan set nilai lm1, lm2, lm3, atau lm4
+                $row = [];
                 $row['no'] = ++$source['no'];
                 $row['nilai_id'] = encrypt($list->nilai_id);
                 $row['nis'] = $list->nis;
                 $row['nama'] = $list->nama;
-                $row['nama_mapel'] = $list->nama_mapel;
-                $row['tp1'] = $list->tp1;
-                $row['tp2'] = $list->tp2;
-                $row['tp3'] = $list->tp3;
-                $row['tp4'] = $list->tp4;
+                $row['lm1'] = ($list->lingkup_materi == 1) ? $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4 : 0;
+                $row['lm2'] = ($list->lingkup_materi == 2) ? $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4 : 0;
+                $row['lm3'] = ($list->lingkup_materi == 3) ? $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4 : 0;
+                $row['lm4'] = ($list->lingkup_materi == 4) ? $list->tp1 + $list->tp2 + $list->tp3 + $list->tp4 : 0;
+
+                // Hitung sumatif saat pertama kali record ditambahkan
+                $lmTotal = $row['lm1'] + $row['lm2'] + $row['lm3'] + $row['lm4'];
+                $row['sumatif'] = $lmTotal / 4;
+
                 $data[] = $row;
             }
-        }
+        } else {
+            // Untuk lingkup spesifik, hanya tambahkan data jika lingkup_materi sesuai
+            if ($list->lingkup_materi == $lingkup) {
+                if ($existingIndex === null) {
+                    $row = [];
+                    $row['no'] = ++$source['no'];
+                    $row['nilai_id'] = encrypt($list->nilai_id);
+                    $row['nis'] = $list->nis;
+                    $row['nama'] = $list->nama;
+                    $row['nama_mapel'] = $list->nama_mapel;
+                    $row['tp1'] = $list->tp1;
+                    $row['tp2'] = $list->tp2;
+                    $row['tp3'] = $list->tp3;
+                    $row['tp4'] = $list->tp4;
 
-        $output = null;
-        if (!empty($source)) {
-            $output = [
-                "meta" => $source['meta'],
-                "data" => isset($data) ? $data : [],
-            ];
+                    $data[] = $row;
+                }
+            }
         }
-
-        die(json_encode($output));
     }
+
+    $output = null;
+    if (!empty($source)) {
+        $output = [
+            "meta" => $source['meta'],
+            "data" => $data,
+        ];
+    }
+
+    die(json_encode($output));
+}
+
 }
